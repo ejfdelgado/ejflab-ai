@@ -1,9 +1,9 @@
 {
     "qa": {
         "collection_name": "qa",
-        "consistency_level": "Eventually",
-        "enable_dynamic_field": false,
-        "auto_id": true,
+        "consistency_level": "Strong",
+        "enable_dynamic_field": true,
+        "auto_id": false,
         "index_params": [
             {
                 "field_name": "sparse_vector",
@@ -19,10 +19,11 @@
         "fields": [
             {
                 "name": "id",
-                "data_type": "DataType.Int64",
+                "data_type": "DataType.VarChar",
                 "is_primary_key": true,
                 "description": "id",
-                "autoID": true
+                "autoID": false,
+                "max_length": 36
             },
             {
                 "name": "document_id",

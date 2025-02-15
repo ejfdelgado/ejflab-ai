@@ -33,20 +33,45 @@
             </button>
         </div>
     </form>
-    <form class="container_vertical gap_10 full margin_10" [formGroup]="formLeft">
-        <div class="container_horizontal width_100 gap_10">
-            <div class="container_vertical full">
-                <mat-form-field>
-                    <mat-label>Query:</mat-label>
-                    <input type="text" matInput formControlName="query">
-                </mat-form-field>
+    <div class="container_vertical full">
+        <form class="container_vertical gap_10 margin_10" [formGroup]="formLeft">
+            <div class="container_horizontal width_100 gap_10">
+                <div class="container_vertical full">
+                    <mat-form-field>
+                        <mat-label>Query:</mat-label>
+                        <input type="text" matInput formControlName="query">
+                    </mat-form-field>
+                </div>
             </div>
-        </div>
-        <div class="container_horizontal end">
-            <button class="btn" mat-raised-button (click)="search()">
-                Search
-                <mat-icon class="peque">search</mat-icon>
-            </button>
-        </div>
-    </form>
+            <div class="container_horizontal end">
+                <button class="btn" mat-raised-button (click)="search()">
+                    Search
+                    <mat-icon class="peque">search</mat-icon>
+                </button>
+            </div>
+        </form>
+        <form *ngIf="currentMatch" class="container_vertical gap_10 margin_10" [formGroup]="formBottom">
+            <label>Id: {{ currentMatch.id }}</label>
+            <label>Distance: {{ currentMatch.distance }}</label>
+            <label>Document Id: {{ currentMatch.document_id }}</label>
+            <mat-form-field>
+                <mat-label>Indexed text:</mat-label>
+                <input type="text" matInput formControlName="text_indexed">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Answer text:</mat-label>
+                <input type="text" matInput formControlName="text_answer">
+            </mat-form-field>
+            <div class="container_horizontal end">
+                <button class="btn" mat-raised-button (click)="deleteEntry()">
+                    Delete
+                    <mat-icon class="peque">delete_forever</mat-icon>
+                </button>
+                <button class="btn" mat-raised-button (click)="updateEntry()">
+                    Update
+                    <mat-icon class="peque">save</mat-icon>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
