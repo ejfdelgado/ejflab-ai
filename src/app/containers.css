@@ -1,0 +1,25 @@
+.container_vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.container_horizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+.width_100 {
+    width: 100%;
+}
+
+.full {
+    flex: 1;
+}
+
+.gap_10 {
+    gap: 10px;
+}
+
+.margin_10 {
+    margin: 10px;
+}

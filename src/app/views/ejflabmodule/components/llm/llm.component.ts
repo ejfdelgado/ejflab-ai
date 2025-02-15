@@ -1,12 +1,140 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SafeHtml } from '@angular/platform-browser';
+import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
+import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
+
+export interface ChatGPT4AllSessionData {
+  role: string;
+  content: string;
+}
+
+export interface AnswerData {
+  txt: SafeHtml;
+  detail: SafeHtml;
+}
 
 @Component({
   selector: 'app-llm',
   templateUrl: './llm.component.html',
-  styleUrl: './llm.component.css'
+  styleUrls: ['../../../../buttons.css', '../../../../containers.css', './llm.component.css']
 })
-export class LlmComponent {
+export class LlmComponent implements OnInit {
+  formRight: FormGroup;
+  gpt4allSession: Array<ChatGPT4AllSessionData> = [];
+  answers: Array<AnswerData> = [];
+  start: number = 0;
+  seconds: string = '';
+
+  constructor(
+    public fb: FormBuilder,
+    public modalSrv: ModalService,
+    private indicatorSrv: IndicatorService,
+  ) {
+
+  }
+
+  resetChat() {
+    this.gpt4allSession = [];
+    this.answers = [];
+  }
+
+  ngOnInit(): void {
+    this.formRight = this.fb.group({
+      text: ['', []],
+    });
+  }
+
   async chat() {
-    //
+    if (!this.formRight.valid) {
+      return;
+    }
+    const field = this.formRight.get('text');
+    if (!field) {
+      return;
+    }
+    let text = field.value;
+    if (text.trim().length == 0) {
+      this.modalSrv.alert({ txt: 'Write something to search' });
+      return;
+    }
+    const activity = this.indicatorSrv.start();
+    const payload: FlowchartProcessRequestData = {
+      channel: 'post',
+      processorMethod: 'llm.chat',
+      room: 'processors',
+      namedInputs: {
+        session: this.gpt4allSession,
+        message: text,
+      },
+      data: {
+        maxTokens: 1024,
+        systemMessage: 'Eres un asistente en español',
+        chatTemplate: "### Human:\n{0}\n\n### Assistant:\n",
+        streaming: true,
+      },
+    };
+    this.tic();
+
+    const gpt4allSession = this.gpt4allSession;
+    const currentAnswer = {
+      txt: text,
+      detail: "",
+    };
+    this.answers.unshift(currentAnswer);
+    field.setValue("");
+
+    const urlServer = this.getRoot() + "srv/flowchart/processor_process_json";
+    fetch(urlServer, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Set headers if necessary
+      },
+      body: JSON.stringify(payload), // Send data in the request body
+    })
+      .then((response: any) => {
+        this.toc();
+        activity.done();
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        function readChunk() {
+          return reader.read().then((temporal: any) => {
+            const { done, value } = temporal;
+            if (done) {
+              gpt4allSession.push({
+                role: "user",
+                content: text,
+              });
+              gpt4allSession.push({
+                role: "assistant",
+                content: currentAnswer.detail,
+              });
+              return;
+            }
+            const chunk = decoder.decode(value, { stream: true });
+            currentAnswer.detail += chunk;
+            return readChunk();
+          });
+        }
+        return readChunk();
+      })
+      .catch(error => {
+        this.modalSrv.error(error);
+        activity.done();
+      });
+  }
+  getRoot(): string {
+    return MyConstants.SRV_ROOT;
+  }
+  tic() {
+    this.start = new Date().getTime();
+  }
+  toc() {
+    const end = new Date().getTime();
+    const duration = ((end - this.start) / 1000).toFixed(2);
+    this.seconds = `${duration} seconds`;
   }
 }

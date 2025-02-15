@@ -114,56 +114,6 @@ mat-form-field.full_height .mat-form-field-subscript-wrapper {
   color: white;
 }
 
-.container_vertical {
-  display: flex;
-  flex-direction: column;
-}
-
-.container_horizontal {
-  display: flex;
-  flex-direction: row;
-}
-
-.width_100 {
-  width: 100%;
-}
-
-.full {
-  flex: 1;
-}
-
-.gap_10 {
-  gap: 10px;
-}
-
-.margin_10 {
-  margin: 10px;
-}
-
-.btn {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-}
-
-.btn mat-icon {
-  font-size: 1.4em;
-  height: 18px;
-  width: 18px;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
 @media (max-width: 800px) {
   .edit-user-dialog-container .mat-dialog-container {
     min-width: 80vw;

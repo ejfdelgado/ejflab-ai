@@ -1,9 +1,27 @@
 <div class="container_horizontal width_100">
-    <div class="container_vertical gap_10 full margin_10">
+    <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
         <p>Chat here:</p>
-        <textarea rows="5"></textarea>
+        <textarea rows="5" matInput formControlName="text"></textarea>
         <div class="container_horizontal gap_10">
-            <button class="btn" (click)="chat()">Send</button>
+            <button class="btn" (click)="resetChat()">
+                <mat-icon>delete_forever</mat-icon>
+                Reset chats
+            </button>
+            <button class="btn" (click)="chat()">
+                <mat-icon>send</mat-icon>
+                Send
+            </button>
         </div>
-    </div>
+        <div class="container_horizontal width_100">
+            <p>{{seconds}}</p>
+        </div>
+        <div *ngIf="answers.length > 0" class="container_horizontal width_100 ">
+            <ul class="">
+                <li *ngFor="let answer of answers">
+                    <p class="answer" [innerHtml]="answer.txt"></p>
+                    <p class="query query_detail" [innerHtml]="answer.detail"></p>
+                </li>
+            </ul>
+        </div>
+    </form>
 </div>
