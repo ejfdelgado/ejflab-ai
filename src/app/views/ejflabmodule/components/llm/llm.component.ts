@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
-import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
+import { EjflabBaseComponent } from '../../ejflabbase.component';
 
 export interface ChatGPT4AllSessionData {
   role: string;
@@ -24,19 +24,17 @@ export interface AnswerData {
     './llm.component.css'
   ]
 })
-export class LlmComponent implements OnInit {
+export class LlmComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
-  start: number = 0;
-  seconds: string = '';
 
   constructor(
     public fb: FormBuilder,
     public modalSrv: ModalService,
     private indicatorSrv: IndicatorService,
   ) {
-
+    super();
   }
 
   resetChat() {
@@ -133,16 +131,5 @@ export class LlmComponent implements OnInit {
         this.modalSrv.error(error);
         activity.done();
       });
-  }
-  getRoot(): string {
-    return MyConstants.SRV_ROOT;
-  }
-  tic() {
-    this.start = new Date().getTime();
-  }
-  toc() {
-    const end = new Date().getTime();
-    const duration = ((end - this.start) / 1000).toFixed(2);
-    this.seconds = `${duration} seconds`;
   }
 }
