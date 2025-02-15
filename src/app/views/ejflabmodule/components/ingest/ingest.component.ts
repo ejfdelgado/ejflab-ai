@@ -49,7 +49,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     }
 
     // Split text into... ==, then with => if it exists
-    const chunksTokens = text.value.split(/==/g);
+    const chunksTokens = text.value.split(/[\n\r]/g);
     const chunks = chunksTokens
       .map((line: string) => { return line.trim(); })
       .filter((line: string) => {
