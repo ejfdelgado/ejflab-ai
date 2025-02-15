@@ -16,11 +16,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
+import { LlmComponent } from './components/llm/llm.component';
 
 
 @NgModule({
   declarations: [
-    EjflabmoduleComponent
+    EjflabmoduleComponent,
+    LlmComponent
   ],
   imports: [
     CommonModule,
