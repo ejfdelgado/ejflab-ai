@@ -1,0 +1,188 @@
+{
+    "intent": {
+        "collection_name": "intent",
+        "consistency_level": "Eventually",
+        "enable_dynamic_field": false,
+        "auto_id": true,
+        "index_params": [
+            {
+                "field_name": "sparse_vector",
+                "index_type": "SPARSE_INVERTED_INDEX",
+                "metric_type": "IP"
+            },
+            {
+                "field_name": "dense_vector",
+                "index_type": "FLAT",
+                "metric_type": "IP"
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "data_type": "DataType.Int64",
+                "is_primary_key": true,
+                "description": "id",
+                "autoID": true
+            },
+            {
+                "name": "document_id",
+                "data_type": "DataType.VarChar",
+                "description": "document_id",
+                "max_length": 512
+            },
+            {
+                "name": "text",
+                "data_type": "DataType.VarChar",
+                "description": "text",
+                "max_length": 2048
+            },
+            {
+                "name": "speaker",
+                "data_type": "DataType.VarChar",
+                "description": "speaker",
+                "max_length": 64
+            },
+            {
+                "name": "start_time",
+                "data_type": "DataType.Int64",
+                "description": "start_time"
+            },
+            {
+                "name": "end_time",
+                "data_type": "DataType.Int64",
+                "description": "end_time"
+            },
+            {
+                "name": "sparse_vector",
+                "data_type": "DataType.SparseFloatVector",
+                "description": "sparse_vector"
+            },
+            {
+                "name": "dense_vector",
+                "data_type": "DataType.FloatVector",
+                "dim": 1024,
+                "description": "dense_vector"
+            },
+            {
+                "name": "ref_id",
+                "data_type": "DataType.VarChar",
+                "description": "ref_id",
+                "max_length": 36
+            }
+        ]
+    },
+    "diarization": {
+        "collection_name": "diarization",
+        "consistency_level": "Strong",
+        "num_partitions": 16,
+        "enable_dynamic_field": false,
+        "auto_id": true,
+        "index_params": [
+            {
+                "field_name": "id",
+                "index_type": "STL_SORT"
+            },
+            {
+                "field_name": "embedding",
+                "index_type": "IVF_FLAT",
+                "metric_type": "COSINE",
+                "params": {
+                    "nlist": 16
+                }
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "data_type": "DataType.Int64",
+                "is_primary_key": true,
+                "description": "id",
+                "autoID": true
+            },
+            {
+                "name": "speaker",
+                "data_type": "DataType.VarChar",
+                "description": "speaker",
+                "max_length": 32,
+                "is_partition_key": true
+            },
+            {
+                "name": "embedding",
+                "data_type": "DataType.FloatVector",
+                "dim": 512,
+                "description": "embedding"
+            }
+        ]
+    },
+    "faces": {
+        "collection_name": "faces",
+        "consistency_level": "Eventually",
+        "enable_dynamic_field": false,
+        "auto_id": true,
+        "index_params": [
+            {
+                "field_name": "face_vector",
+                "index_type": "FLAT",
+                "metric_type": "IP"
+            }
+        ],
+        "fields": [
+            {
+                "name": "id",
+                "data_type": "DataType.Int64",
+                "is_primary_key": true,
+                "description": "id",
+                "autoID": true
+            },
+            {
+                "name": "document_id",
+                "data_type": "DataType.VarChar",
+                "description": "text",
+                "max_length": 512
+            },
+            {
+                "name": "face_path",
+                "data_type": "DataType.VarChar",
+                "description": "face path",
+                "max_length": 2048
+            },
+            {
+                "name": "millis",
+                "data_type": "DataType.Int64",
+                "description": "millis"
+            },
+            {
+                "name": "x1",
+                "data_type": "DataType.Float",
+                "description": "Box x1"
+            },
+            {
+                "name": "y1",
+                "data_type": "DataType.Float",
+                "description": "Box y1"
+            },
+            {
+                "name": "x2",
+                "data_type": "DataType.Float",
+                "description": "Box x2"
+            },
+            {
+                "name": "y2",
+                "data_type": "DataType.Float",
+                "description": "Box y2"
+            },
+            {
+                "name": "face_vector",
+                "data_type": "DataType.FloatVector",
+                "dim": 512,
+                "description": "face_vector"
+            },
+            {
+                "name": "ref_id",
+                "data_type": "DataType.VarChar",
+                "description": "ref_id",
+                "max_length": 36
+            }
+        ]
+    }
+}

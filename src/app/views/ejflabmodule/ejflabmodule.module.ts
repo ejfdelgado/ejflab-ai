@@ -17,12 +17,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LlmComponent } from './components/llm/llm.component';
+import { MilvusComponent } from './components/milvus/milvus.component';
 
 
 @NgModule({
   declarations: [
     EjflabmoduleComponent,
-    LlmComponent
+    LlmComponent,
+    MilvusComponent
   ],
   imports: [
     CommonModule,

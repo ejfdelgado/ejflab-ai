@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EjflabmoduleComponent } from './ejflabmodule.component';
 import { LlmComponent } from './components/llm/llm.component';
+import { MilvusComponent } from './components/milvus/milvus.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
       {
         path: 'llm',
         component: LlmComponent,
+      },
+      {
+        path: 'milvus',
+        component: MilvusComponent,
       },
     ]
   }

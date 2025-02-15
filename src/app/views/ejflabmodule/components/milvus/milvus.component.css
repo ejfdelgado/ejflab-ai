@@ -1,0 +1,47 @@
+.container_vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container_vertical.centered {
+    justify-content: center;
+}
+
+.container_horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.container_vertical.no_gap,
+.container_horizontal.no_gap {
+    gap: 0;
+}
+
+.container_horizontal.centered {
+    justify-content: center;
+}
+
+.full {
+    flex: 1;
+}
+
+.text_names {
+    font-size: 20px;
+    line-height: 37px;
+}
+
+.padding_10 {
+    padding: 10px;
+}
+
+.row_options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.row_options button.button_general {
+    height: 54px;
+}
