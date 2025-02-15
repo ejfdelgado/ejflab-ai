@@ -11,9 +11,9 @@
     "start": "npx nodemon app.mjs",
     "start_no": "node app.mjs",
     "reset_path": "NODE_SERVER_PATH=/ node ./node_modules/@ejfdelgado/ejflab-common/src/changePath.js",
-    "front_back_build": "docker build --no-cache=true -t us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.0.0 -f Dockerfile . && npm run bip",
-    "front_back_build_fast": "npm run build_local && docker build --no-cache=false -t us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.0.0 -f DockerfileFast . && npm run bip",
-    "front_back_publish": "docker push us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.0.0 && npm run bip",
+    "front_back_build": "docker build --no-cache=true -t us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.1.0 -f Dockerfile . && npm run bip",
+    "front_back_build_fast": "npm run build_local && docker build --no-cache=false -t us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.1.0 -f DockerfileFast . && npm run bip",
+    "front_back_publish": "docker push us-docker.pkg.dev/ejfexperiments/us.gcr.io/ejflab_ai:1.1.0 && npm run bip",
     "image_list": "docker image ls",
     "image_rm": "docker rmi --force 4346f414a0e4"
   },
