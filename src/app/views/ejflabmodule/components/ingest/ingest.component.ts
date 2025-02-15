@@ -103,6 +103,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
         query: query.value,
         database: database.value,
         collection: collection.value,
+        kReRank: 5,
       },
       data: {
 

@@ -13,7 +13,7 @@
             {
                 "field_name": "dense_vector",
                 "index_type": "FLAT",
-                "metric_type": "IP"
+                "metric_type": "L2"
             }
         ],
         "fields": [
