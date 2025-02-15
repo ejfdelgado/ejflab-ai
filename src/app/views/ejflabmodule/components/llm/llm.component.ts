@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
@@ -17,7 +17,12 @@ export interface AnswerData {
 @Component({
   selector: 'app-llm',
   templateUrl: './llm.component.html',
-  styleUrls: ['../../../../buttons.css', '../../../../containers.css', './llm.component.css']
+  styleUrls: [
+    '../../../../buttons.css',
+    '../../../../containers.css',
+    '../../../../fonts.css',
+    './llm.component.css'
+  ]
 })
 export class LlmComponent implements OnInit {
   formRight: FormGroup;
@@ -41,7 +46,9 @@ export class LlmComponent implements OnInit {
 
   ngOnInit(): void {
     this.formRight = this.fb.group({
-      text: ['', []],
+      text: ['', [Validators.required]],
+      systemPrompt: ['Eres un asistente en español', [Validators.required]],
+      maxTokens: [1024, [Validators.required]],
     });
   }
 
@@ -50,12 +57,13 @@ export class LlmComponent implements OnInit {
       return;
     }
     const field = this.formRight.get('text');
-    if (!field) {
+    const systemPrompt = this.formRight.get('systemPrompt');
+    const maxTokens = this.formRight.get('maxTokens');
+    if (!field || !systemPrompt || !maxTokens) {
       return;
     }
     let text = field.value;
     if (text.trim().length == 0) {
-      this.modalSrv.alert({ txt: 'Write something to search' });
       return;
     }
     const activity = this.indicatorSrv.start();
@@ -68,8 +76,8 @@ export class LlmComponent implements OnInit {
         message: text,
       },
       data: {
-        maxTokens: 1024,
-        systemMessage: 'Eres un asistente en español',
+        maxTokens: maxTokens.value,
+        systemMessage: systemPrompt.value,
         chatTemplate: "### Human:\n{0}\n\n### Assistant:\n",
         streaming: true,
       },
