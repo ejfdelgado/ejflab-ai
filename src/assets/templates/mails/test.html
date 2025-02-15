@@ -1,0 +1,18 @@
+<body style="font-family: sans-serif;">
+    <h1>Detección de imágenes</h1>
+    $[for vez in ${data.veces}]
+    <span style="margin-bottom:15px;">
+        <label style="margin-bottom:15px;">Fecha: ${vez.t|formatDate}</label><br>
+        <label style="margin-bottom:15px;">Ubicación: <a href="${vez.googlemaps}">${vez.googlemaps}</a></label><br>
+        <span style="margin-bottom:15px;">
+            $[for tag in ${vez.list}]
+            <b style="border-radius: 5px; padding: 3px; background-color: gray; color: white;">${tag.name}
+                ${tag.score|porcentaje1}</b>
+            $[endfor]
+        </span><br>
+        <span style="text-align: center;">
+            <img style="border-radius: 5px; max-width: 50vw;" src="${vez.uri}">
+        </span><br>
+    </span>
+    $[endfor]
+</body>

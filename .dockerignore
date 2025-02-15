@@ -1,0 +1,7 @@
+npm-debug.log
+Dockerfile
+.dockerignore
+.angular
+.vscode
+c\+\+
+bin-local

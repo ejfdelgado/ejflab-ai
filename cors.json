@@ -1,0 +1,35 @@
+[
+  {
+    "origin": [
+      "http://proyeccion-colombia1.appspot.com",
+      "http://proyeccion-colombia1.appspot.com:8081",
+      "https://paistv.appspot.com",
+      "http://pais.tv",
+      "https://pais.tv",
+      "http://ejfdelgado.pais.tv",
+      "http://*.pais.tv",
+      "https://ejfdelgado.pais.tv",
+      "https://*.pais.tv",
+      "http://localhost:4200",
+      "http://mylocalhost.com:8081",
+      "https://mainapp-7b6hvjg6ia-uc.a.run.app",
+      "https://ejfexperiments.wl.r.appspot.com"
+    ],
+    "method": [
+      "GET",
+      "HEAD",
+      "DELETE",
+      "PUT",
+      "POST",
+      "OPTIONS"
+    ],
+    "responseHeader": [
+      "Content-Type",
+      "Access-Control-Allow-Origin",
+      "authorization",
+      "x-host",
+      "x-referer"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

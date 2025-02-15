@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ejfexperiments": {
+      "hosting": {
+        "ejflab1": [
+          "ejfexperiments"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ejfexperiments"
+  }
+}

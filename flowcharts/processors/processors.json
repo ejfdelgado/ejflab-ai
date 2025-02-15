@@ -1,0 +1,30 @@
+{
+    "localFiles": {
+        "postUrl": "http://local_files_processor:8089",
+        "topicUrl": ""
+    },
+    "frameExtractor": {
+        "postUrl": "http://frameextractor_processor:8090",
+        "topicUrl": ""
+    },
+    "speechToText": {
+        "postUrl": "http://speech2text_processor:8087",
+        "topicUrl": ""
+    },
+    "audioFeature": {
+        "postUrl": "http://audiofeature_processor:8088",
+        "topicUrl": ""
+    },
+    "milvusIx": {
+        "postUrl": "http://milvus_ix_processor:8091",
+        "topicUrl": ""
+    },
+    "llm": {
+        "postUrl": "http://llm_processor:8092",
+        "topicUrl": ""
+    },
+    "imageDescription": {
+        "postUrl": "http://image_processor:8095",
+        "topicUrl": ""
+    }
+}

@@ -1,0 +1,158 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  /* Esto evita actualizar cuando le dan scroll hacia abajo */
+  overscroll-behavior-y: contain;
+}
+
+.search-pages-dialog-container .mat-dialog-container {
+  min-width: 80vw;
+}
+
+.edit-user-dialog-container .mat-dialog-container {
+  min-width: 50vw;
+}
+
+mat-form-field.date_picker .mat-form-field-infix {
+  display: flex;
+}
+
+.generic_icon {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  background: white;
+  text-align: center;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 1px 1px 4px 1px #c7c8ca;
+}
+
+.invisible {
+  display: none !important;
+}
+
+.white_subtitle {
+  color: #fff;
+  text-shadow: -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000,
+    1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000;
+}
+
+.black_subtitle {
+  color: #000;
+  text-shadow: -1px -1px 0 #fff, 0 -1px 0 #fff, 1px -1px 0 #fff, 1px 0 0 #fff,
+    1px 1px 0 #fff, 0 1px 0 #fff, -1px 1px 0 #fff, -1px 0 0 #fff;
+}
+
+.noselect,
+.no_caret {
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  -moz-user-select: none;
+  /* Firefox all */
+  user-select: none;
+  /* Standard syntax */
+}
+
+.no_mouse {
+  pointer-events: none;
+}
+
+.si_mouse {
+  pointer-events: all;
+}
+
+.manito {
+  cursor: pointer;
+}
+
+.json-key {
+  color: brown;
+}
+
+.json-value {
+  color: navy;
+}
+
+.json-string {
+  color: olive;
+}
+
+.timepicker-overlay {
+  z-index: 10000000 !important;
+}
+
+.timepicker-backdrop-overlay {
+  z-index: 10000000 !important;
+}
+
+mat-form-field.full_height>div,
+mat-form-field.full_height>div>div,
+mat-form-field.full_height>div>div>div,
+mat-form-field.full_height>div>div>div>textarea {
+  height: 100%;
+}
+
+mat-form-field.full_height .mat-form-field-subscript-wrapper {
+  display: none;
+}
+
+.button_danger.mat-mdc-raised-button:not(:disabled) {
+  background-color: #b53f3f;
+  color: white;
+}
+
+@media (max-width: 800px) {
+  .edit-user-dialog-container .mat-dialog-container {
+    min-width: 80vw;
+  }
+
+  .nogalespopup {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+}
+
+@media (orientation: landscape) {
+  app-webcam .webcam-wrapper {
+    height: 100vh;
+    width: 100%;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  app-webcam video,
+  app-webcam img {
+    width: auto !important;
+    height: 100% !important;
+  }
+}
+
+@media (orientation: portrait) {
+  app-webcam .webcam-wrapper {
+    width: 100vw;
+    height: 100%;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  app-webcam video,
+  app-webcam img {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
