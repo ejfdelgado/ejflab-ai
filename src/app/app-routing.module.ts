@@ -5,11 +5,17 @@ import {
   redirectLoggedInTo,
   redirectUnauthorizedTo,
 } from '@angular/fire/auth-guard';
+import { EjflabmoduleModule } from './views/ejflabmodule/ejflabmodule.module';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
 const redirectLoggedInToHome = () => redirectLoggedInTo(['customers']);
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => EjflabmoduleModule,
+  },
+];
 
 /*
 IMPORTANTE: Cuando agregue un módulo acá, debe modificar tsconfig.app.json
