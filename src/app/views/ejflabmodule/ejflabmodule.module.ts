@@ -18,13 +18,15 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LlmComponent } from './components/llm/llm.component';
 import { MilvusComponent } from './components/milvus/milvus.component';
+import { IngestComponent } from './components/ingest/ingest.component';
 
 
 @NgModule({
   declarations: [
     EjflabmoduleComponent,
     LlmComponent,
-    MilvusComponent
+    MilvusComponent,
+    IngestComponent
   ],
   imports: [
     CommonModule,

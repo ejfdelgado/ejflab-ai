@@ -3,20 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { EjflabmoduleComponent } from './ejflabmodule.component';
 import { LlmComponent } from './components/llm/llm.component';
 import { MilvusComponent } from './components/milvus/milvus.component';
+import { IngestComponent } from './components/ingest/ingest.component';
 
 const routes: Routes = [
   {
     path: '',
     component: EjflabmoduleComponent,
     children: [
-      {
-        path: 'llm',
-        component: LlmComponent,
-      },
-      {
-        path: 'milvus',
-        component: MilvusComponent,
-      },
+      { path: 'llm', component: LlmComponent, },
+      { path: 'milvus', component: MilvusComponent, },
+      { path: 'ingest', component: IngestComponent, },
     ]
   }
 ];

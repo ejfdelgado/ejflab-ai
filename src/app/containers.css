@@ -23,3 +23,24 @@
 .margin_10 {
     margin: 10px;
 }
+
+.padding_10 {
+    padding: 10px;
+}
+
+.container_vertical.centered {
+    justify-content: center;
+}
+
+.container_vertical.no_gap,
+.container_horizontal.no_gap {
+    gap: 0;
+}
+
+.container_horizontal.centered {
+    justify-content: center;
+}
+
+.container_horizontal.end {
+    justify-content: end;
+}

@@ -1,0 +1,52 @@
+<div class="container_horizontal width_100">
+    <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
+        <div class="container_horizontal width_100 gap_10">
+            <div class="container_vertical full">
+                <mat-form-field>
+                    <mat-label>Database:</mat-label>
+                    <input type="text" matInput formControlName="database">
+                </mat-form-field>
+            </div>
+            <div class="container_vertical full">
+                <mat-form-field>
+                    <mat-label>Collection:</mat-label>
+                    <input type="text" matInput formControlName="collection">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="container_horizontal width_100 gap_10">
+            <div class="container_vertical full">
+                <mat-form-field>
+                    <mat-label>Document Id:</mat-label>
+                    <input type="text" matInput formControlName="documentId">
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-form-field>
+            <mat-label>Knowlegde</mat-label>
+            <textarea rows="10" matInput formControlName="text"></textarea>
+        </mat-form-field>
+        <div class="container_horizontal end">
+            <button class="btn" mat-raised-button (click)="indexQA()">
+                Index text
+                <mat-icon class="peque">bookmarks</mat-icon>
+            </button>
+        </div>
+    </form>
+    <form class="container_vertical gap_10 full margin_10" [formGroup]="formLeft">
+        <div class="container_horizontal width_100 gap_10">
+            <div class="container_vertical full">
+                <mat-form-field>
+                    <mat-label>Query:</mat-label>
+                    <input type="text" matInput formControlName="query">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="container_horizontal end">
+            <button class="btn" mat-raised-button (click)="search()">
+                Search
+                <mat-icon class="peque">search</mat-icon>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FlowchartService, HttpService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
+import { FlowchartProcessRequestData, FlowchartService, HttpService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
 
 export interface MilvusCollectionData {
   name: string;
@@ -13,7 +13,12 @@ export interface MilvusDatabaseData {
 @Component({
   selector: 'app-milvus',
   templateUrl: './milvus.component.html',
-  styleUrl: './milvus.component.css'
+  styleUrls: [
+    '../../../../buttons.css',
+    '../../../../containers.css',
+    '../../../../fonts.css',
+    './milvus.component.css'
+  ]
 })
 export class MilvusComponent implements OnInit, OnDestroy {
 
@@ -25,13 +30,9 @@ export class MilvusComponent implements OnInit, OnDestroy {
       json: './flowcharts/milvus/flow01milvus.json',
       path: 'intent',
     },
-    "diarization": {
+    "qa": {
       json: './flowcharts/milvus/flow01milvus.json',
-      path: 'diarization',
-    },
-    "faces": {
-      json: './flowcharts/milvus/flow01milvus.json',
-      path: 'faces',
+      path: 'qa',
     },
   }
 
