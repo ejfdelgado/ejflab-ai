@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS public.knowledge
 (
     id integer NOT NULL DEFAULT nextval('knowledge_knowledge_id_seq'::regclass),
     document_id character varying(36) COLLATE pg_catalog."default" NOT NULL,
-    text_indexed character varying(2048) COLLATE pg_catalog."default" NOT NULL,
-    text_answer character varying(2048) COLLATE pg_catalog."default" NOT NULL,
+    text_indexed TEXT NOT NULL,
+    text_answer TEXT NOT NULL,
 	dense_vector vector(1024),
 	--sparse_vector FLOAT[],
     sparse_vector JSONB,

@@ -39,8 +39,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formRight = this.fb.group({
-      database: ['test', [Validators.required]],
-      collection: ['qa', [Validators.required]],
       documentId: ['default', [Validators.required]],
       text: ['', [Validators.required]],
     });
@@ -54,11 +52,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   }
 
   async indexQA() {
-    const database = this.formRight.get('database');
-    const collection = this.formRight.get('collection');
+
     const text = this.formRight.get('text');
     const documentId = this.formRight.get('documentId');
-    if (!database || !collection || !text || !documentId) {
+    if (!text || !documentId) {
       return;
     }
 
@@ -85,12 +82,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       });
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
-      processorMethod: 'milvusIx.indexqa',
+      processorMethod: 'baai.index',
       room: 'processors',
       namedInputs: {
         knowledge: chunks,
-        database: database.value,
-        collection: collection.value,
       },
       data: {
 
@@ -103,9 +98,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
 
   async search() {
     const query = this.formLeft.get('query');
-    const database = this.formRight.get('database');
-    const collection = this.formRight.get('collection');
-    if (!query || !database || !collection) {
+    if (!query) {
       return;
     }
     // Call the processor
@@ -115,8 +108,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       room: 'processors',
       namedInputs: {
         query: query.value,
-        database: database.value,
-        collection: collection.value,
         kReRank: 5,
       },
       data: {
@@ -144,11 +135,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!confirm) {
       return;
     }
-    const database = this.formRight.get('database');
-    const collection = this.formRight.get('collection');
-    if (!database || !collection) {
-      return;
-    }
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
       processorMethod: 'milvusIx.deleteqa',
@@ -157,8 +143,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
         item: {
           id: `${this.currentMatch.id}`,
         },
-        database: database.value,
-        collection: collection.value,
       },
       data: {
 
@@ -173,11 +157,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!this.currentMatch) {
       return;
     }
-    const database = this.formRight.get('database');
-    const collection = this.formRight.get('collection');
-    if (!database || !collection) {
-      return;
-    }
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
       processorMethod: 'milvusIx.updateqa',
@@ -189,25 +168,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
           text_indexed: this.currentMatch.text_indexed,
           document_id: this.currentMatch.document_id,
         },
-        database: database.value,
-        collection: collection.value,
-      },
-      data: {
-
-      },
-    };
-    const response = await this.flowchartSrv.process(payload, false);
-    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-  }
-
-  async pgtest() {
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'baai.pgtest',
-      room: 'processors',
-      namedInputs: {
-        
       },
       data: {
 
