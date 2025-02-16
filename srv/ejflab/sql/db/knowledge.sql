@@ -34,5 +34,6 @@ ALTER TABLE IF EXISTS public.knowledge
 
 CREATE INDEX knowledge_dense_vector_index ON public.knowledge USING ivfflat (dense_vector vector_l2_ops);
 
+-- Only used on reranking
 --CREATE INDEX knowledge_sparse_vector_index ON public.knowledge USING BRIN (sparse_vector);
-CREATE INDEX knowledge_sparse_vector_index ON public.knowledge USING GIN (sparse_vector);
+--CREATE INDEX knowledge_sparse_vector_index ON public.knowledge USING GIN (sparse_vector);
