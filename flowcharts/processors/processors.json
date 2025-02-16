@@ -26,5 +26,9 @@
     "imageDescription": {
         "postUrl": "http://image_processor:8095",
         "topicUrl": ""
+    },
+    "baai": {
+        "postUrl": "http://baai:8097",
+        "topicUrl": ""
     }
 }

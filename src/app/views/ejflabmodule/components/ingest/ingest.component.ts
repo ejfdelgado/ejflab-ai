@@ -200,4 +200,21 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }
+
+  async pgtest() {
+    const payload: FlowchartProcessRequestData = {
+      channel: 'post',
+      processorMethod: 'baai.pgtest',
+      room: 'processors',
+      namedInputs: {
+        
+      },
+      data: {
+
+      },
+    };
+    const response = await this.flowchartSrv.process(payload, false);
+    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
+    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+  }
 }
