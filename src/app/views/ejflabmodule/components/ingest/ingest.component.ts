@@ -45,6 +45,8 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     });
     this.formLeft = this.fb.group({
       query: ['', [Validators.required]],
+      k: [5, [Validators.required]],
+      maxDistance: [0.6, [Validators.required]],
     });
     this.formBottom = new FormGroup({
       formArrayName: this.fb.array([]),
@@ -99,7 +101,9 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
 
   async search() {
     const query = this.formLeft.get('query');
-    if (!query) {
+    const k = this.formLeft.get('k');
+    const maxDistance = this.formLeft.get('maxDistance');
+    if (!query || !k || !maxDistance) {
       return;
     }
     // Call the processor
@@ -109,7 +113,8 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       room: 'processors',
       namedInputs: {
         query: query.value,
-        kReRank: 5,
+        kReRank: k.value,
+        max_distance: maxDistance.value,
       },
       data: {
 
@@ -151,8 +156,9 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       controlArray.push(control);
       let index = i;
       control.valueChanges.subscribe((value: any) => {
-        console.log(`${index} = ${JSON.stringify(value)}`);
-        //this.currentMatches[index] = value;
+        const { text_indexed, text_answer } = value;
+        this.currentMatches[index].text_indexed = text_indexed;
+        this.currentMatches[index].text_answer = text_answer;
       });
       i++;
     });
@@ -165,7 +171,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     }
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
-      processorMethod: 'milvusIx.deleteqa',
+      processorMethod: 'baai.delete',
       room: 'processors',
       namedInputs: {
         item: {
@@ -177,14 +183,18 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       },
     };
     const response = await this.flowchartSrv.process(payload, false);
-    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+    // TODO verify it was successfully deleted
+    const index = this.currentMatches.indexOf(currentMatch);
+    this.currentMatches.splice(index, 1);
+    this.buildForm();
+    //const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
+    //this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }
 
   async updateEntry(currentMatch: QADataType) {
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
-      processorMethod: 'milvusIx.updateqa',
+      processorMethod: 'baai.update',
       room: 'processors',
       namedInputs: {
         item: {
