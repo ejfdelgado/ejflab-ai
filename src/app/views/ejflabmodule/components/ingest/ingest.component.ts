@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FlowchartProcessRequestData, FlowchartService, IndicatorService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
 
 export interface QADataType {
   id: number;
   distance: number;
+  score_reranked: number;
   document_id: string;
   text_answer: string;
   text_indexed: string;
@@ -25,7 +26,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   formLeft: FormGroup;
   formBottom: FormGroup;
-  currentMatch: QADataType | null = null;
+  currentMatches: QADataType[] = [];
 
   constructor(
     public fb: FormBuilder,
@@ -45,10 +46,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     this.formLeft = this.fb.group({
       query: ['', [Validators.required]],
     });
-    this.formBottom = this.fb.group({
-      text_indexed: ['', [Validators.required]],
-      text_answer: ['', []],
+    this.formBottom = new FormGroup({
+      formArrayName: this.fb.array([]),
     });
+    this.buildForm();
   }
 
   async indexQA() {
@@ -104,7 +105,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     // Call the processor
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
-      processorMethod: 'milvusIx.searchqa',
+      processorMethod: 'baai.search',
       room: 'processors',
       namedInputs: {
         query: query.value,
@@ -115,22 +116,49 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       },
     };
     const response = await this.flowchartSrv.process(payload, false);
-    //const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    //this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-    const rerank = response?.response?.data?.rerank
+    /*
+    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
+    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+    */
+
+    const rerank = response?.response?.data?.rows
     if (rerank) {
-      this.formBottom.get('text_indexed')?.setValue(rerank.text_indexed);
-      this.formBottom.get('text_answer')?.setValue(rerank.text_answer);
-      this.currentMatch = rerank;
+
+      this.currentMatches = rerank;
+      this.buildForm();
+
     } else {
-      this.currentMatch = null;
+      this.currentMatches = [];
     }
   }
 
-  async deleteEntry() {
-    if (!this.currentMatch) {
-      return;
-    }
+  buildForm() {
+    const controlArray = this.formBottom.get('formArrayName') as FormArray;
+    controlArray.clear();
+
+    let i = 0;
+    this.currentMatches.forEach((mytag) => {
+      const control = this.fb.group({
+        text_indexed: new FormControl({
+          value: mytag.text_indexed,
+          disabled: false,
+        }),
+        text_answer: new FormControl({
+          value: mytag.text_answer,
+          disabled: false,
+        }),
+      });
+      controlArray.push(control);
+      let index = i;
+      control.valueChanges.subscribe((value: any) => {
+        console.log(`${index} = ${JSON.stringify(value)}`);
+        //this.currentMatches[index] = value;
+      });
+      i++;
+    });
+  }
+
+  async deleteEntry(currentMatch: QADataType) {
     const confirm = await this.modalSrv.confirm({ title: "Delete", txt: "Can't be undone, sure?" });
     if (!confirm) {
       return;
@@ -141,7 +169,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       room: 'processors',
       namedInputs: {
         item: {
-          id: `${this.currentMatch.id}`,
+          id: `${currentMatch.id}`,
         },
       },
       data: {
@@ -153,20 +181,17 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }
 
-  async updateEntry() {
-    if (!this.currentMatch) {
-      return;
-    }
+  async updateEntry(currentMatch: QADataType) {
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
       processorMethod: 'milvusIx.updateqa',
       room: 'processors',
       namedInputs: {
         item: {
-          id: `${this.currentMatch.id}`,
-          text_answer: this.currentMatch.text_answer,
-          text_indexed: this.currentMatch.text_indexed,
-          document_id: this.currentMatch.document_id,
+          id: `${currentMatch.id}`,
+          text_answer: currentMatch.text_answer,
+          text_indexed: currentMatch.text_indexed,
+          document_id: currentMatch.document_id,
         },
       },
       data: {
