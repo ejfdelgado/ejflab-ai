@@ -55,6 +55,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       return;
     }
     const response = await this.knowledgeSrv.index(text.value, documentId.value);
+    this.lastAction = "index";
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }
@@ -81,7 +82,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   }
 
   async page() {
-    if (this.lastAction == "search") {
+    if (this.lastAction !== "page") {
       this.resetMatches();
     }
     this.paging.offset = this.currentMatches.length;

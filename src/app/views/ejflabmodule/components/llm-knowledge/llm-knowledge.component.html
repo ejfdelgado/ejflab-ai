@@ -1,6 +1,6 @@
 <div class="container_horizontal width_100">
-    <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
-        <div class="container_horizontal width_100 gap_10">
+    <form class="container_vertical gap_5 full margin_10" [formGroup]="formRight">
+        <div class="container_horizontal width_100 gap_5">
             <div class="container_vertical full">
                 <mat-form-field>
                     <mat-label>System prompt:</mat-label>
@@ -23,6 +23,14 @@
                 <mat-form-field>
                     <mat-label>Max Distance:</mat-label>
                     <input type="number" matInput formControlName="maxDistance">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="container_horizontal width_100 gap_10">
+            <div class="container_vertical full">
+                <mat-form-field>
+                    <mat-label>Query prompt:</mat-label>
+                    <input type="text" matInput formControlName="queryPrompt">
                 </mat-form-field>
             </div>
         </div>

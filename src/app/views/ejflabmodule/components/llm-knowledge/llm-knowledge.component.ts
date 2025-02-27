@@ -4,6 +4,7 @@ import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { KnowledgeService } from '../../services/knowledge.service';
+import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 
 export interface ChatGPT4AllSessionData {
   role: string;
@@ -29,6 +30,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
+  renderer = new MyTemplate();
 
   constructor(
     public fb: FormBuilder,
@@ -48,6 +50,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.formRight = this.fb.group({
       text: ['', [Validators.required]],
       systemPrompt: ['Eres un asistente en español', [Validators.required]],
+      queryPrompt: ['Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"', [Validators.required]],
       maxTokens: [1024, [Validators.required]],
       k: [5, [Validators.required]],
       maxDistance: [0.6, [Validators.required]],
@@ -60,10 +63,11 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     }
     const field = this.formRight.get('text');
     const systemPrompt = this.formRight.get('systemPrompt');
+    const queryPrompt = this.formRight.get('queryPrompt');
     const maxTokens = this.formRight.get('maxTokens');
     const k = this.formRight.get('k');
     const maxDistance = this.formRight.get('maxDistance');
-    if (!field || !systemPrompt || !maxTokens || !k || !maxDistance) {
+    if (!field || !systemPrompt || !maxTokens || !k || !maxDistance || !queryPrompt) {
       return;
     }
     let text = field.value;
@@ -84,7 +88,11 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
           return data.text_indexed
         }
       }).join('"\n\n y \n\n"');
-      text = `Responde la pregunta: \n\n "${text}" \n\n teniendo en cuenta principalmente que: \n\n "${allKnowledge}"`;
+      text = this.renderer.render(queryPrompt.value, {
+        text: text,
+        knowledge: allKnowledge,
+      });
+      console.log(text);
     }
 
     const payload: FlowchartProcessRequestData = {
