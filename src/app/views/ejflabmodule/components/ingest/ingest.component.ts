@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { FlowchartProcessRequestData, FlowchartService, IndicatorService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
+import { IndicatorService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
+import { KnowledgeService } from '../../services/knowledge.service';
 
 export interface QADataType {
   id: number;
@@ -10,6 +11,8 @@ export interface QADataType {
   document_id: string;
   text_answer: string;
   text_indexed: string;
+  created?: number;
+  updated?: number;
 }
 
 @Component({
@@ -32,7 +35,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     public fb: FormBuilder,
     public modalSrv: ModalService,
     private indicatorSrv: IndicatorService,
-    public flowchartSrv: FlowchartService,
+    public knowledgeSrv: KnowledgeService,
     public jsonColorPipe: JsonColorPipe,
   ) {
     super();
@@ -55,46 +58,12 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   }
 
   async indexQA() {
-
     const text = this.formRight.get('text');
     const documentId = this.formRight.get('documentId');
     if (!text || !documentId) {
       return;
     }
-
-    // Split text into... ==, then with => if it exists
-    const chunksTokens = text.value.split(/[\n\r]/g);
-    const chunks = chunksTokens
-      .map((line: string) => { return line.trim(); })
-      .filter((line: string) => {
-        // Remove any empty line
-        return line.length > 0;
-      })
-      .map((line: string) => {
-        // Check if should be Query Answer or only Knowledge
-        const tokens = line.split(/=>/g);
-        const response: any = {
-          document_id: documentId.value,
-          text_answer: '',
-        };
-        response.text_indexed = tokens[0];
-        if (tokens.length > 1) {
-          response.text_answer = tokens[1];
-        }
-        return response;
-      });
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'baai.index',
-      room: 'processors',
-      namedInputs: {
-        knowledge: chunks,
-      },
-      data: {
-
-      },
-    };
-    const response = await this.flowchartSrv.process(payload, false);
+    const response = await this.knowledgeSrv.index(text.value, documentId.value);
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }
@@ -106,32 +75,11 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!query || !k || !maxDistance) {
       return;
     }
-    // Call the processor
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'baai.search',
-      room: 'processors',
-      namedInputs: {
-        query: query.value,
-        kReRank: k.value,
-        max_distance: maxDistance.value,
-      },
-      data: {
-
-      },
-    };
-    const response = await this.flowchartSrv.process(payload, false);
-    /*
-    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-    */
-
+    const response = await this.knowledgeSrv.search(query.value, k.value, maxDistance.value);
     const rerank = response?.response?.data?.rows
     if (rerank) {
-
       this.currentMatches = rerank;
       this.buildForm();
-
     } else {
       this.currentMatches = [];
     }
@@ -169,46 +117,18 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!confirm) {
       return;
     }
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'baai.delete',
-      room: 'processors',
-      namedInputs: {
-        item: {
-          id: `${currentMatch.id}`,
-        },
-      },
-      data: {
-
-      },
-    };
-    const response = await this.flowchartSrv.process(payload, false);
-    // TODO verify it was successfully deleted
-    const index = this.currentMatches.indexOf(currentMatch);
-    this.currentMatches.splice(index, 1);
-    this.buildForm();
-    //const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    //this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+    const deleted = await this.knowledgeSrv.delete(currentMatch);
+    if (deleted) {
+      const index = this.currentMatches.indexOf(currentMatch);
+      this.currentMatches.splice(index, 1);
+      this.buildForm();
+    } else {
+      this.modalSrv.alert({ title: "Ups!", txt: "Entry was not deleted." });
+    }
   }
 
   async updateEntry(currentMatch: QADataType) {
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'baai.update',
-      room: 'processors',
-      namedInputs: {
-        item: {
-          id: `${currentMatch.id}`,
-          text_answer: currentMatch.text_answer,
-          text_indexed: currentMatch.text_indexed,
-          document_id: currentMatch.document_id,
-        },
-      },
-      data: {
-
-      },
-    };
-    const response = await this.flowchartSrv.process(payload, false);
+    const response = await this.knowledgeSrv.update(currentMatch);
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
   }

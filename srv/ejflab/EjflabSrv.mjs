@@ -16,5 +16,6 @@ const upload = multer.default({
 export class EjflabSrv {
   static configure(app) {
     app.get("/srv/rac/index", [commonHeaders, handleErrorsDecorator(RACServices.index),]);
+    app.get("/srv/rac/page", [commonHeaders, handleErrorsDecorator(RACServices.page),]);
   }
 }

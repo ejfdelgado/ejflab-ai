@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS public.knowledge
 	dense_vector vector(1024),
 	--sparse_vector FLOAT[],
     sparse_vector JSONB,
+    created bigint NOT NULL,
+    updated bigint NOT NULL,
     CONSTRAINT knowledge_pkey PRIMARY KEY (id)
 )
 

@@ -51,11 +51,19 @@
         <form class="container_vertical gap_10 margin_10" [formGroup]="formBottom">
             <div class="container_vertical" [formArrayName]="'formArrayName'">
                 <div class="container_vertical" *ngFor="let currentMatch of currentMatches; index as i;">
-                    <div class="container_vertical" [formGroupName]="i">
-                        <label>Id: {{ currentMatch.id }}</label>
-                        <label>Distance: {{ currentMatch.distance }}</label>
-                        <label>Score reranked: {{ currentMatch.score_reranked }}</label>
-                        <label>Document Id: {{ currentMatch.document_id }}</label>
+                    <div class="container_vertical knowledge_properties" [formGroupName]="i">
+                        <div class="container_horizontal">
+                            <label class="full">Id: <strong>{{ currentMatch.id }}</strong></label>
+                            <label class="full">Document Id: <strong>{{ currentMatch.document_id }}</strong></label>
+                        </div>
+                        <div class="container_horizontal">
+                            <label class="full">Distance: <strong>{{ currentMatch.distance }}</strong></label>
+                            <label class="full">Score reranked: <strong>{{ currentMatch.score_reranked }}</strong></label>
+                        </div>
+                        <div class="container_horizontal">
+                            <label class="full">Created: <strong>{{ currentMatch.created | epoch2date:'mmm d yyyy hh:MM:ss TT' }}</strong></label>
+                            <label class="full">Updated: <strong>{{ currentMatch.updated | epoch2date:'mmm d yyyy hh:MM:ss TT' }}</strong></label>
+                        </div>
                         <mat-form-field>
                             <mat-label>Indexed text:</mat-label>
                             <input type="text" matInput formControlName="text_indexed">
