@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IndicatorService, JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
 import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 
@@ -17,7 +17,6 @@ import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 export class IngestComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   formLeft: FormGroup;
-  formBottom: FormGroup;
   currentMatches: QADataType[] = [];
   lastAction: string = "";
   paging: PagingData = {
@@ -47,37 +46,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       k: [5, [Validators.required]],
       maxDistance: [0.6, [Validators.required]],
     });
-    this.formBottom = new FormGroup({
-      formArrayName: this.fb.array([]),
-    });
-    this.buildForm();
-  }
-
-  buildForm() {
-    const controlArray = this.formBottom.get('formArrayName') as FormArray;
-    controlArray.clear();
-
-    let i = 0;
-    this.currentMatches.forEach((mytag) => {
-      const control = this.fb.group({
-        text_indexed: new FormControl({
-          value: mytag.text_indexed,
-          disabled: false,
-        }),
-        text_answer: new FormControl({
-          value: mytag.text_answer,
-          disabled: false,
-        }),
-      });
-      controlArray.push(control);
-      let index = i;
-      control.valueChanges.subscribe((value: any) => {
-        const { text_indexed, text_answer } = value;
-        this.currentMatches[index].text_indexed = text_indexed;
-        this.currentMatches[index].text_answer = text_answer;
-      });
-      i++;
-    });
   }
 
   async indexQA() {
@@ -104,7 +72,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     } else {
       this.resetMatches();
     }
-    this.buildForm();
     this.lastAction = "search";
   }
 
@@ -120,30 +87,11 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     this.paging.offset = this.currentMatches.length;
     const parts = await this.knowledgeSrv.page(this.paging);
     if (parts.length > 0) {
-      this.currentMatches.push(...parts);
+      const temp = [];
+      temp.push(...this.currentMatches);
+      temp.push(...parts);
+      this.currentMatches = temp;
       this.lastAction = "page";
-      this.buildForm();
-    }
-  }
-
-  async updateEntry(currentMatch: QADataType) {
-    const response = await this.knowledgeSrv.update(currentMatch);
-    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-  }
-
-  async deleteEntry(currentMatch: QADataType) {
-    const confirm = await this.modalSrv.confirm({ title: "Delete", txt: "Can't be undone, sure?" });
-    if (!confirm) {
-      return;
-    }
-    const deleted = await this.knowledgeSrv.delete(currentMatch);
-    if (deleted) {
-      const index = this.currentMatches.indexOf(currentMatch);
-      this.currentMatches.splice(index, 1);
-      this.buildForm();
-    } else {
-      this.modalSrv.alert({ title: "Ups!", txt: "Entry was not deleted." });
     }
   }
 }

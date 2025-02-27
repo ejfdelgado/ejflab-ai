@@ -83,9 +83,8 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         } else {
           return data.text_indexed
         }
-      }).join("\n\n");
-      text = `Responde la pregunta: \n\n ${text} \n\n teniendo en cuenta principalmente que: \n\n ${allKnowledge}`;
-      console.log(text);
+      }).join('"\n\n y \n\n"');
+      text = `Responde la pregunta: \n\n "${text}" \n\n teniendo en cuenta principalmente que: \n\n "${allKnowledge}"`;
     }
 
     const payload: FlowchartProcessRequestData = {

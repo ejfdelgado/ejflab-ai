@@ -122,7 +122,7 @@ export class KnowledgeService {
             },
         };
         const response = await this.flowchartSrv.process(payload, false);
-        if (response?.data?.deleted === true) {
+        if (response?.response?.data?.deleted === true) {
             return true;
         }
         return false;

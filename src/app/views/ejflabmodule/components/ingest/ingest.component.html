@@ -42,53 +42,16 @@
                 </div>
             </div>
             <div class="container_horizontal end">
-                <button class="btn" mat-raised-button (click)="page()">
-                    Page
-                    <mat-icon class="peque">library_books</mat-icon>
-                </button>
                 <button class="btn" mat-raised-button (click)="search()">
                     Search
                     <mat-icon class="peque">search</mat-icon>
                 </button>
+                <button class="btn" mat-raised-button (click)="page()">
+                    Page
+                    <mat-icon class="peque">library_books</mat-icon>
+                </button>
             </div>
         </form>
-        <form class="container_vertical gap_10 margin_10" [formGroup]="formBottom">
-            <div class="container_vertical" [formArrayName]="'formArrayName'">
-                <div class="container_vertical" *ngFor="let currentMatch of currentMatches; index as i;">
-                    <div class="container_vertical knowledge_properties" [formGroupName]="i">
-                        <div class="container_horizontal">
-                            <label class="full">Id: <strong>{{ currentMatch.id }}</strong></label>
-                            <label class="full">Document Id: <strong>{{ currentMatch.document_id }}</strong></label>
-                        </div>
-                        <div class="container_horizontal">
-                            <label class="full">Distance: <strong>{{ currentMatch.distance }}</strong></label>
-                            <label class="full">Score reranked: <strong>{{ currentMatch.score_reranked }}</strong></label>
-                        </div>
-                        <div class="container_horizontal">
-                            <label class="full">Created: <strong>{{ currentMatch.created | epoch2date:'mmm d yyyy hh:MM:ss TT' }}</strong></label>
-                            <label class="full">Updated: <strong>{{ currentMatch.updated | epoch2date:'mmm d yyyy hh:MM:ss TT' }}</strong></label>
-                        </div>
-                        <mat-form-field>
-                            <mat-label>Indexed text:</mat-label>
-                            <input type="text" matInput formControlName="text_indexed">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Answer text:</mat-label>
-                            <input type="text" matInput formControlName="text_answer">
-                        </mat-form-field>
-                        <div class="container_horizontal end">
-                            <button class="btn" mat-raised-button (click)="deleteEntry(currentMatch)">
-                                Delete
-                                <mat-icon class="peque">delete_forever</mat-icon>
-                            </button>
-                            <button class="btn" mat-raised-button (click)="updateEntry(currentMatch)">
-                                Update
-                                <mat-icon class="peque">save</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+        <app-knowledge-list [(currentMatches)]="currentMatches"></app-knowledge-list>
     </div>
 </div>

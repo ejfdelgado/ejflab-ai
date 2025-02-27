@@ -20,6 +20,7 @@ import { LlmComponent } from './components/llm/llm.component';
 import { MilvusComponent } from './components/milvus/milvus.component';
 import { IngestComponent } from './components/ingest/ingest.component';
 import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.component';
+import { KnowledgeListComponent } from './components/knowledge-list/knowledge-list.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.
     LlmComponent,
     MilvusComponent,
     IngestComponent,
-    LlmKnowledgeComponent
+    LlmKnowledgeComponent,
+    KnowledgeListComponent
   ],
   imports: [
     CommonModule,

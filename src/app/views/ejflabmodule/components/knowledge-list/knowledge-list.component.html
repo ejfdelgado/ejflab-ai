@@ -1,0 +1,40 @@
+<form class="container_vertical gap_10 margin_10" [formGroup]="formBottom">
+    <div class="container_vertical" [formArrayName]="'formArrayName'">
+        <div class="container_vertical" *ngFor="let currentMatch of currentMatches; index as i;">
+            <div class="container_vertical knowledge_properties" [formGroupName]="i">
+                <div class="container_horizontal">
+                    <label class="full">Id: <strong>{{ currentMatch.id }}</strong></label>
+                    <label class="full">Document Id: <strong>{{ currentMatch.document_id }}</strong></label>
+                </div>
+                <div class="container_horizontal">
+                    <label class="full">Distance: <strong>{{ currentMatch.distance }}</strong></label>
+                    <label class="full">Score reranked: <strong>{{ currentMatch.score_reranked }}</strong></label>
+                </div>
+                <div class="container_horizontal">
+                    <label class="full">Created: <strong>{{ currentMatch.created | epoch2date:'mmm d yyyy hh:MM:ss TT'
+                            }}</strong></label>
+                    <label class="full">Updated: <strong>{{ currentMatch.updated | epoch2date:'mmm d yyyy hh:MM:ss TT'
+                            }}</strong></label>
+                </div>
+                <mat-form-field>
+                    <mat-label>Indexed text:</mat-label>
+                    <textarea rows="1" matInput formControlName="text_indexed"></textarea>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Answer text:</mat-label>
+                    <textarea rows="1" matInput formControlName="text_answer"></textarea>
+                </mat-form-field>
+                <div class="container_horizontal end">
+                    <button class="btn" mat-raised-button (click)="deleteEntryFun(currentMatch)">
+                        Delete
+                        <mat-icon class="peque">delete_forever</mat-icon>
+                    </button>
+                    <button class="btn" mat-raised-button (click)="updateEntryFun(currentMatch)">
+                        Update
+                        <mat-icon class="peque">save</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
