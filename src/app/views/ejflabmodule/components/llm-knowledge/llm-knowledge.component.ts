@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
-import { KnowledgeService } from '../../services/knowledge.service';
+import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 
 export interface ChatGPT4AllSessionData {
@@ -14,6 +14,7 @@ export interface ChatGPT4AllSessionData {
 export interface AnswerData {
   txt: SafeHtml;
   detail: SafeHtml;
+  knowledge: QADataType[]
 }
 
 @Component({
@@ -48,7 +49,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
 
   ngOnInit(): void {
     this.formRight = this.fb.group({
-      text: ['', [Validators.required]],
+      text: ['', []],
       systemPrompt: ['Eres un asistente en español', [Validators.required]],
       queryPrompt: ['Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"', [Validators.required]],
       maxTokens: [1024, [Validators.required]],
@@ -87,12 +88,11 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         } else {
           return data.text_indexed
         }
-      }).join('"\n\n y \n\n"');
+      }).join('" y "');
       text = this.renderer.render(queryPrompt.value, {
         text: text,
         knowledge: allKnowledge,
       });
-      console.log(text);
     }
 
     const payload: FlowchartProcessRequestData = {
@@ -113,9 +113,10 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.tic();
 
     const gpt4allSession = this.gpt4allSession;
-    const currentAnswer = {
+    const currentAnswer: AnswerData = {
       txt: text,
       detail: "",
+      knowledge: knowledge ? knowledge : [],
     };
     this.answers.unshift(currentAnswer);
     field.setValue("");
@@ -146,7 +147,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
               });
               gpt4allSession.push({
                 role: "assistant",
-                content: currentAnswer.detail,
+                content: currentAnswer.detail.toString(),
               });
               return;
             }
