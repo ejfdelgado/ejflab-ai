@@ -98,8 +98,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!query || !k || !maxDistance) {
       return;
     }
-    const response = await this.knowledgeSrv.search(query.value, k.value, maxDistance.value);
-    const rerank = response?.response?.data?.rows
+    const rerank = await this.knowledgeSrv.search(query.value, k.value, maxDistance.value);
     if (rerank) {
       this.currentMatches = rerank;
     } else {

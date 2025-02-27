@@ -45,7 +45,7 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
     const VIEW_OPTIONS = [
       { pathname: 'llm', label: 'LLM', icon: 'psychology' },
       { pathname: 'llm_knowledge', label: 'LLM + Knowledge', icon: 'psychology' },
-      { pathname: 'milvus', label: 'Milvus database admin', icon: 'menu_book' },
+      //{ pathname: 'milvus', label: 'Milvus database admin', icon: 'menu_book' },
       { pathname: 'ingest', label: 'Postgresql Ingest', icon: 'save' },
     ];
     for (let i = 0; i < VIEW_OPTIONS.length; i++) {

@@ -73,9 +73,20 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     const activity = this.indicatorSrv.start();
 
     // First fetch knowledge
-    const response = await this.knowledgeSrv.search(text, k.value, maxDistance.value);
+    const knowledge = await this.knowledgeSrv.search(text, k.value, maxDistance.value);
 
-    // Then build prompt
+    if (knowledge && knowledge.length > 0) {
+      // Then build prompt
+      const allKnowledge = knowledge.map((data) => {
+        if (data.text_answer) {
+          return data.text_answer;
+        } else {
+          return data.text_indexed
+        }
+      }).join("\n\n");
+      text = `Responde la pregunta: \n\n ${text} \n\n teniendo en cuenta principalmente que: \n\n ${allKnowledge}`;
+      console.log(text);
+    }
 
     const payload: FlowchartProcessRequestData = {
       channel: 'post',

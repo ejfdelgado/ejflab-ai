@@ -59,12 +59,12 @@ export class KnowledgeService {
         return response;
     }
 
-    async page(paging: PagingData): Promise<any> {
+    async page(paging: PagingData): Promise<QADataType[]> {
         const queryString = new URLSearchParams(paging as any).toString();
-        return await this.httpSrv.get(`srv/rac/page?${queryString}`);
+        return (await this.httpSrv.get(`srv/rac/page?${queryString}`)) as QADataType[];
     }
 
-    async search(query: string, k: number, maxDistance: number) {
+    async search(query: string, k: number, maxDistance: number): Promise<QADataType[] | null> {
         // Call the processor
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
@@ -80,7 +80,10 @@ export class KnowledgeService {
             },
         };
         const response = await this.flowchartSrv.process(payload, false);
-        return response;
+        if (response?.response?.data?.rows instanceof Array) {
+            return response?.response?.data?.rows;
+        }
+        return null;
     }
 
     async update(currentMatch: QADataType) {
