@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
 import { FlowchartProcessRequestData, FlowchartService, HttpService, PagingData } from 'ejflab-front-lib';
-import { QADataType } from '../components/ingest/ingest.component';
+
+export interface QADataType {
+    id: number;
+    distance: number;
+    score_reranked: number;
+    document_id: string;
+    text_answer: string;
+    text_indexed: string;
+    created?: number;
+    updated?: number;
+}
 
 @Injectable({
     providedIn: 'root'
