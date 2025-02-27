@@ -25,11 +25,11 @@
                     <textarea rows="1" matInput formControlName="text_answer"></textarea>
                 </mat-form-field>
                 <div class="container_horizontal end">
-                    <button class="btn" mat-raised-button (click)="deleteEntryFun(currentMatch)">
+                    <button class="btn" (click)="deleteEntryFun(currentMatch)">
                         Delete
                         <mat-icon class="peque">delete_forever</mat-icon>
                     </button>
-                    <button class="btn" mat-raised-button (click)="updateEntryFun(currentMatch)">
+                    <button class="btn" (click)="updateEntryFun(currentMatch)">
                         Update
                         <mat-icon class="peque">save</mat-icon>
                     </button>

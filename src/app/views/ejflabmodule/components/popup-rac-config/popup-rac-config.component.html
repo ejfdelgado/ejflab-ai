@@ -1,0 +1,47 @@
+<div mat-dialog-title>
+    <header>
+        <mat-icon class="peque">settings</mat-icon>
+        <span>Configuration</span>
+        <mat-icon class="peque manito" (click)="cancel()">close</mat-icon>
+    </header>
+</div>
+<mat-dialog-content class="mat-typography container_popup">
+    <form class="form-container layout_columna border_bottom" [formGroup]="formRight">
+        <div class="container_horizontal width_100">
+            <div class="container_vertical full">
+                <div class="container_horizontal full">
+                    <mat-form-field>
+                        <mat-label>Max tokens:</mat-label>
+                        <input type="number" matInput formControlName="maxTokens">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Top:</mat-label>
+                        <input type="number" matInput formControlName="k">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Max Distance:</mat-label>
+                        <input type="number" matInput formControlName="maxDistance">
+                    </mat-form-field>
+                </div>
+                <mat-form-field>
+                    <mat-label>System prompt:</mat-label>
+                    <input type="text" matInput formControlName="systemPrompt">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Query prompt:</mat-label>
+                    <input type="text" matInput formControlName="queryPrompt">
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<div class="bottom_buttons">
+    <button class="btn btn-secondary" (click)="cancel()" type="button">
+        <mat-icon>close</mat-icon>
+        Cancel
+    </button>
+    <button class="btn btn-primary" (click)="accept()">
+        <mat-icon>send</mat-icon>
+        Accept
+    </button>
+</div>

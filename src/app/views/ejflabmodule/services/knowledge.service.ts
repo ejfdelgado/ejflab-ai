@@ -24,7 +24,7 @@ export class KnowledgeService {
     async index(text: string, documentId: string) {
 
         // Split text into... ==, then with => if it exists
-        const chunksTokens = text.split(/[\n\r]/g);
+        const chunksTokens = text.trim().split(/[\n\r]/g);
         const chunks = chunksTokens
             .map((line: string) => { return line.trim(); })
             .filter((line: string) => {
@@ -44,6 +44,9 @@ export class KnowledgeService {
                 }
                 return response;
             });
+        if (chunks.length == 0) {
+            return null;
+        }
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
             processorMethod: 'baai.index',

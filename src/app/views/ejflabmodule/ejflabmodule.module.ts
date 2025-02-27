@@ -21,6 +21,7 @@ import { MilvusComponent } from './components/milvus/milvus.component';
 import { IngestComponent } from './components/ingest/ingest.component';
 import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.component';
 import { KnowledgeListComponent } from './components/knowledge-list/knowledge-list.component';
+import { PopupRacConfigComponent } from './components/popup-rac-config/popup-rac-config.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { KnowledgeListComponent } from './components/knowledge-list/knowledge-li
     MilvusComponent,
     IngestComponent,
     LlmKnowledgeComponent,
-    KnowledgeListComponent
+    KnowledgeListComponent,
+    PopupRacConfigComponent
   ],
   imports: [
     CommonModule,

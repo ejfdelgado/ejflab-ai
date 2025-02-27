@@ -39,10 +39,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   ngOnInit(): void {
     this.formRight = this.fb.group({
       documentId: ['default', [Validators.required]],
-      text: ['', [Validators.required]],
+      text: ['', []],
     });
     this.formLeft = this.fb.group({
-      query: ['', [Validators.required]],
+      query: ['', []],
       k: [5, [Validators.required]],
       maxDistance: [0.6, [Validators.required]],
     });

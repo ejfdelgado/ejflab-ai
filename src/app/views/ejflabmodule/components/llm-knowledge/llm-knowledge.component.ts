@@ -5,6 +5,8 @@ import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejf
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupRacConfigComponent, RacConfigData } from '../popup-rac-config/popup-rac-config.component';
 
 export interface ChatGPT4AllSessionData {
   role: string;
@@ -32,12 +34,20 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
   renderer = new MyTemplate();
+  config: RacConfigData = {
+    systemPrompt: 'Eres un asistente en español',
+    queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
+    maxTokens: 1024,
+    k: 5,
+    maxDistance: 0.6,
+  };
 
   constructor(
     public fb: FormBuilder,
     public modalSrv: ModalService,
     private indicatorSrv: IndicatorService,
     public knowledgeSrv: KnowledgeService,
+    public dialog: MatDialog,
   ) {
     super();
   }
@@ -80,6 +90,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     // First fetch knowledge
     const knowledge = await this.knowledgeSrv.search(text, k.value, maxDistance.value);
 
+    let modifiedText = text;
     if (knowledge && knowledge.length > 0) {
       // Then build prompt
       const allKnowledge = knowledge.map((data) => {
@@ -89,7 +100,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
           return data.text_indexed
         }
       }).join('" y "');
-      text = this.renderer.render(queryPrompt.value, {
+      modifiedText = this.renderer.render(queryPrompt.value, {
         text: text,
         knowledge: allKnowledge,
       });
@@ -101,7 +112,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       room: 'processors',
       namedInputs: {
         session: this.gpt4allSession,
-        message: text,
+        message: modifiedText,
       },
       data: {
         maxTokens: maxTokens.value,
@@ -162,5 +173,23 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         this.modalSrv.error(error);
         activity.done();
       });
+  }
+
+  async openConfiguration() {
+    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
+      data: {
+        data: this.config
+      },
+      //disableClose: true,
+      panelClass: ['popup_1', 'nogalespopup'],
+    });
+    if (dialogRef) {
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        if (result) {
+          this.config = result;
+        }
+      });
+    }
   }
 }
