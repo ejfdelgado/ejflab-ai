@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IndicatorService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
+import { IndicatorService, JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
 import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 
 @Component({
@@ -19,6 +19,13 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   formLeft: FormGroup;
   formBottom: FormGroup;
   currentMatches: QADataType[] = [];
+  lastAction: string = "";
+  paging: PagingData = {
+    limit: 10,
+    offset: 0,
+    direction: "DESC",
+    orderColumn: "created"
+  };
 
   constructor(
     public fb: FormBuilder,
@@ -95,9 +102,28 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     const rerank = response?.response?.data?.rows
     if (rerank) {
       this.currentMatches = rerank;
-      this.buildForm();
     } else {
-      this.currentMatches = [];
+      this.resetMatches();
+    }
+    this.buildForm();
+    this.lastAction = "search";
+  }
+
+  resetMatches() {
+    this.currentMatches = [];
+    this.paging.offset = 0;
+  }
+
+  async page() {
+    if (this.lastAction == "search") {
+      this.resetMatches();
+    }
+    this.paging.offset = this.currentMatches.length;
+    const parts = await this.knowledgeSrv.page(this.paging);
+    if (parts.length > 0) {
+      this.currentMatches.push(...parts);
+      this.lastAction = "page";
+      this.buildForm();
     }
   }
 

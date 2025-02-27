@@ -3,9 +3,9 @@ import { FlowchartProcessRequestData, FlowchartService, HttpService, PagingData 
 
 export interface QADataType {
     id: number;
-    distance: number;
-    score_reranked: number;
     document_id: string;
+    distance?: number;
+    score_reranked?: number;
     text_answer: string;
     text_indexed: string;
     created?: number;
