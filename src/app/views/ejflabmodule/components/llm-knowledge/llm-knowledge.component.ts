@@ -38,7 +38,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     systemPrompt: 'Eres un asistente en español',
     queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
     maxTokens: 1024,
-    k: 5,
+    k: 2,
     maxDistance: 0.6,
   };
 
