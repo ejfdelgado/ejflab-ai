@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
+import { KnowledgeService } from '../../services/knowledge.service';
 
 export interface ChatGPT4AllSessionData {
   role: string;
@@ -33,6 +34,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     public fb: FormBuilder,
     public modalSrv: ModalService,
     private indicatorSrv: IndicatorService,
+    public knowledgeSrv: KnowledgeService,
   ) {
     super();
   }
@@ -47,6 +49,8 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       text: ['', [Validators.required]],
       systemPrompt: ['Eres un asistente en español', [Validators.required]],
       maxTokens: [1024, [Validators.required]],
+      k: [5, [Validators.required]],
+      maxDistance: [0.6, [Validators.required]],
     });
   }
 
@@ -57,7 +61,9 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     const field = this.formRight.get('text');
     const systemPrompt = this.formRight.get('systemPrompt');
     const maxTokens = this.formRight.get('maxTokens');
-    if (!field || !systemPrompt || !maxTokens) {
+    const k = this.formRight.get('k');
+    const maxDistance = this.formRight.get('maxDistance');
+    if (!field || !systemPrompt || !maxTokens || !k || !maxDistance) {
       return;
     }
     let text = field.value;
@@ -65,6 +71,12 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       return;
     }
     const activity = this.indicatorSrv.start();
+
+    // First fetch knowledge
+    const response = await this.knowledgeSrv.search(text, k.value, maxDistance.value);
+
+    // Then build prompt
+
     const payload: FlowchartProcessRequestData = {
       channel: 'post',
       processorMethod: 'llm.chat',
