@@ -30,5 +30,9 @@
     "baai": {
         "postUrl": "http://baai:8097",
         "topicUrl": ""
+    },
+    "chunker": {
+        "postUrl": "http://chunker:8098",
+        "topicUrl": ""
     }
 }

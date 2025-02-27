@@ -39,6 +39,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   ngOnInit(): void {
     this.formRight = this.fb.group({
       documentId: ['default', [Validators.required]],
+      chunkSize: [100, [Validators.required]],
       text: ['', []],
     });
     this.formLeft = this.fb.group({
@@ -93,6 +94,26 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       temp.push(...parts);
       this.currentMatches = temp;
       this.lastAction = "page";
+    }
+  }
+
+  async splitText() {
+    const text = this.formRight.get('text');
+    const chunkSize = this.formRight.get('chunkSize');
+    const documentId = this.formRight.get('documentId');
+
+    if (!text || !documentId || !chunkSize) {
+      return;
+    }
+    const response = await this.knowledgeSrv.chunk(text.value, chunkSize.value);
+    const chunkList = response?.response?.data?.chunks;
+    if (chunkList) {
+      //const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
+      //this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+      const replacementText = chunkList
+        .map((line: string) => { return line.replace(/[\n\r]/g, " ") })
+        .join('\n\n');
+      text.setValue(replacementText);
     }
   }
 }

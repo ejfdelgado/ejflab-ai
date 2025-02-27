@@ -130,4 +130,20 @@ export class KnowledgeService {
         }
         return false;
     }
+
+    async chunk(text: string, chunkSize: number) {
+        const payload: FlowchartProcessRequestData = {
+            channel: 'post',
+            processorMethod: 'chunker.split',
+            room: 'processors',
+            namedInputs: {
+                text: text
+            },
+            data: {
+                chunkSize
+            },
+        };
+        const response = await this.flowchartSrv.process(payload, false);
+        return response;
+    }
 }
