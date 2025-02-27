@@ -45,7 +45,7 @@ export class PopupRacConfigComponent {
     this.formRight = this.fb.group({
       systemPrompt: [this.data.systemPrompt, [Validators.required]],
       queryPrompt: [this.data.queryPrompt, [Validators.required]],
-      maxTokens: [this.data.maxDistance, [Validators.required]],
+      maxTokens: [this.data.maxTokens, [Validators.required]],
       k: [this.data.k, [Validators.required]],
       maxDistance: [this.data.maxDistance, [Validators.required]],
     });
