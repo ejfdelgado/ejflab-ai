@@ -19,6 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LlmComponent } from './components/llm/llm.component';
 import { MilvusComponent } from './components/milvus/milvus.component';
 import { IngestComponent } from './components/ingest/ingest.component';
+import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { IngestComponent } from './components/ingest/ingest.component';
     EjflabmoduleComponent,
     LlmComponent,
     MilvusComponent,
-    IngestComponent
+    IngestComponent,
+    LlmKnowledgeComponent
   ],
   imports: [
     CommonModule,

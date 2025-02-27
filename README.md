@@ -15,7 +15,7 @@ ng generate component views/ejflabmodule/views/my-view --standalone false --skip
 ## Add new component
 
 ```
-ng generate component views/ejflabmodule/components/llm --standalone false  --skip-tests
+ng generate component views/ejflabmodule/components/llm-knowledge --standalone false  --skip-tests
 ```
 
 ```
