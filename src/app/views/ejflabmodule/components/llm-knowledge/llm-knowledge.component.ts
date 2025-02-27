@@ -60,11 +60,6 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   ngOnInit(): void {
     this.formRight = this.fb.group({
       text: ['', []],
-      systemPrompt: ['Eres un asistente en español', [Validators.required]],
-      queryPrompt: ['Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"', [Validators.required]],
-      maxTokens: [1024, [Validators.required]],
-      k: [5, [Validators.required]],
-      maxDistance: [0.6, [Validators.required]],
     });
   }
 
@@ -73,12 +68,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       return;
     }
     const field = this.formRight.get('text');
-    const systemPrompt = this.formRight.get('systemPrompt');
-    const queryPrompt = this.formRight.get('queryPrompt');
-    const maxTokens = this.formRight.get('maxTokens');
-    const k = this.formRight.get('k');
-    const maxDistance = this.formRight.get('maxDistance');
-    if (!field || !systemPrompt || !maxTokens || !k || !maxDistance || !queryPrompt) {
+    if (!field) {
       return;
     }
     let text = field.value;
@@ -88,7 +78,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     const activity = this.indicatorSrv.start();
 
     // First fetch knowledge
-    const knowledge = await this.knowledgeSrv.search(text, k.value, maxDistance.value);
+    const knowledge = await this.knowledgeSrv.search(text, this.config.k, this.config.maxDistance);
 
     let modifiedText = text;
     if (knowledge && knowledge.length > 0) {
@@ -100,7 +90,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
           return data.text_indexed
         }
       }).join('" y "');
-      modifiedText = this.renderer.render(queryPrompt.value, {
+      modifiedText = this.renderer.render(this.config.queryPrompt, {
         text: text,
         knowledge: allKnowledge,
       });
@@ -115,8 +105,8 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         message: modifiedText,
       },
       data: {
-        maxTokens: maxTokens.value,
-        systemMessage: systemPrompt.value,
+        maxTokens: this.config.maxTokens,
+        systemMessage: this.config.systemPrompt,
         chatTemplate: "### Human:\n{0}\n\n### Assistant:\n",
         streaming: true,
       },
@@ -185,7 +175,6 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     });
     if (dialogRef) {
       dialogRef.afterClosed().subscribe((result) => {
-        console.log(result);
         if (result) {
           this.config = result;
         }
