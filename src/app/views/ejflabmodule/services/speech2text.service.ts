@@ -45,6 +45,12 @@ export interface DiarizationData {
     "distance_from": string;
 }
 
+export interface Speech2TextEventData {
+    name: "listenStarts" | "listenEnds" | "transcriptStarts" | "transcriptEnds" | "transcriptError";
+    audio?: AudioData;
+    error?: Error;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -60,9 +66,7 @@ export class Speech2TextService {
             speech2text: 0,
         };
     language: string = 'es';
-    onSpeechStart: EventEmitter<void> = new EventEmitter();
-    onSpeechEnd: EventEmitter<AudioData> = new EventEmitter();
-    speechToTextEvents: EventEmitter<string> = new EventEmitter();
+    speechToTextEvents: EventEmitter<Speech2TextEventData> = new EventEmitter();
 
     constructor(
         public flowchartSrv: FlowchartService,
@@ -93,7 +97,9 @@ export class Speech2TextService {
                 this.states.listening = 1;
                 //console.log("Speech start...");
                 this.startTime = new Date().getTime();
-                this.onSpeechStart.emit();
+                this.speechToTextEvents.emit({
+                    name: "listenStarts"
+                });
             },
             onSpeechEnd: (samples) => {
                 this.states.listening = 0;
@@ -119,7 +125,10 @@ export class Speech2TextService {
                         segments: [],
                     },
                 };
-                this.onSpeechEnd.emit(audio);
+                this.speechToTextEvents.emit({
+                    name: "listenEnds",
+                    audio: audio
+                });
                 this.speechToText(audio);
             },
         });
@@ -273,7 +282,10 @@ export class Speech2TextService {
         this.states.speech2text += 1;
         try {
             audio.transcriptProgress.processTime = 0;
-            this.speechToTextEvents.emit("start");
+            this.speechToTextEvents.emit({
+                name: "transcriptStarts",
+                audio: audio,
+            });
             const startTime = new Date().getTime();
             const payload: FlowchartProcessRequestData = {
                 loadingIndicator: false,
@@ -299,17 +311,28 @@ export class Speech2TextService {
                 audio.transcript = response?.response?.data?.transcript;
                 audio.transcriptProgress.processTime = (new Date().getTime() - startTime) / 1000;
                 audio.transcriptProgress.ratio = 100 * (audio.transcriptProgress.processTime / audio.duration);
-                this.speechToTextEvents.emit("success");
+                this.speechToTextEvents.emit({
+                    name: "transcriptEnds",
+                    audio: audio,
+                });
             } else {
-                this.speechToTextEvents.emit("error");
+                this.speechToTextEvents.emit({
+                    name: "transcriptError",
+                    audio: audio,
+                    error: new Error(response.message),
+                });
                 this.modalSrv.alert({
                     title: 'Error',
                     txt: JSON.stringify(response, null, 4),
                 });
             }
-        } catch (err) {
+        } catch (err: any) {
             this.states.speech2text -= 1;
-            this.speechToTextEvents.emit("error");
+            this.speechToTextEvents.emit({
+                name: "transcriptError",
+                audio: audio,
+                error: err,
+            });
         }
     }
 }

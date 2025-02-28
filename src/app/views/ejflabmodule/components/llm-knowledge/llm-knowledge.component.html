@@ -15,11 +15,12 @@
         </div>
     </div>
     <form class="container_vertical gap_5 margin_10" [formGroup]="formRight">
-        <mat-form-field>
+        <mat-form-field *ngIf="!speech2TextSrv.isListening()">
             <mat-label>Your message</mat-label>
             <textarea rows="1" matInput formControlName="text"></textarea>
         </mat-form-field>
-
+        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()==0" mode="determinate" value="0"></mat-progress-bar>
+        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
         <div class="container_horizontal end gap_10">
             <label class="switch">
                 <input type="checkbox" [(ngModel)]="viewKnowledge" (ngModelChange)="changeVideoKnowledge($event)"
@@ -35,9 +36,18 @@
                 <mat-icon>delete_forever</mat-icon>
                 Reset chat
             </button>
-            <button class="btn" (click)="chat()">
+            <button class="btn" (click)="chat()" *ngIf="!speech2TextSrv.isListening()">
                 <mat-icon>send</mat-icon>
                 Send
+            </button>
+            <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
+                <mat-icon class="peque">play_arrow</mat-icon>
+                <span>Listent</span>
+            </button>
+            <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
+                [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
+                <mat-icon class="peque">pause</mat-icon>
+                <span>Stop listen</span>
             </button>
         </div>
     </form>

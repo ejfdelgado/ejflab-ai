@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
@@ -7,6 +7,8 @@ import { KnowledgeService, QADataType } from '../../services/knowledge.service';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent, RacConfigData } from '../popup-rac-config/popup-rac-config.component';
+import { AudioData, Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
+import { Subscription } from 'rxjs';
 
 export interface ChatGPT4AllSessionData {
   role: string;
@@ -30,7 +32,7 @@ export interface AnswerData {
     './llm-knowledge.component.css'
   ]
 })
-export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit {
+export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit, OnDestroy {
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
@@ -43,6 +45,9 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     k: 2,
     maxDistance: 0.6,
   };
+  onSpeechStartSubscription: Subscription | null = null;
+  onSpeechEnd: Subscription | null = null;
+  speechToTextEvents: Subscription | null = null;
 
   constructor(
     public fb: FormBuilder,
@@ -51,6 +56,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     public knowledgeSrv: KnowledgeService,
     public dialog: MatDialog,
     public cdr: ChangeDetectorRef,
+    public speech2TextSrv: Speech2TextService,
   ) {
     super();
   }
@@ -60,10 +66,33 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.answers = [];
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.formRight = this.fb.group({
       text: ['', []],
     });
+    await this.speech2TextSrv.turnOn();
+    this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
+      if (event.name == "transcriptEnds" && event.audio) {
+        const message = event.audio.transcript.transcription;
+        const field = this.formRight.get('text');
+        field?.setValue(message);
+        this.chat();
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  async ngOnDestroy() {
+    await this.speech2TextSrv.turnOff();
+    if (this.onSpeechStartSubscription) {
+      this.onSpeechStartSubscription.unsubscribe();
+    }
+    if (this.onSpeechEnd) {
+      this.onSpeechEnd.unsubscribe();
+    }
+    if (this.speechToTextEvents) {
+      this.speechToTextEvents.unsubscribe();
+    }
   }
 
   async chat() {
@@ -141,7 +170,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         }
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        function readChunk() {
+        const readChunk = () => {
           return reader.read().then((temporal: any) => {
             const { done, value } = temporal;
             if (done) {
@@ -157,6 +186,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
             }
             const chunk = decoder.decode(value, { stream: true });
             currentAnswer.detail += chunk;
+            this.cdr.detectChanges();
             return readChunk();
           });
         }

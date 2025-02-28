@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FlowchartService, HttpService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
-import { AudioData, Speech2TextService } from '../../services/speech2text.service';
+import { AudioData, Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -33,13 +33,10 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       displayFileUpload: ['', []],
     });
     await this.speech2TextSrv.turnOn();
-    this.onSpeechStartSubscription = this.speech2TextSrv.onSpeechStart.subscribe((audio: AudioData) => {
-      this.cdr.detectChanges();
-    });
-    this.speech2TextSrv.onSpeechEnd.subscribe((audio: AudioData) => {
-      this.audios.push(audio);
-    });
-    this.speech2TextSrv.speechToTextEvents.subscribe((audio: AudioData) => {
+    this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
+      if (event.name == "listenStarts" && event.audio) {
+        this.audios.push(event.audio);
+      }
       this.cdr.detectChanges();
     });
   }
@@ -79,13 +76,5 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
   showAudioDetail(audio: AudioData) {
     const html = "<pre>" + this.jsonColorPipe.transform(audio) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-  }
-
-  async start() {
-    this.speech2TextSrv.start();
-  }
-
-  async pause() {
-    this.speech2TextSrv.pause();
   }
 }

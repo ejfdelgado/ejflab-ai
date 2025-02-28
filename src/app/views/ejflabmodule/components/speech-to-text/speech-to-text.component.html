@@ -1,10 +1,10 @@
 <div class="container_vertical padding_10">
     <form class="row_options form-container layout_columna border_bottom" [formGroup]="formLeft">
-        <button *ngIf="!speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="start()">
+        <button *ngIf="!speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="speech2TextSrv.start()">
             <mat-icon class="peque">play_arrow</mat-icon>
             <span>Start</span>
         </button>
-        <button *ngIf="speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="pause()"
+        <button *ngIf="speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="speech2TextSrv.pause()"
             [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
             <mat-icon class="peque">pause</mat-icon>
             <span>Pause</span>
