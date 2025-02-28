@@ -45,6 +45,7 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
     const VIEW_OPTIONS = [
       { pathname: 'llm', label: 'LLM', icon: 'psychology' },
       { pathname: 'speech_to_text', label: 'Speech to Text', icon: 'record_voice_over' },
+      { pathname: 'text_to_speech', label: 'Text to Speech', icon: 'record_voice_over' },
       { pathname: 'llm_knowledge', label: 'LLM + Knowledge', icon: 'psychology' },
       //{ pathname: 'milvus', label: 'Milvus database admin', icon: 'menu_book' },
       { pathname: 'ingest', label: 'Postgresql Ingest', icon: 'save' },

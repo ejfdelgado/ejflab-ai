@@ -6,6 +6,7 @@ import { MilvusComponent } from './components/milvus/milvus.component';
 import { IngestComponent } from './components/ingest/ingest.component';
 import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.component';
 import { SpeechToTextComponent } from './components/speech-to-text/speech-to-text.component';
+import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       { path: 'llm', component: LlmComponent, },
       { path: 'llm_knowledge', component: LlmKnowledgeComponent, },
       { path: 'speech_to_text', component: SpeechToTextComponent, },
+      { path: 'text_to_speech', component: TextToSpeechComponent, },
       { path: 'milvus', component: MilvusComponent, },
       { path: 'ingest', component: IngestComponent, },
     ]

@@ -1,0 +1,14 @@
+<div class="container_horizontal width_100">
+    <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
+        <mat-form-field>
+            <mat-label>Your message</mat-label>
+            <textarea rows="5" matInput formControlName="text"></textarea>
+        </mat-form-field>
+        <div class="container_horizontal gap_10">
+            <button class="btn" (click)="convert()">
+                <mat-icon>send</mat-icon>
+                Send
+            </button>
+        </div>
+    </form>
+</div>

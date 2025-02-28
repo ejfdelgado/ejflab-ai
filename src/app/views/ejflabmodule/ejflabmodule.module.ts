@@ -23,6 +23,7 @@ import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.
 import { KnowledgeListComponent } from './components/knowledge-list/knowledge-list.component';
 import { PopupRacConfigComponent } from './components/popup-rac-config/popup-rac-config.component';
 import { SpeechToTextComponent } from './components/speech-to-text/speech-to-text.component';
+import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { SpeechToTextComponent } from './components/speech-to-text/speech-to-tex
     LlmKnowledgeComponent,
     KnowledgeListComponent,
     PopupRacConfigComponent,
-    SpeechToTextComponent
+    SpeechToTextComponent,
+    TextToSpeechComponent
   ],
   imports: [
     CommonModule,
