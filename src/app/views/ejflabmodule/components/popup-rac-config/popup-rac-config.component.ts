@@ -2,14 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModalService } from 'ejflab-front-lib';
-
-export interface RacConfigData {
-  systemPrompt: string;
-  queryPrompt: string;
-  maxTokens: number;
-  maxDistance: number;
-  k: number;
-}
+import { RacConfigData } from '../../services/knowledge.service';
 
 @Component({
   selector: 'app-popup-rac-config',
@@ -38,6 +31,7 @@ export class PopupRacConfigComponent {
       maxTokens: temp.maxTokens,
       maxDistance: temp.maxDistance,
       k: temp.k,
+      useRAC: temp.useRAC,
     }
   }
 

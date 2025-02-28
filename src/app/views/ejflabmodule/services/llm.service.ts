@@ -2,8 +2,7 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { SafeHtml } from "@angular/platform-browser";
 import { FlowchartProcessRequestData, FlowchartService, IndicatorService, ModalService } from "ejflab-front-lib";
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
-import { KnowledgeService, QADataType } from "./knowledge.service";
-import { RacConfigData } from "../components/popup-rac-config/popup-rac-config.component";
+import { KnowledgeService, QADataType, RacConfigData } from "./knowledge.service";
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 
 export interface ChatGPT4AllSessionData {
@@ -42,13 +41,13 @@ export class LLMService {
         return MyConstants.SRV_ROOT;
     }
 
-    async chat(text: string, gpt4allSession: Array<ChatGPT4AllSessionData>, maxTokens: number, systemPrompt: string, config: RacConfigData | null = null) {
+    async chat(text: string, gpt4allSession: Array<ChatGPT4AllSessionData>, config: RacConfigData) {
         if (text.trim().length == 0) {
             return;
         }
         const activity = this.indicatorSrv.start();
         let modifiedText = text;
-        if (config) {
+        if (config.useRAC) {
             // First fetch knowledge
             const knowledge = await this.knowledgeSrv.search(text, config.k, config.maxDistance);
             if (knowledge && knowledge.length > 0) {
@@ -75,8 +74,8 @@ export class LLMService {
                 message: modifiedText,
             },
             data: {
-                maxTokens: maxTokens,
-                systemMessage: systemPrompt,
+                maxTokens: config.maxTokens,
+                systemMessage: config.systemPrompt,
                 chatTemplate: "### Human:\n{0}\n\n### Assistant:\n",
                 streaming: true,
             },

@@ -4,6 +4,7 @@ import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
+import { RacConfigData } from '../../services/knowledge.service';
 
 @Component({
   selector: 'app-llm',
@@ -19,6 +20,14 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
+  config: RacConfigData = {
+    systemPrompt: 'Eres un asistente en español',
+    queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
+    maxTokens: 1024,
+    k: 2,
+    maxDistance: 0.6,
+    useRAC: false,
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -66,6 +75,6 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
     if (text.trim().length == 0) {
       return;
     }
-    await this.LLMSrv.chat(text, this.gpt4allSession, maxTokens.value, systemPrompt.value);
+    await this.LLMSrv.chat(text, this.gpt4allSession, this.config);
   }
 }

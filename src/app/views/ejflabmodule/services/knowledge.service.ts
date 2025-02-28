@@ -12,6 +12,15 @@ export interface QADataType {
     updated?: number;
 }
 
+export interface RacConfigData {
+    systemPrompt: string;
+    queryPrompt: string;
+    maxTokens: number;
+    maxDistance: number;
+    k: number;
+    useRAC: boolean;
+}
+
 @Injectable({
     providedIn: 'root'
 })

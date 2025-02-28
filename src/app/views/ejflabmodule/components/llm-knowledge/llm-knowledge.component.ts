@@ -1,15 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SafeHtml } from '@angular/platform-browser';
-import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
-import { QADataType } from '../../services/knowledge.service';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupRacConfigComponent, RacConfigData } from '../popup-rac-config/popup-rac-config.component';
+import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
 import { Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
 import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
+import { RacConfigData } from '../../services/knowledge.service';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -34,6 +33,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     maxTokens: 1024,
     k: 2,
     maxDistance: 0.6,
+    useRAC: true,
   };
   onSpeechStartSubscription: Subscription | null = null;
   onSpeechEnd: Subscription | null = null;
@@ -101,16 +101,14 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       return;
     }
     const field = this.formRight.get('text');
-    const systemPrompt = this.formRight.get('systemPrompt');
-    const maxTokens = this.formRight.get('maxTokens');
-    if (!field || !systemPrompt || !maxTokens) {
+    if (!field) {
       return;
     }
     let text = field.value;
     if (text.trim().length == 0) {
       return;
     }
-    await this.LLMSrv.chat(text, this.gpt4allSession, maxTokens.value, systemPrompt.value, this.config);
+    await this.LLMSrv.chat(text, this.gpt4allSession, this.config);
   }
 
   async openConfiguration() {
