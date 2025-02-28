@@ -1,0 +1,81 @@
+.container_vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container_vertical.centered {
+    justify-content: center;
+}
+
+.container_horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.container_vertical.no_gap,
+.container_horizontal.no_gap {
+    gap: 0;
+}
+
+.container_horizontal.centered {
+    justify-content: center;
+}
+
+.full {
+    flex: 1;
+}
+
+.transcription {
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+mat-icon.no_text {
+    margin: 0;
+}
+
+.transcription p,
+.summary p {
+    margin-bottom: 0;
+}
+
+.summary p {
+    font-size: 1.5em;
+}
+
+.blue_text {
+    color: blue;
+}
+
+.container_horizontal audio {
+    min-width: 300px;
+}
+
+.l_r_padding_10 {
+    padding: 0 10px;
+}
+
+.padding_10 {
+    padding: 10px;
+}
+
+.button_general.active {
+    background-color: #b2b2ff;
+    color: white;
+}
+
+.row_options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.row_options button.button_general {
+    height: 54px;
+}
+
+strong.red {
+    color: red;
+}
