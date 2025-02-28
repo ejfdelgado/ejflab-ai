@@ -47,10 +47,12 @@ export class LLMService {
         }
         const activity = this.indicatorSrv.start();
         let modifiedText = text;
+        let knowledge: QADataType[] = [];
         if (config.useRAC) {
             // First fetch knowledge
-            const knowledge = await this.knowledgeSrv.search(text, config.k, config.maxDistance);
-            if (knowledge && knowledge.length > 0) {
+            const knowledgeTemp = await this.knowledgeSrv.search(text, config.k, config.maxDistance);
+            if (knowledgeTemp && knowledgeTemp.length > 0) {
+                knowledge = knowledgeTemp;
                 // Then build prompt
                 const allKnowledge = knowledge.map((data) => {
                     if (data.text_answer) {
@@ -83,7 +85,7 @@ export class LLMService {
         const currentAnswer: AnswerData = {
             query: text,
             answer: "",
-            knowledge: []
+            knowledge: knowledge
         };
 
         this.LLMEvents.emit({
