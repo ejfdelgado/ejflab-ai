@@ -11,6 +11,10 @@
         "postUrl": "http://speech2text_processor:8087",
         "topicUrl": ""
     },
+    "textToSpeech": {
+        "postUrl": "http://text2speech_processor:8099",
+        "topicUrl": ""
+    },
     "audioFeature": {
         "postUrl": "http://audiofeature_processor:8088",
         "topicUrl": ""
