@@ -63,12 +63,13 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
       if (event.name == "chatSetup") {
         this.tic();
-        this.answers.unshift(event.chat);
+        this.answers.push(event.chat);
         const field = this.formRight.get('text');
         field?.setValue("");
       } else if (event.name == "chatStart") {
         this.toc();
       }
+      // scroll down
       this.cdr.detectChanges();
     });
     this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
