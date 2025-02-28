@@ -3,23 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
-import { KnowledgeService, QADataType } from '../../services/knowledge.service';
+import { QADataType } from '../../services/knowledge.service';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent, RacConfigData } from '../popup-rac-config/popup-rac-config.component';
-import { AudioData, Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
+import { Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
 import { Subscription } from 'rxjs';
-
-export interface ChatGPT4AllSessionData {
-  role: string;
-  content: string;
-}
-
-export interface AnswerData {
-  txt: SafeHtml;
-  detail: SafeHtml;
-  knowledge: QADataType[]
-}
+import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -53,10 +43,10 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     public fb: FormBuilder,
     public modalSrv: ModalService,
     private indicatorSrv: IndicatorService,
-    public knowledgeSrv: KnowledgeService,
     public dialog: MatDialog,
     public cdr: ChangeDetectorRef,
     public speech2TextSrv: Speech2TextService,
+    private LLMSrv: LLMService,
   ) {
     super();
   }
@@ -70,7 +60,17 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.formRight = this.fb.group({
       text: ['', []],
     });
-    await this.speech2TextSrv.turnOn();
+    this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
+      if (event.name == "chatSetup") {
+        this.tic();
+        this.answers.unshift(event.chat);
+        const field = this.formRight.get('text');
+        field?.setValue("");
+      } else if (event.name == "chatStart") {
+        this.toc();
+      }
+      this.cdr.detectChanges();
+    });
     this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
       if (event.name == "transcriptEnds" && event.audio) {
         const message = event.audio.transcript.transcription;
@@ -80,6 +80,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       }
       this.cdr.detectChanges();
     });
+    await this.speech2TextSrv.turnOn();
   }
 
   async ngOnDestroy() {
@@ -100,102 +101,16 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       return;
     }
     const field = this.formRight.get('text');
-    if (!field) {
+    const systemPrompt = this.formRight.get('systemPrompt');
+    const maxTokens = this.formRight.get('maxTokens');
+    if (!field || !systemPrompt || !maxTokens) {
       return;
     }
     let text = field.value;
     if (text.trim().length == 0) {
       return;
     }
-    const activity = this.indicatorSrv.start();
-
-    // First fetch knowledge
-    const knowledge = await this.knowledgeSrv.search(text, this.config.k, this.config.maxDistance);
-
-    let modifiedText = text;
-    if (knowledge && knowledge.length > 0) {
-      // Then build prompt
-      const allKnowledge = knowledge.map((data) => {
-        if (data.text_answer) {
-          return data.text_answer;
-        } else {
-          return data.text_indexed
-        }
-      }).join('" y "');
-      modifiedText = this.renderer.render(this.config.queryPrompt, {
-        text: text,
-        knowledge: allKnowledge,
-      });
-    }
-
-    const payload: FlowchartProcessRequestData = {
-      channel: 'post',
-      processorMethod: 'llm.chat',
-      room: 'processors',
-      namedInputs: {
-        session: this.gpt4allSession,
-        message: modifiedText,
-      },
-      data: {
-        maxTokens: this.config.maxTokens,
-        systemMessage: this.config.systemPrompt,
-        chatTemplate: "### Human:\n{0}\n\n### Assistant:\n",
-        streaming: true,
-      },
-    };
-    this.tic();
-
-    const gpt4allSession = this.gpt4allSession;
-    const currentAnswer: AnswerData = {
-      txt: text,
-      detail: "",
-      knowledge: knowledge ? knowledge : [],
-    };
-    this.answers.unshift(currentAnswer);
-    field.setValue("");
-
-    const urlServer = this.getRoot() + "srv/flowchart/processor_process_json";
-    fetch(urlServer, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Set headers if necessary
-      },
-      body: JSON.stringify(payload), // Send data in the request body
-    })
-      .then((response: any) => {
-        this.toc();
-        activity.done();
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        const readChunk = () => {
-          return reader.read().then((temporal: any) => {
-            const { done, value } = temporal;
-            if (done) {
-              gpt4allSession.push({
-                role: "user",
-                content: text,
-              });
-              gpt4allSession.push({
-                role: "assistant",
-                content: currentAnswer.detail.toString(),
-              });
-              return;
-            }
-            const chunk = decoder.decode(value, { stream: true });
-            currentAnswer.detail += chunk;
-            this.cdr.detectChanges();
-            return readChunk();
-          });
-        }
-        return readChunk();
-      })
-      .catch(error => {
-        this.modalSrv.error(error);
-        activity.done();
-      });
+    await this.LLMSrv.chat(text, this.gpt4allSession, maxTokens.value, systemPrompt.value, this.config);
   }
 
   async openConfiguration() {

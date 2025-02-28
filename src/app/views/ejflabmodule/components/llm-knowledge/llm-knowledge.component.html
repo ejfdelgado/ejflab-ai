@@ -3,10 +3,10 @@
         <div *ngFor="let answer of answers" class="container_horizontal width_100 gap_10">
             <div class="container_vertical full chat_container">
                 <div class="query_text_container">
-                    <p class="query_text" [innerHtml]="answer.txt"></p>
+                    <p class="query_text" [innerHtml]="answer.query"></p>
                 </div>
                 <div class="answer_text_container">
-                    <p class="answer_text" [innerHtml]="answer.detail"></p>
+                    <p class="answer_text" [innerHtml]="answer.answer"></p>
                 </div>
             </div>
             <div class="container_vertical full knowledge_container" *ngIf="viewKnowledge">

@@ -35,8 +35,8 @@
         <div *ngIf="answers.length > 0" class="container_horizontal width_100 ">
             <ul class="">
                 <li *ngFor="let answer of answers">
-                    <p class="answer" [innerHtml]="answer.txt"></p>
-                    <p class="query query_detail" [innerHtml]="answer.detail"></p>
+                    <p class="answer" [innerHtml]="answer.query"></p>
+                    <p class="query query_detail" [innerHtml]="answer.answer"></p>
                 </li>
             </ul>
         </div>
