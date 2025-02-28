@@ -1,5 +1,5 @@
 <div class="container_vertical panel_full_screen">
-    <div class="container_vertical width_100 panel_with_vertical_scroll">
+    <div class="container_vertical width_100 panel_with_vertical_scroll gap_10">
         <div *ngFor="let answer of answers" class="container_horizontal width_100 gap_10">
             <div class="container_vertical full chat_container">
                 <div class="query_text_container">
@@ -9,7 +9,7 @@
                     <p class="answer_text" [innerHtml]="answer.answer"></p>
                 </div>
             </div>
-            <div class="container_vertical full knowledge_container" *ngIf="viewKnowledge">
+            <div class="container_vertical full knowledge_container" *ngIf="config.showKnowledge">
                 <app-knowledge-list class="width_100" [(currentMatches)]="answer.knowledge"></app-knowledge-list>
             </div>
         </div>
@@ -17,17 +17,13 @@
     <form class="container_vertical gap_5 margin_10" [formGroup]="formRight">
         <mat-form-field *ngIf="!speech2TextSrv.isListening()">
             <mat-label>Your message</mat-label>
-            <textarea rows="1" matInput formControlName="text"></textarea>
+            <textarea (keydown)="onKeydown($event)" rows="1" matInput formControlName="text"></textarea>
         </mat-form-field>
-        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()==0" mode="determinate" value="0"></mat-progress-bar>
-        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
+        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()==0"
+            mode="determinate" value="0"></mat-progress-bar>
+        <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()!==0"
+            mode="buffer"></mat-progress-bar>
         <div class="container_horizontal end gap_10">
-            <label class="switch">
-                <input type="checkbox" [(ngModel)]="viewKnowledge" (ngModelChange)="changeVideoKnowledge($event)"
-                    [ngModelOptions]=" 
-             {standalone: true}">
-                <div class="slider round"></div>
-            </label>
             <button class="btn" (click)="openConfiguration()">
                 <mat-icon>settings</mat-icon>
                 Configure

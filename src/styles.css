@@ -126,6 +126,10 @@ app-llm-knowledge {
   right: 0;
 }
 
+app-llm-knowledge app-knowledge-list .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white;
+}
+
 @media (max-width: 800px) {
   .edit-user-dialog-container .mat-dialog-container {
     min-width: 80vw;

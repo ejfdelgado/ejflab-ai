@@ -31,6 +31,27 @@
                     <mat-label>Query prompt:</mat-label>
                     <input type="text" matInput formControlName="queryPrompt">
                 </mat-form-field>
+                <div class="container_horizontal">
+                    <div class="container_horizontal vcentered full gap_10">
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="data.useRAC" (ngModelChange)="changeUseRAC($event)"
+                                [ngModelOptions]=" 
+                 {standalone: true}">
+                            <div class="slider round"></div>
+                        </label>
+                        <div>Use RAC?</div>
+                    </div>
+                    <div class="container_horizontal vcentered full gap_10">
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="data.showKnowledge"
+                                (ngModelChange)="changeShowKnowledge($event)" [ngModelOptions]=" 
+                 {standalone: true}">
+                            <div class="slider round"></div>
+                        </label>
+                        <div>Show knowledge?</div>
+                    </div>
+                </div>
+                <div class="margin_10"></div>
             </div>
         </div>
     </form>

@@ -11,12 +11,15 @@ import { RacConfigData } from '../../services/knowledge.service';
     '../../../../buttons.css',
     '../../../../popup.css',
     '../../../../containers.css',
+    '../../../../forms.css',
     './popup-rac-config.component.css'
   ]
 })
 export class PopupRacConfigComponent {
   formRight: FormGroup;
   data: RacConfigData;
+  useRAC: boolean;
+  showKnowledge: boolean;
 
   constructor(
     public fb: FormBuilder,
@@ -32,6 +35,7 @@ export class PopupRacConfigComponent {
       maxDistance: temp.maxDistance,
       k: temp.k,
       useRAC: temp.useRAC,
+      showKnowledge: temp.showKnowledge
     }
   }
 
@@ -64,5 +68,13 @@ export class PopupRacConfigComponent {
     this.data.k = this.formRight.get('k')?.getRawValue();
     // Rewrite all
     this.dialogRef.close(this.data);
+  }
+
+  changeUseRAC(event: any) {
+
+  }
+
+  changeShowKnowledge(event: any) {
+
   }
 }

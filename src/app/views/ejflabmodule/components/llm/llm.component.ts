@@ -27,6 +27,7 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
     k: 2,
     maxDistance: 0.6,
     useRAC: false,
+    showKnowledge: false,
   };
 
   constructor(

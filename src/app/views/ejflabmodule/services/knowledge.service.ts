@@ -19,6 +19,7 @@ export interface RacConfigData {
     maxDistance: number;
     k: number;
     useRAC: boolean;
+    showKnowledge: boolean;
 }
 
 @Injectable({

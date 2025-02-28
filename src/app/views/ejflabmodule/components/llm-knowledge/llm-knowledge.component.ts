@@ -26,14 +26,14 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
   renderer = new MyTemplate();
-  viewKnowledge: boolean = false;
   config: RacConfigData = {
-    systemPrompt: 'Eres un asistente en español',
+    systemPrompt: 'Eres un asistente que solo habla español',
     queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
     maxTokens: 1024,
     k: 2,
     maxDistance: 0.6,
     useRAC: true,
+    showKnowledge: false,
   };
   onSpeechStartSubscription: Subscription | null = null;
   onSpeechEnd: Subscription | null = null;
@@ -131,5 +131,12 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
 
   changeVideoKnowledge(event: any) {
     this.cdr.detectChanges();
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.chat();
+    }
   }
 }

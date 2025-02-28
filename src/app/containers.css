@@ -45,6 +45,10 @@
     justify-content: center;
 }
 
+.container_horizontal.vcentered {
+    align-items: center;
+}
+
 .container_horizontal.end {
     justify-content: end;
 }
