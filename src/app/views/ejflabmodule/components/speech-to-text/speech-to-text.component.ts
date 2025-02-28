@@ -29,8 +29,14 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       displayFileUpload: ['', []],
     });
     await this.speech2TextSrv.turnOn();
-    this.speech2TextSrv.onAudio.subscribe((audio: AudioData) => {
+    this.speech2TextSrv.onSpeechStart.subscribe((audio: AudioData) => {
+      this.cdr.detectChanges();
+    });
+    this.speech2TextSrv.onSpeechEnd.subscribe((audio: AudioData) => {
       this.audios.push(audio);
+    });
+    this.speech2TextSrv.speechToTextEvents.subscribe((audio: AudioData) => {
+      this.cdr.detectChanges();
     });
   }
 

@@ -60,7 +60,9 @@ export class Speech2TextService {
             speech2text: 0,
         };
     language: string = 'es';
-    onAudio: EventEmitter<AudioData> = new EventEmitter<AudioData>();
+    onSpeechStart: EventEmitter<void> = new EventEmitter();
+    onSpeechEnd: EventEmitter<AudioData> = new EventEmitter();
+    speechToTextEvents: EventEmitter<string> = new EventEmitter();
 
     constructor(
         public flowchartSrv: FlowchartService,
@@ -91,6 +93,7 @@ export class Speech2TextService {
                 this.states.listening = 1;
                 //console.log("Speech start...");
                 this.startTime = new Date().getTime();
+                this.onSpeechStart.emit();
             },
             onSpeechEnd: (samples) => {
                 this.states.listening = 0;
@@ -116,8 +119,7 @@ export class Speech2TextService {
                         segments: [],
                     },
                 };
-                this.onAudio.emit(audio);
-
+                this.onSpeechEnd.emit(audio);
                 this.speechToText(audio);
             },
         });
@@ -271,6 +273,7 @@ export class Speech2TextService {
         this.states.speech2text += 1;
         try {
             audio.transcriptProgress.processTime = 0;
+            this.speechToTextEvents.emit("start");
             const startTime = new Date().getTime();
             const payload: FlowchartProcessRequestData = {
                 loadingIndicator: false,
@@ -296,7 +299,9 @@ export class Speech2TextService {
                 audio.transcript = response?.response?.data?.transcript;
                 audio.transcriptProgress.processTime = (new Date().getTime() - startTime) / 1000;
                 audio.transcriptProgress.ratio = 100 * (audio.transcriptProgress.processTime / audio.duration);
+                this.speechToTextEvents.emit("success");
             } else {
+                this.speechToTextEvents.emit("error");
                 this.modalSrv.alert({
                     title: 'Error',
                     txt: JSON.stringify(response, null, 4),
@@ -304,6 +309,7 @@ export class Speech2TextService {
             }
         } catch (err) {
             this.states.speech2text -= 1;
+            this.speechToTextEvents.emit("error");
         }
     }
 }
