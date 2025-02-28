@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FlowchartProcessRequestData, FlowchartService, HttpService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
+import { FlowchartService, HttpService, JsonColorPipe, ModalService } from 'ejflab-front-lib';
 import { AudioData, Speech2TextService } from '../../services/speech2text.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-speech-to-text',
@@ -11,6 +12,9 @@ import { AudioData, Speech2TextService } from '../../services/speech2text.servic
 export class SpeechToTextComponent implements OnInit, OnDestroy {
   audios: Array<AudioData> = [];
   formLeft: FormGroup;
+  onSpeechStartSubscription: Subscription | null = null;
+  onSpeechEnd: Subscription | null = null;
+  speechToTextEvents: Subscription | null = null;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -29,7 +33,7 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       displayFileUpload: ['', []],
     });
     await this.speech2TextSrv.turnOn();
-    this.speech2TextSrv.onSpeechStart.subscribe((audio: AudioData) => {
+    this.onSpeechStartSubscription = this.speech2TextSrv.onSpeechStart.subscribe((audio: AudioData) => {
       this.cdr.detectChanges();
     });
     this.speech2TextSrv.onSpeechEnd.subscribe((audio: AudioData) => {
@@ -42,6 +46,15 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
 
   async ngOnDestroy() {
     await this.speech2TextSrv.turnOff();
+    if (this.onSpeechStartSubscription) {
+      this.onSpeechStartSubscription.unsubscribe();
+    }
+    if (this.onSpeechEnd) {
+      this.onSpeechEnd.unsubscribe();
+    }
+    if (this.speechToTextEvents) {
+      this.speechToTextEvents.unsubscribe();
+    }
   }
 
   audioIdentity(index: number, item: AudioData) {
