@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
 import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
@@ -26,6 +26,7 @@ export interface AnswerData {
     '../../../../buttons.css',
     '../../../../containers.css',
     '../../../../fonts.css',
+    '../../../../forms.css',
     './llm-knowledge.component.css'
   ]
 })
@@ -34,6 +35,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
   renderer = new MyTemplate();
+  viewKnowledge: boolean = false;
   config: RacConfigData = {
     systemPrompt: 'Eres un asistente en español',
     queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
@@ -48,6 +50,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     private indicatorSrv: IndicatorService,
     public knowledgeSrv: KnowledgeService,
     public dialog: MatDialog,
+    public cdr: ChangeDetectorRef,
   ) {
     super();
   }
@@ -180,5 +183,9 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         }
       });
     }
+  }
+
+  changeVideoKnowledge(event: any) {
+    this.cdr.detectChanges();
   }
 }

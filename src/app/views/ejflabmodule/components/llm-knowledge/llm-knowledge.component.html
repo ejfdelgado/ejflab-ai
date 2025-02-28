@@ -1,11 +1,32 @@
-<div class="container_horizontal width_100">
-    <form class="container_vertical gap_5 full margin_10" [formGroup]="formRight">
+<div class="container_vertical panel_full_screen">
+    <div class="container_horizontal width_100 panel_with_vertical_scroll">
+        <div *ngFor="let answer of answers" class="container_horizontal width_100 gap_10">
+            <div class="container_vertical full chat_container">
+                <div class="query_text_container">
+                    <p class="query_text" [innerHtml]="answer.txt"></p>
+                </div>
+                <div class="answer_text_container">
+                    <p class="answer_text" [innerHtml]="answer.detail"></p>
+                </div>
+            </div>
+            <div class="container_vertical full knowledge_container" *ngIf="viewKnowledge">
+                <app-knowledge-list class="width_100" [(currentMatches)]="answer.knowledge"></app-knowledge-list>
+            </div>
+        </div>
+    </div>
+    <form class="container_vertical gap_5 margin_10" [formGroup]="formRight">
         <mat-form-field>
             <mat-label>Your message</mat-label>
             <textarea rows="1" matInput formControlName="text"></textarea>
         </mat-form-field>
 
         <div class="container_horizontal end gap_10">
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="viewKnowledge" (ngModelChange)="changeVideoKnowledge($event)"
+                    [ngModelOptions]=" 
+             {standalone: true}">
+                <div class="slider round"></div>
+            </label>
             <button class="btn" (click)="openConfiguration()">
                 <mat-icon>settings</mat-icon>
                 Configure
@@ -18,20 +39,6 @@
                 <mat-icon>send</mat-icon>
                 Send
             </button>
-        </div>
-        <div class="container_horizontal width_100">
-            <p>{{seconds}}</p>
-        </div>
-        <div *ngIf="answers.length > 0" class="container_horizontal width_100 ">
-            <div *ngFor="let answer of answers" class="container_horizontal width_100 gap_10">
-                <div class="container_vertical full">
-                    <p class="answer" [innerHtml]="answer.txt"></p>
-                    <p class="query query_detail" [innerHtml]="answer.detail"></p>
-                </div>
-                <div class="container_vertical full">
-                    <app-knowledge-list class="width_100" [(currentMatches)]="answer.knowledge"></app-knowledge-list>
-                </div>
-            </div>
         </div>
     </form>
 </div>

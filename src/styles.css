@@ -118,6 +118,14 @@ mat-form-field.full_height .mat-form-field-subscript-wrapper {
   color: white;
 }
 
+app-llm-knowledge {
+  position: absolute;
+  bottom: 0;
+  top: 90px;
+  left: 0;
+  right: 0;
+}
+
 @media (max-width: 800px) {
   .edit-user-dialog-container .mat-dialog-container {
     min-width: 80vw;
