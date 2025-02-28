@@ -30,16 +30,7 @@ export interface AudioData {
     transcription: string;
     segments: Array<SegmentData>;
   },
-  diarization: Array<DiarizationData>,
   transcriptProgress: {
-    ratio: number;
-    processTime: number;
-  },
-  diarizationProgress: {
-    ratio: number;
-    processTime: number;
-  },
-  intentProgress: {
     ratio: number;
     processTime: number;
   },
@@ -246,14 +237,6 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
             ratio: 0,
             processTime: 0,
           },
-          diarizationProgress: {
-            ratio: 0,
-            processTime: 0,
-          },
-          intentProgress: {
-            ratio: 0,
-            processTime: 0,
-          },
           start: this.startTime,
           end: new Date().getTime(),
           extension: 'wav',
@@ -261,7 +244,6 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
             transcription: '',
             segments: [],
           },
-          diarization: [],
         };
         this.audios.push(audio);
         this.speechToText(audio);
@@ -349,34 +331,6 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       }
     } catch (err) {
       this.states.speech2text -= 1;
-    }
-  }
-
-  async getMeta(audio: AudioData) {
-    const payload: FlowchartProcessRequestData = {
-      id: `manual_${audio.id}`,
-      loadingIndicator: false,
-      channel: 'post',
-      processorMethod: 'localFiles1.bytesmeta',
-      room: 'processors',
-      namedInputs: {
-        bytes: new Uint8Array(audio.buffer),
-        media: {
-          startTime: 1,
-        }
-      },
-      data: {
-        extension: audio.extension
-      },
-    };
-    this.cdr.detectChanges();
-    const response = await this.flowchartSrv.process(payload, false);
-    const metadata = response?.response?.data?.metadata;
-    if (metadata) {
-      audio.duration = metadata.seconds;
-      const ahora = new Date().getTime();
-      audio.start = ahora;
-      audio.end = ahora + 1000 * audio.duration;
     }
   }
 
