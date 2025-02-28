@@ -1,31 +1,24 @@
 <div class="container_vertical padding_10">
     <form class="row_options form-container layout_columna border_bottom" [formGroup]="formLeft">
-        <mat-form-field class="">
-            <mat-label>Language</mat-label>
-            <select matNativeControl [(ngModel)]="language" [ngModelOptions]="{standalone: true}">
-                <option [ngValue]="'es'">Español</option>
-                <option [ngValue]="'en'">English</option>
-            </select>
-        </mat-form-field>
-        <button *ngIf="!listening" class="button_general full" mat-raised-button (click)="start()">
+        <button *ngIf="!speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="start()">
             <mat-icon class="peque">play_arrow</mat-icon>
             <span>Start</span>
         </button>
-        <button *ngIf="listening" class="button_general full" mat-raised-button (click)="pause()"
-            [ngClass]="{'active': states.listening!==0}">
+        <button *ngIf="speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="pause()"
+            [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
             <mat-icon class="peque">pause</mat-icon>
             <span>Pause</span>
         </button>
     </form>
-    <mat-progress-bar *ngIf="states.listening===0" mode="determinate" value="0"></mat-progress-bar>
-    <mat-progress-bar *ngIf="states.listening!==0" mode="buffer"></mat-progress-bar>
+    <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()" mode="determinate" value="0"></mat-progress-bar>
+    <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
     <div>
         <div *ngFor="let audio of audios; trackBy:audioIdentity" class="row_options">
             <button class="button_general" mat-raised-button (click)="removeAudio(audio)">
                 <mat-icon class="no_text">close</mat-icon>
             </button>
             <audio src="{{ audio.base64 }}" controls></audio>
-            <button class="button_general" mat-raised-button (click)="speechToText(audio)">
+            <button class="button_general" mat-raised-button (click)="speech2TextSrv.speechToText(audio)">
                 <mat-icon class="no_text">chat</mat-icon>
             </button>
             <button class="button_general" mat-raised-button (click)="showAudioDetail(audio)">
