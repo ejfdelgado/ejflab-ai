@@ -24,28 +24,32 @@
             mode="determinate" value="0"></mat-progress-bar>
         <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()!==0"
             mode="buffer"></mat-progress-bar>
-        <div class="container_horizontal end gap_10">
-            <button class="btn" (click)="openConfiguration()">
-                <mat-icon>settings</mat-icon>
-                Configure
-            </button>
-            <button class="btn" (click)="resetChat()">
-                <mat-icon>delete_forever</mat-icon>
-                Reset chat
-            </button>
-            <button class="btn" (click)="chat()" *ngIf="!speech2TextSrv.isListening()">
-                <mat-icon>send</mat-icon>
-                Send
-            </button>
-            <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
-                <mat-icon class="peque">play_arrow</mat-icon>
-                <span>Listent</span>
-            </button>
-            <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
-                [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
-                <mat-icon class="peque">pause</mat-icon>
-                <span>Stop listen</span>
-            </button>
+        <div class="container_horizontal">
+            <div class="container_horizontal gap_10">
+                <button class="btn" (click)="openConfiguration()">
+                    <mat-icon>settings</mat-icon>
+                    Configure
+                </button>
+                <button class="btn red" (click)="resetChat()">
+                    <mat-icon>delete_forever</mat-icon>
+                    Clear chat
+                </button>
+            </div>
+            <div class="container_horizontal end full gap_10">
+                <button class="btn" (click)="chat()" *ngIf="!speech2TextSrv.isListening()">
+                    <mat-icon>send</mat-icon>
+                    Send
+                </button>
+                <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
+                    <mat-icon class="peque">mic</mat-icon>
+                    <span>Speak</span>
+                </button>
+                <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
+                    [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
+                    <mat-icon class="peque">pause</mat-icon>
+                    <span>Pause</span>
+                </button>
+            </div>
         </div>
     </form>
 </div>
