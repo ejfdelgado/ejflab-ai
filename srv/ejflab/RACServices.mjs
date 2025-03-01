@@ -1,7 +1,5 @@
 "use strict";
 import { General } from "@ejfdelgado/ejflab-back/srv/common/General.mjs";
-import { ParametrosIncompletosException, MalaPeticionException } from "@ejfdelgado/ejflab-back/srv/MyError.mjs";
-import { uuidv7 } from "uuidv7";
 import { PostgresSrv } from "@ejfdelgado/ejflab-back/srv/PostgresSrv.mjs";
 
 export class RACServices {
@@ -10,6 +8,8 @@ export class RACServices {
   }
 
   static async page(req, res, next) {
+    const schema = General.readParam(req, "schema", null, true);
+    const table = General.readParam(req, "table", null, true);
     const {
       orderColumn,
       direction,
@@ -20,7 +20,9 @@ export class RACServices {
       orderColumn,
       direction,
       limit,
-      offset
+      offset,
+      schema,
+      table
     };
     const databaseResponse = await PostgresSrv.executeFile("srv/ejflab/sql/read/knowledge_page.sql", model);
     const rows = databaseResponse.rows;

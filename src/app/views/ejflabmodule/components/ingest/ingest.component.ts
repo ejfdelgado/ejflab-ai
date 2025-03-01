@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IndicatorService, JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
-import { KnowledgeService, QADataType } from '../../services/knowledge.service';
+import { KnowledgeService, QADataType, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupDatabaseEditComponent } from '../popup-database-edit/popup-database-edit.component';
 
@@ -21,6 +21,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   formLeft: FormGroup;
   currentMatches: QADataType[] = [];
   lastAction: string = "";
+  config: RacConfigData;
   paging: PagingData = {
     limit: 10,
     offset: 0,
@@ -37,6 +38,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     private dialog: MatDialog,
   ) {
     super();
+    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   ngOnInit(): void {
@@ -47,8 +49,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     });
     this.formLeft = this.fb.group({
       query: ['', []],
-      k: [5, [Validators.required]],
-      maxDistance: [0.6, [Validators.required]],
     });
   }
 
@@ -66,12 +66,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
 
   async search() {
     const query = this.formLeft.get('query');
-    const k = this.formLeft.get('k');
-    const maxDistance = this.formLeft.get('maxDistance');
-    if (!query || !k || !maxDistance) {
+    if (!query) {
       return;
     }
-    const rerank = await this.knowledgeSrv.search(query.value, k.value, maxDistance.value);
+    const rerank = await this.knowledgeSrv.search(query.value, this.config.k, this.config.maxDistance);
     if (rerank) {
       this.currentMatches = rerank;
     } else {
@@ -90,7 +88,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       this.resetMatches();
     }
     this.paging.offset = this.currentMatches.length;
-    const parts = await this.knowledgeSrv.page(this.paging);
+    const parts = await this.knowledgeSrv.page(this.paging, this.config);
     if (parts.length > 0) {
       const temp = [];
       temp.push(...this.currentMatches);

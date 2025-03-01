@@ -8,10 +8,8 @@ import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.co
 import { Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
 import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
-import { RacConfigData } from '../../services/knowledge.service';
+import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
-import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
-import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -29,16 +27,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
   renderer = new MyTemplate();
-  config: RacConfigData = {
-    systemPrompt: 'Eres un asistente que solo habla español',
-    queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
-    maxTokens: 1024,
-    k: 2,
-    maxDistance: 0.6,
-    useRAC: false,
-    showKnowledge: false,
-    outputAudio: false,
-  };
+  config: RacConfigData;
   onSpeechStartSubscription: Subscription | null = null;
   llmEvents: Subscription | null = null;
   speechToTextEvents: Subscription | null = null;
@@ -55,22 +44,10 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     public speech2TextSrv: Speech2TextService,
     private text2speechSrv: Text2SpeechService,
     private LLMSrv: LLMService,
+    private knowledgeSrv: KnowledgeService,
   ) {
     super();
-    this.refreshConfig();
-  }
-
-  refreshConfig() {
-    const old = MyCookies.getCookie("RAC_CONFIG");
-    if (old) {
-      try {
-        const unparsed = Buffer.from(old, "base64").toString('utf8');
-        const parsed = JSON.parse(unparsed);
-        this.config = parsed;
-      } catch (err) {
-
-      }
-    }
+    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   resetChat() {

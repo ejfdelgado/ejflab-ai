@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FlowchartProcessRequestData, FlowchartService, HttpService, PagingData } from 'ejflab-front-lib';
+import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
+import { Buffer } from 'buffer';
 
 export interface QADataType {
     id: number;
@@ -75,8 +77,13 @@ export class KnowledgeService {
         return response;
     }
 
-    async page(paging: PagingData): Promise<QADataType[]> {
-        const queryString = new URLSearchParams(paging as any).toString();
+    async page(paging: PagingData, config: RacConfigData): Promise<QADataType[]> {
+        const { schema, table } = config;
+        const model: any = Object.assign({
+            schema,
+            table,
+        }, paging);
+        const queryString = new URLSearchParams(model).toString();
         return (await this.httpSrv.get(`srv/rac/page?${queryString}`)) as QADataType[];
     }
 
@@ -158,5 +165,28 @@ export class KnowledgeService {
         };
         const response = await this.flowchartSrv.process(payload, false);
         return response;
+    }
+
+    loadLocalConfig(): RacConfigData {
+        const old = MyCookies.getCookie("RAC_CONFIG");
+        if (old) {
+            try {
+                const unparsed = Buffer.from(old, "base64").toString('utf8');
+                const parsed = JSON.parse(unparsed);
+                return parsed as RacConfigData;
+            } catch (err) {
+
+            }
+        }
+        return {
+            systemPrompt: 'Eres un asistente que solo habla español',
+            queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
+            maxTokens: 1024,
+            k: 2,//top
+            maxDistance: 0.6,
+            useRAC: false,
+            showKnowledge: false,
+            outputAudio: false,
+        };
     }
 }

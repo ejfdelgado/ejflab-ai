@@ -6,7 +6,7 @@ text_answer,
 created,
 updated
 FROM 
-public.knowledge
-ORDER BY '${orderColumn | noQuotes}' ${direction | sanitizeNumber}
+rac_${schema | singleWord}.rac_${table | singleWord}
+ORDER BY ${orderColumn | singleWord} ${direction | singleWord}
 LIMIT ${limit | sanitizeNumber}
 OFFSET ${offset | sanitizeNumber};
