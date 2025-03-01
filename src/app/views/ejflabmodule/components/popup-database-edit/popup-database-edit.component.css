@@ -1,0 +1,8 @@
+.basic_item {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.basic_item:hover {
+    background-color: lightblue;
+}

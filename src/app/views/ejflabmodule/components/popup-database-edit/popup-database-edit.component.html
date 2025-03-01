@@ -13,7 +13,7 @@
                 <input type="text" matInput formControlName="schemaName">
             </mat-form-field>
             <div class="container_vertical full">
-                <div *ngFor="let schema of schemas">{{ schema.name }}</div>
+                <div class="basic_item schema_item" (click)="selectSchema(schema)" *ngFor="let schema of schemas">{{ schema.name }}</div>
             </div>
         </div>
         <div class="container_vertical full">
@@ -22,7 +22,7 @@
                 <input type="text" matInput formControlName="tableName">
             </mat-form-field>
             <div class="container_vertical full">
-                <div *ngFor="let table of tables">{{ table.name }}</div>
+                <div class="basic_item table_item" (click)="selectTable(table)" *ngFor="let table of tables">{{ table.name }}</div>
             </div>
         </div>
     </form>

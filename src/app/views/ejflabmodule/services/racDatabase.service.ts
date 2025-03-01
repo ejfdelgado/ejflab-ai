@@ -19,11 +19,19 @@ export class RACDatabaseService {
 
     async getSchemas(): Promise<SchemaDataType[]> {
         let response: SchemaDataType[] = [];
+        const data: any = await this.httpSrv.get("srv/rac/db/schemas");
+        if (data.schemas) {
+            response = data.schemas;
+        }
         return response;
     }
 
     async getTables(schema: string): Promise<TableDataType[]> {
         let response: TableDataType[] = [];
+        const data: any = await this.httpSrv.get(`srv/rac/db/schemas/${schema}/tables`);
+        if (data.tables) {
+            response = data.tables;
+        }
         return response;
     }
 }
