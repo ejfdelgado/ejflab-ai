@@ -26,4 +26,4 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS ${schema | singleWord}.rac_${name | singleWord} OWNER to "user";
 
-CREATE INDEX rac_${name | singleWord}_dense_vector_index ON ${schema | singleWord}.rac_${name | singleWord} USING ivfflat (dense_vector vector_l2_ops);
+CREATE INDEX IF NOT EXISTS rac_${name | singleWord}_dense_vector_index ON ${schema | singleWord}.rac_${name | singleWord} USING ivfflat (dense_vector vector_l2_ops);
