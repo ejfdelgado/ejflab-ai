@@ -9,6 +9,7 @@ import { Speech2TextEventData, Speech2TextService } from '../../services/speech2
 import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
 import { RacConfigData } from '../../services/knowledge.service';
+import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -36,16 +37,19 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     showKnowledge: false,
   };
   onSpeechStartSubscription: Subscription | null = null;
-  onSpeechEnd: Subscription | null = null;
+  llmEvents: Subscription | null = null;
   speechToTextEvents: Subscription | null = null;
+  textIndex = 0;
+  MIN_CHARACTERS = 50;
+  text2speechArray: string[] = [];
 
   constructor(
-    public fb: FormBuilder,
-    public modalSrv: ModalService,
-    private indicatorSrv: IndicatorService,
-    public dialog: MatDialog,
-    public cdr: ChangeDetectorRef,
+    private fb: FormBuilder,
+    private modalSrv: ModalService,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
     public speech2TextSrv: Speech2TextService,
+    private text2speechSrv: Text2SpeechService,
     private LLMSrv: LLMService,
   ) {
     super();
@@ -56,11 +60,27 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.answers = [];
   }
 
+  async checkPlay() {
+    if (this.text2speechSrv.isPlaying()) {
+      return;
+    }
+    if (this.text2speechArray.length > 0) {
+      // gets the first element
+      const firstText = this.text2speechArray.splice(0, 1)[0];
+      this.text2speechSrv.convert(firstText);
+    }
+  }
+
   async ngOnInit() {
     this.formRight = this.fb.group({
       text: ['', []],
     });
-    this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
+    this.text2speechSrv.audioEvents.subscribe((event: Text2SpeechEventData) => {
+      if (event.name == "ends") {
+        this.checkPlay();
+      }
+    });
+    this.llmEvents = this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
       if (event.name == "chatSetup") {
         this.tic();
         this.answers.push(event.chat);
@@ -68,11 +88,31 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         field?.setValue("");
       } else if (event.name == "chatStart") {
         this.toc();
+        this.textIndex = 0;
+        this.text2speechArray = [];
+      }
+
+      if (event.name == "chatChunk" || event.name == "chatEnds") {
+        const answer = event.chat.answer;
+        // takes the substring
+        const sub = answer.substring(this.textIndex);
+        const complete_words = /^.*\s/.exec(sub);
+        if ((complete_words && complete_words[0].length > this.MIN_CHARACTERS) || event.name == "chatEnds") {
+          if (event.name == "chatEnds") {
+            this.text2speechArray.push(sub);
+          } else {
+            if (complete_words) {
+              this.text2speechArray.push(complete_words[0]);
+              this.textIndex += complete_words[0].length;
+            }
+          }
+          this.checkPlay();
+        }
       }
       // scroll down
       this.cdr.detectChanges();
     });
-    this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
+    this.speechToTextEvents = this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
       if (event.name == "transcriptEnds" && event.audio) {
         const message = event.audio.transcript.transcription;
         const field = this.formRight.get('text');
@@ -86,11 +126,8 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
 
   async ngOnDestroy() {
     await this.speech2TextSrv.turnOff();
-    if (this.onSpeechStartSubscription) {
-      this.onSpeechStartSubscription.unsubscribe();
-    }
-    if (this.onSpeechEnd) {
-      this.onSpeechEnd.unsubscribe();
+    if (this.llmEvents) {
+      this.llmEvents.unsubscribe();
     }
     if (this.speechToTextEvents) {
       this.speechToTextEvents.unsubscribe();
@@ -124,6 +161,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           this.config = result;
+          this.cdr.detectChanges();
         }
       });
     }
