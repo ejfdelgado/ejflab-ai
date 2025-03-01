@@ -13,23 +13,21 @@
                     <input type="number" matInput formControlName="chunkSize">
                 </mat-form-field>
             </div>
-            <div class="container_vertical">
-                <button class="btn" (click)="configure()">
-                    <mat-icon class="peque">settings</mat-icon>
-                    Configure
-                </button>
-            </div>
         </div>
         <mat-form-field>
             <mat-label>Knowlegde</mat-label>
             <textarea rows="10" matInput formControlName="text"></textarea>
         </mat-form-field>
         <div class="container_horizontal end">
-            <button class="btn" mat-raised-button (click)="splitText()">
-                Split text
-                <mat-icon class="peque">bookmarks</mat-icon>
+            <button class="btn" (click)="configure()">
+                <mat-icon class="peque">settings</mat-icon>
+                Configure
             </button>
-            <button class="btn" mat-raised-button (click)="indexQA()">
+            <button class="btn" (click)="splitText()">
+                Split text
+                <mat-icon class="peque">content_cut</mat-icon>
+            </button>
+            <button class="btn" (click)="indexQA()">
                 Index text
                 <mat-icon class="peque">bookmarks</mat-icon>
             </button>

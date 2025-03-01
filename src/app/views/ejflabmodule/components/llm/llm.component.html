@@ -1,25 +1,15 @@
 <div class="container_horizontal width_100">
     <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
-        <div class="container_horizontal width_100 gap_10">
-            <div class="container_vertical full">
-                <mat-form-field>
-                    <mat-label>System prompt:</mat-label>
-                    <input type="text" matInput formControlName="systemPrompt">
-                </mat-form-field>
-            </div>
-            <div class="container_vertical full">
-                <mat-form-field>
-                    <mat-label>Max tokens:</mat-label>
-                    <input type="number" matInput formControlName="maxTokens">
-                </mat-form-field>
-            </div>
-        </div>
         <mat-form-field>
             <mat-label>Your message</mat-label>
             <textarea rows="5" matInput formControlName="text"></textarea>
         </mat-form-field>
         
         <div class="container_horizontal gap_10">
+            <button class="btn" (click)="configure()">
+                <mat-icon class="peque">settings</mat-icon>
+                Configure
+            </button>
             <button class="btn" (click)="resetChat()">
                 <mat-icon>delete_forever</mat-icon>
                 Reset chat

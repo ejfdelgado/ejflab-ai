@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SafeHtml } from '@angular/platform-browser';
-import { FlowchartProcessRequestData, IndicatorService, ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
-import { RacConfigData } from '../../services/knowledge.service';
+import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
 
 @Component({
   selector: 'app-llm',
@@ -20,23 +20,17 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
-  config: RacConfigData = {
-    systemPrompt: 'Eres un asistente en español',
-    queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
-    maxTokens: 1024,
-    k: 2,
-    maxDistance: 0.6,
-    useRAC: false,
-    showKnowledge: false,
-    outputAudio: false,
-  };
+  config: RacConfigData;
 
   constructor(
     private fb: FormBuilder,
     private LLMSrv: LLMService,
     private cdr: ChangeDetectorRef,
+    private knowledgeSrv: KnowledgeService,
+    private dialog: MatDialog,
   ) {
     super();
+    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   resetChat() {
@@ -46,9 +40,7 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.formRight = this.fb.group({
-      text: ['', [Validators.required]],
-      systemPrompt: ['Eres un asistente en español', [Validators.required]],
-      maxTokens: [1024, [Validators.required]],
+      text: ['', []],
     });
     this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
       if (event.name == "chatSetup") {
@@ -68,15 +60,31 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
       return;
     }
     const field = this.formRight.get('text');
-    const systemPrompt = this.formRight.get('systemPrompt');
-    const maxTokens = this.formRight.get('maxTokens');
-    if (!field || !systemPrompt || !maxTokens) {
+    if (!field) {
       return;
     }
-    let text = field.value;
+    let text: string = field.getRawValue();
     if (text.trim().length == 0) {
       return;
     }
     await this.LLMSrv.chat(text, this.gpt4allSession, this.config);
+  }
+
+  async configure() {
+    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
+      data: {
+        data: this.config
+      },
+      //disableClose: true,
+      panelClass: ['popup_1', 'nogalespopup'],
+    });
+    if (dialogRef) {
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.config = result;
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 }
