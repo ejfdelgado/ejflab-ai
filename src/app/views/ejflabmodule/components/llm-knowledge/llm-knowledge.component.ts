@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IndicatorService, ModalService } from 'ejflab-front-lib';
+import { ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
 import { RacConfigData } from '../../services/knowledge.service';
 import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
+import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -55,6 +57,20 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     private LLMSrv: LLMService,
   ) {
     super();
+    this.refreshConfig();
+  }
+
+  refreshConfig() {
+    const old = MyCookies.getCookie("RAC_CONFIG");
+    if (old) {
+      try {
+        const unparsed = Buffer.from(old, "base64").toString('utf8');
+        const parsed = JSON.parse(unparsed);
+        this.config = parsed;
+      } catch (err) {
+
+      }
+    }
   }
 
   resetChat() {

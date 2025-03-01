@@ -5,6 +5,8 @@ import { ModalService } from 'ejflab-front-lib';
 import { RacConfigData } from '../../services/knowledge.service';
 import { RACDatabaseService, SchemaDataType, TableDataType } from '../../services/racDatabase.service';
 import { PopupDatabaseEditComponent } from '../popup-database-edit/popup-database-edit.component';
+import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-popup-rac-config',
@@ -103,6 +105,8 @@ export class PopupRacConfigComponent implements OnInit {
     this.data.schema = this.formRight.get('schema')?.getRawValue();
     this.data.table = this.formRight.get('table')?.getRawValue();
     // Rewrite all
+    const base64 = Buffer.from(JSON.stringify(this.data), "utf8").toString('base64');
+    MyCookies.setCookie("RAC_CONFIG", base64);
     this.dialogRef.close(this.data);
   }
 
