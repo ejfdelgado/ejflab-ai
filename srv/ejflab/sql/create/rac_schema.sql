@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS rac_${schema | singleWord} AUTHORIZATION "user";

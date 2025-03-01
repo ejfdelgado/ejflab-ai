@@ -1,4 +1,4 @@
 -- list all schemas
-SELECT table_schema
-FROM information_schema.tables
-GROUP BY table_schema;
+SELECT nspname
+FROM pg_namespace
+WHERE nspname LIKE 'rac_%';

@@ -19,8 +19,10 @@ export class EjflabSrv {
     app.get("/srv/rac/page", [commonHeaders, handleErrorsDecorator(RACServices.page),]);
 
     app.get("/srv/rac/db/schemas", [commonHeaders, handleErrorsDecorator(RACServices.getSchemas),]);
-    app.get("/srv/rac/db/:schema/tables", [commonHeaders, handleErrorsDecorator(RACServices.getTableOfschemas),]);
-    app.get("/srv/rac/db/:schema/table/create", [commonHeaders, handleErrorsDecorator(RACServices.createTableOfschema),]);
-    app.get("/srv/rac/db/:schema/table/destroy", [commonHeaders, handleErrorsDecorator(RACServices.destroyTableOfschema),]);
+    app.get("/srv/rac/db/schemas/:schema/create", [commonHeaders, handleErrorsDecorator(RACServices.createSchema),]);
+    app.get("/srv/rac/db/schemas/:schema/destroy", [commonHeaders, handleErrorsDecorator(RACServices.destroySchema),]);
+    app.get("/srv/rac/db/schemas/:schema/tables", [commonHeaders, handleErrorsDecorator(RACServices.getTableOfschemas),]);
+    app.get("/srv/rac/db/schemas/:schema/tables/:table/create", [commonHeaders, handleErrorsDecorator(RACServices.createTableOfschema),]);
+    app.get("/srv/rac/db/schemas/:schema/tables/:table/destroy", [commonHeaders, handleErrorsDecorator(RACServices.destroyTableOfschema),]);
   }
 }
