@@ -17,7 +17,13 @@ export class RACDatabaseService {
         private httpSrv: HttpService,
     ) { }
 
-    getSchemas() {
+    async getSchemas(): Promise<SchemaDataType[]> {
+        let response: SchemaDataType[] = [];
+        return response;
+    }
 
+    async getTables(schema: string): Promise<TableDataType[]> {
+        let response: TableDataType[] = [];
+        return response;
     }
 }
