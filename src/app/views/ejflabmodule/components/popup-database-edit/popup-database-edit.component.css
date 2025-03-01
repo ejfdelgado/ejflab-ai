@@ -3,10 +3,25 @@
     cursor: pointer;
 }
 
-.basic_item:hover {
+.basic_item:hover,
+.basic_item.selected {
     background-color: lightblue;
 }
 
 .btn.peque {
     height: 57px;
+}
+
+.btn.red {
+    background-color: red;
+}
+
+.btn.disabled {
+    pointer-events: none;
+    background-color: gray;
+}
+
+.scrolled_container {
+    max-height: 200px;
+    overflow-y: scroll;
 }

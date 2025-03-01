@@ -19,6 +19,8 @@ export class PopupDatabaseEditComponent implements OnInit {
   form: FormGroup;
   schemas: SchemaDataType[] = [];
   tables: TableDataType[] = [];
+  schemaName: string = "";
+  tableName: string = "";
 
   constructor(
     public fb: FormBuilder,
@@ -36,12 +38,29 @@ export class PopupDatabaseEditComponent implements OnInit {
       schemaName: ["", []],
       tableName: ["", []],
     });
+
+    this.form.get('schemaName')?.valueChanges.subscribe((next) => {
+      this.schemaName = next;
+    });
+    this.form.get('tableName')?.valueChanges.subscribe((next) => {
+      this.tableName = next;
+    });
     this.refreshSchemas();
   }
 
+  isSchemaPresent() {
+    const filtered = this.schemas.filter((schema) => { return schema.name == this.schemaName });
+    return filtered.length > 0;
+  }
+
+  isTablePresent() {
+    const filtered = this.tables.filter((table) => { return table.name == this.tableName });
+    return filtered.length > 0;
+  }
+
   isNameValid(name: string) {
-    if (!/[a-z]+/.exec(name.trim())) {
-      this.modalSrv.alert({ title: "Opps!", txt: "Names only can contain a-z characters" });
+    if (!/^[a-z_]+$/.exec(name.trim())) {
+      this.modalSrv.alert({ title: "Opps!", txt: "Names only can contain a-z and _ characters" });
       return false;
     }
     return true;
@@ -53,7 +72,7 @@ export class PopupDatabaseEditComponent implements OnInit {
   }
 
   async refreshTables() {
-    const name = this.form.get('schemaName')?.getRawValue();
+    const name = this.form.get('schemaName')?.getRawValue().trim();
     if (!name) {
       return;
     }
@@ -82,11 +101,12 @@ export class PopupDatabaseEditComponent implements OnInit {
   }
 
   async destroySchema() {
-    const name = this.form.get('schemaName')?.getRawValue();
+    const name = this.form.get('schemaName')?.getRawValue().trim();
     if (name) {
-      const confirm = await this.modalSrv.confirm({ title: `Destroy ${name} schema?`, txt: "Can't be undone" });
+      const confirm = await this.modalSrv.confirm({ title: `Destroy "${name}" schema?`, txt: "Can't be undone" });
       if (confirm) {
         await this.rACDatabaseSrv.destroySchema(name);
+        this.tables = [];
         this.refreshSchemas();
       }
     }
@@ -105,8 +125,11 @@ export class PopupDatabaseEditComponent implements OnInit {
     const schemaName = this.form.get('schemaName')?.getRawValue().trim();
     const tableName = this.form.get('tableName')?.getRawValue().trim();
     if (this.isNameValid(schemaName) && this.isNameValid(tableName)) {
-      await this.rACDatabaseSrv.destroyTable(schemaName, tableName);
-      this.refreshTables();
+      const confirm = await this.modalSrv.confirm({ title: `Destroy "${schemaName}.${tableName}" table?`, txt: "Can't be undone" });
+      if (confirm) {
+        await this.rACDatabaseSrv.destroyTable(schemaName, tableName);
+        this.refreshTables();
+      }
     }
   }
 
