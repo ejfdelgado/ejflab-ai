@@ -21,6 +21,8 @@ export interface RacConfigData {
     useRAC: boolean;
     showKnowledge: boolean;
     outputAudio: boolean;
+    schema?: string;
+    table?: string;
 }
 
 @Injectable({

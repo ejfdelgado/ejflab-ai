@@ -9,7 +9,7 @@
     <form class="form-container layout_columna border_bottom" [formGroup]="formRight">
         <div class="container_horizontal width_100">
             <div class="container_vertical full">
-                <div class="container_horizontal full">
+                <div class="container_horizontal gap_10 full">
                     <mat-form-field>
                         <mat-label>Max tokens:</mat-label>
                         <input type="number" matInput formControlName="maxTokens">
@@ -58,6 +58,26 @@
                     </div>
                 </div>
                 <div class="margin_10"></div>
+                <div class="container_horizontal gap_10">
+                    <mat-form-field>
+                        <mat-label>Shema</mat-label>
+                        <select matNativeControl formControlName="schema">
+                            <option [ngValue]="null"></option>
+                            <option *ngFor="let schema of schemas" [ngValue]="schema.name">{{schema.name}}</option>
+                        </select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Table</mat-label>
+                        <select matNativeControl formControlName="table">
+                            <option [ngValue]="null"></option>
+                            <option *ngFor="let table of tables" [ngValue]="table.name">{{table.name}}</option>
+                        </select>
+                    </mat-form-field>
+                    <button class="btn peque btn-secondary" (click)="manageDatabase()" type="button">
+                        <mat-icon>settings</mat-icon>
+                        Manage
+                    </button>
+                </div>
             </div>
         </div>
     </form>

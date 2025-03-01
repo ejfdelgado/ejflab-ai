@@ -128,5 +128,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       //disableClose: true,
       panelClass: ['popup_1', 'nogalespopup'],
     });
+    if (dialogRef) {
+      dialogRef.afterClosed().subscribe((result) => {
+        //
+      });
+    }
   }
 }
