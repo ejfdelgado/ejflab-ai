@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { KnowledgeService, QADataType } from '../../services/knowledge.service';
+import { KnowledgeService, QADataType, RacConfigData } from '../../services/knowledge.service';
 import { JsonColorPipe, ModalService } from 'ejflab-front-lib';
 
 @Component({
@@ -16,6 +16,7 @@ import { JsonColorPipe, ModalService } from 'ejflab-front-lib';
 export class KnowledgeListComponent implements OnInit, OnChanges {
   formBottom: FormGroup;
   @Input() currentMatches: QADataType[];
+  @Input() config: RacConfigData;
   @Output() currentMatchesChange: EventEmitter<QADataType[]> = new EventEmitter();
   @Output() deleteEntry: EventEmitter<QADataType> = new EventEmitter();
   @Output() updateEntry: EventEmitter<QADataType> = new EventEmitter();
@@ -69,7 +70,7 @@ export class KnowledgeListComponent implements OnInit, OnChanges {
   }
 
   async updateEntryFun(currentMatch: QADataType) {
-    const response = await this.knowledgeSrv.update(currentMatch);
+    const response = await this.knowledgeSrv.update(currentMatch, this.config);
     this.updateEntry.emit(currentMatch);
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
@@ -80,7 +81,7 @@ export class KnowledgeListComponent implements OnInit, OnChanges {
     if (!confirm) {
       return;
     }
-    const deleted = await this.knowledgeSrv.delete(currentMatch);
+    const deleted = await this.knowledgeSrv.delete(currentMatch, this.config);
     if (deleted) {
       const index = this.currentMatches.indexOf(currentMatch);
       this.currentMatches.splice(index, 1);

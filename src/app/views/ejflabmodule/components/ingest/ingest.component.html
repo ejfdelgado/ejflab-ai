@@ -14,9 +14,9 @@
                 </mat-form-field>
             </div>
             <div class="container_vertical">
-                <button class="btn" (click)="configureDatabase()">
-                    Configure database
+                <button class="btn" (click)="configure()">
                     <mat-icon class="peque">settings</mat-icon>
+                    Configure
                 </button>
             </div>
         </div>
@@ -56,6 +56,6 @@
                 </button>
             </div>
         </form>
-        <app-knowledge-list [(currentMatches)]="currentMatches"></app-knowledge-list>
+        <app-knowledge-list [(currentMatches)]="currentMatches" [config]="config"></app-knowledge-list>
     </div>
 </div>

@@ -10,7 +10,8 @@
                 </div>
             </div>
             <div class="container_vertical full knowledge_container" *ngIf="config.showKnowledge">
-                <app-knowledge-list class="width_100" [(currentMatches)]="answer.knowledge"></app-knowledge-list>
+                <app-knowledge-list class="width_100" [config]="config"
+                    [(currentMatches)]="answer.knowledge"></app-knowledge-list>
             </div>
         </div>
     </div>

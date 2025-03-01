@@ -36,7 +36,7 @@ export class KnowledgeService {
         public flowchartSrv: FlowchartService,
     ) { }
 
-    async index(text: string, documentId: string) {
+    async index(text: string, documentId: string, config: RacConfigData) {
 
         // Split text into... ==, then with => if it exists
         const chunksTokens = text.trim().split(/[\n\r]/g);
@@ -68,6 +68,8 @@ export class KnowledgeService {
             room: 'processors',
             namedInputs: {
                 knowledge: chunks,
+                schema: config.schema,
+                table: config.table,
             },
             data: {
 
@@ -87,7 +89,7 @@ export class KnowledgeService {
         return (await this.httpSrv.get(`srv/rac/page?${queryString}`)) as QADataType[];
     }
 
-    async search(query: string, k: number, maxDistance: number): Promise<QADataType[] | null> {
+    async search(query: string, config: RacConfigData): Promise<QADataType[] | null> {
         // Call the processor
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
@@ -95,8 +97,10 @@ export class KnowledgeService {
             room: 'processors',
             namedInputs: {
                 query: query,
-                kReRank: k,
-                max_distance: maxDistance,
+                kReRank: config.k,
+                max_distance: config.maxDistance,
+                schema: config.schema,
+                table: config.table,
             },
             data: {
 
@@ -109,7 +113,7 @@ export class KnowledgeService {
         return null;
     }
 
-    async update(currentMatch: QADataType) {
+    async update(currentMatch: QADataType, config: RacConfigData) {
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
             processorMethod: 'baai.update',
@@ -121,6 +125,8 @@ export class KnowledgeService {
                     text_indexed: currentMatch.text_indexed,
                     document_id: currentMatch.document_id,
                 },
+                schema: config.schema,
+                table: config.table,
             },
             data: {
 
@@ -130,7 +136,7 @@ export class KnowledgeService {
         return response;
     }
 
-    async delete(currentMatch: QADataType) {
+    async delete(currentMatch: QADataType, config: RacConfigData) {
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
             processorMethod: 'baai.delete',
@@ -139,6 +145,8 @@ export class KnowledgeService {
                 item: {
                     id: `${currentMatch.id}`,
                 },
+                schema: config.schema,
+                table: config.table,
             },
             data: {
 

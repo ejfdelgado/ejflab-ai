@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IndicatorService, JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
+import { JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
 import { KnowledgeService, QADataType, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupDatabaseEditComponent } from '../popup-database-edit/popup-database-edit.component';
+import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
 
 @Component({
   selector: 'app-ingest',
@@ -32,10 +32,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   constructor(
     public fb: FormBuilder,
     public modalSrv: ModalService,
-    private indicatorSrv: IndicatorService,
     public knowledgeSrv: KnowledgeService,
     public jsonColorPipe: JsonColorPipe,
     private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
   ) {
     super();
     this.config = this.knowledgeSrv.loadLocalConfig();
@@ -58,7 +58,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!text || !documentId) {
       return;
     }
-    const response = await this.knowledgeSrv.index(text.value, documentId.value);
+    const response = await this.knowledgeSrv.index(text.value, documentId.value, this.config);
     this.lastAction = "index";
     const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
@@ -69,7 +69,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!query) {
       return;
     }
-    const rerank = await this.knowledgeSrv.search(query.value, this.config.k, this.config.maxDistance);
+    const rerank = await this.knowledgeSrv.search(query.value, this.config);
     if (rerank) {
       this.currentMatches = rerank;
     } else {
@@ -118,17 +118,20 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     }
   }
 
-  async configureDatabase() {
-    const dialogRef = this.dialog.open(PopupDatabaseEditComponent, {
+  async configure() {
+    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
       data: {
-
+        data: this.config
       },
       //disableClose: true,
       panelClass: ['popup_1', 'nogalespopup'],
     });
     if (dialogRef) {
       dialogRef.afterClosed().subscribe((result) => {
-        //
+        if (result) {
+          this.config = result;
+          this.cdr.detectChanges();
+        }
       });
     }
   }

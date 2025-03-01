@@ -50,7 +50,7 @@ export class LLMService {
         let knowledge: QADataType[] = [];
         if (config.useRAC) {
             // First fetch knowledge
-            const knowledgeTemp = await this.knowledgeSrv.search(text, config.k, config.maxDistance);
+            const knowledgeTemp = await this.knowledgeSrv.search(text, config);
             if (knowledgeTemp && knowledgeTemp.length > 0) {
                 knowledge = knowledgeTemp;
                 // Then build prompt
