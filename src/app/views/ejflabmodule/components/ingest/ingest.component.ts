@@ -3,6 +3,8 @@ import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IndicatorService, JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
 import { KnowledgeService, QADataType } from '../../services/knowledge.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupDatabaseEditComponent } from '../popup-database-edit/popup-database-edit.component';
 
 @Component({
   selector: 'app-ingest',
@@ -32,6 +34,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     private indicatorSrv: IndicatorService,
     public knowledgeSrv: KnowledgeService,
     public jsonColorPipe: JsonColorPipe,
+    private dialog: MatDialog,
   ) {
     super();
   }
@@ -115,5 +118,15 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
         .join('\n\n');
       text.setValue(replacementText);
     }
+  }
+
+  async configureDatabase() {
+    const dialogRef = this.dialog.open(PopupDatabaseEditComponent, {
+      data: {
+
+      },
+      //disableClose: true,
+      panelClass: ['popup_1', 'nogalespopup'],
+    });
   }
 }

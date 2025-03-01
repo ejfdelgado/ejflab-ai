@@ -24,6 +24,7 @@ import { KnowledgeListComponent } from './components/knowledge-list/knowledge-li
 import { PopupRacConfigComponent } from './components/popup-rac-config/popup-rac-config.component';
 import { SpeechToTextComponent } from './components/speech-to-text/speech-to-text.component';
 import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
+import { PopupDatabaseEditComponent } from './components/popup-database-edit/popup-database-edit.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { TextToSpeechComponent } from './components/text-to-speech/text-to-speec
     KnowledgeListComponent,
     PopupRacConfigComponent,
     SpeechToTextComponent,
-    TextToSpeechComponent
+    TextToSpeechComponent,
+    PopupDatabaseEditComponent
   ],
   imports: [
     CommonModule,

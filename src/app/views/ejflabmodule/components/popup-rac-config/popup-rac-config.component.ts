@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModalService } from 'ejflab-front-lib';
@@ -15,7 +15,7 @@ import { RacConfigData } from '../../services/knowledge.service';
     './popup-rac-config.component.css'
   ]
 })
-export class PopupRacConfigComponent {
+export class PopupRacConfigComponent implements OnInit {
   formRight: FormGroup;
   data: RacConfigData;
   useRAC: boolean;
