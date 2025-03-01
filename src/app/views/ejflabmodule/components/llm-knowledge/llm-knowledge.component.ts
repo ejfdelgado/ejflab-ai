@@ -50,7 +50,14 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
-  resetChat() {
+  async resetChat() {
+    const confirm = await this.modalSrv.confirm({
+      title: '¿Sure?',
+      txt: "Can't be undone.",
+    });
+    if (!confirm) {
+      return;
+    }
     this.gpt4allSession = [];
     this.answers = [];
   }
