@@ -61,9 +61,6 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   }
 
   async checkPlay() {
-    if (this.text2speechSrv.isPlaying()) {
-      return;
-    }
     if (this.text2speechArray.length > 0) {
       // gets the first element
       const firstText = this.text2speechArray.splice(0, 1)[0];
