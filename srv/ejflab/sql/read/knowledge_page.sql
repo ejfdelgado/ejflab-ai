@@ -7,6 +7,6 @@ created,
 updated
 FROM 
 public.knowledge
-ORDER BY ${orderColumn} ${direction}
-LIMIT ${limit}
-OFFSET ${offset};
+ORDER BY '${orderColumn | noQuotes}' ${direction | sanitizeNumber}
+LIMIT ${limit | sanitizeNumber}
+OFFSET ${offset | sanitizeNumber};
