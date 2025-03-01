@@ -8,21 +8,39 @@
 <mat-dialog-content class="mat-typography container_popup">
     <form class="container_horizontal gap_10" [formGroup]="form">
         <div class="container_vertical full">
-            <mat-form-field>
-                <mat-label>Schema:</mat-label>
-                <input type="text" matInput formControlName="schemaName">
-            </mat-form-field>
+            <div class="container_horizontal gap_10">
+                <mat-form-field class="full">
+                    <mat-label>Schema:</mat-label>
+                    <input type="text" matInput formControlName="schemaName">
+                </mat-form-field>
+                <button class="btn peque btn-secondary" (click)="createSchema()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button class="btn peque btn-secondary" (click)="destroySchema()" type="button">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
             <div class="container_vertical full">
-                <div class="basic_item schema_item" (click)="selectSchema(schema)" *ngFor="let schema of schemas">{{ schema.name }}</div>
+                <div class="basic_item schema_item" (click)="selectSchema(schema)" *ngFor="let schema of schemas">{{
+                    schema.name }}</div>
             </div>
         </div>
         <div class="container_vertical full">
-            <mat-form-field>
-                <mat-label>Table:</mat-label>
-                <input type="text" matInput formControlName="tableName">
-            </mat-form-field>
+            <div class="container_horizontal gap_10">
+                <mat-form-field>
+                    <mat-label>Table:</mat-label>
+                    <input type="text" matInput formControlName="tableName">
+                </mat-form-field>
+                <button class="btn peque btn-secondary" (click)="createTable()" type="button">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button class="btn peque btn-secondary" (click)="destroyTable()" type="button">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
             <div class="container_vertical full">
-                <div class="basic_item table_item" (click)="selectTable(table)" *ngFor="let table of tables">{{ table.name }}</div>
+                <div class="basic_item table_item" (click)="selectTable(table)" *ngFor="let table of tables">{{
+                    table.name }}</div>
             </div>
         </div>
     </form>

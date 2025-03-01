@@ -6,3 +6,7 @@
 .basic_item:hover {
     background-color: lightblue;
 }
+
+.btn.peque {
+    height: 57px;
+}
