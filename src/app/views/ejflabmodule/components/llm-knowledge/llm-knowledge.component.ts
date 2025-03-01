@@ -35,7 +35,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     maxDistance: 0.6,
     useRAC: false,
     showKnowledge: false,
-    outputAudio: true,
+    outputAudio: false,
   };
   onSpeechStartSubscription: Subscription | null = null;
   llmEvents: Subscription | null = null;
@@ -43,6 +43,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   textIndex = 0;
   MIN_CHARACTERS = 50;
   text2speechArray: string[] = [];
+  wasListening: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -104,13 +105,20 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         if ((complete_words && complete_words[0].length > this.MIN_CHARACTERS) || event.name == "chatEnds") {
           if (event.name == "chatEnds") {
             this.text2speechArray.push(sub);
+            if (!this.config.outputAudio) {
+              if (this.wasListening) {
+                this.speech2TextSrv.start();
+              }
+            }
           } else {
             if (complete_words) {
               this.text2speechArray.push(complete_words[0]);
               this.textIndex += complete_words[0].length;
             }
           }
-          this.checkPlay();
+          if (this.config.outputAudio) {
+            this.checkPlay();
+          }
         }
       }
       // scroll down
@@ -121,7 +129,12 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         const message = event.audio.transcript.transcription;
         const field = this.formRight.get('text');
         field?.setValue(message);
-        this.speech2TextSrv.pause();
+        if (this.speech2TextSrv.isListening()) {
+          this.wasListening = true;
+          this.speech2TextSrv.pause();
+        } else {
+          this.wasListening = false;
+        }
         this.cdr.detectChanges();
         this.chat();
       }
