@@ -7,7 +7,7 @@ export interface HeartBeatData {
 };
 
 export interface Text2SpeechEventData {
-    name: "starts" | "ends";
+    name: "starts" | "ends" | "endsAll";
 }
 
 @Injectable({
@@ -30,9 +30,15 @@ export class Text2SpeechService {
                 this.step1 = this.step1Buffer.splice(0, 1)[0];
                 this.callService(this.step1);
             }
-            if (this.step2Buffer.length > 0 && this.step2 == null) {
-                this.step2 = this.step2Buffer.splice(0, 1)[0];
-                this.playSound(this.step2);
+            if (this.step2Buffer.length > 0) {
+                if (this.step2 == null) {
+                    this.step2 = this.step2Buffer.splice(0, 1)[0];
+                    this.playSound(this.step2);
+                }
+            }
+
+            if (this.step1Buffer.length == 0 && this.step2Buffer.length == 0 && this.step1 == null && this.step2 == null) {
+                this.audioEvents.emit({ name: "endsAll" });
             }
         });
     }
@@ -73,7 +79,8 @@ export class Text2SpeechService {
 
     async convert(text: string) {
         const ident: HeartBeatData = {
-            text,
+            // Remove all non characters or numbers
+            text: text.replace(/[^a-záéíóúÁÉÍÓÚüÜñÑA-Z0-9,.:\?\!\s]/g, " "),
         };
         this.step1Buffer.push(ident);
         this.heartBeat.emit();

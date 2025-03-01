@@ -33,8 +33,9 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     maxTokens: 1024,
     k: 2,
     maxDistance: 0.6,
-    useRAC: true,
+    useRAC: false,
     showKnowledge: false,
+    outputAudio: true,
   };
   onSpeechStartSubscription: Subscription | null = null;
   llmEvents: Subscription | null = null;
@@ -75,6 +76,12 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     this.text2speechSrv.audioEvents.subscribe((event: Text2SpeechEventData) => {
       if (event.name == "ends") {
         this.checkPlay();
+      } else if (event.name == "endsAll") {
+        this.speech2TextSrv.start();
+        this.cdr.detectChanges();
+      } else if (event.name == "starts") {
+        this.speech2TextSrv.pause();
+        this.cdr.detectChanges();
       }
     });
     this.llmEvents = this.LLMSrv.LLMEvents.subscribe((event: LLMEventData) => {
@@ -114,6 +121,8 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         const message = event.audio.transcript.transcription;
         const field = this.formRight.get('text');
         field?.setValue(message);
+        this.speech2TextSrv.pause();
+        this.cdr.detectChanges();
         this.chat();
       }
       this.cdr.detectChanges();

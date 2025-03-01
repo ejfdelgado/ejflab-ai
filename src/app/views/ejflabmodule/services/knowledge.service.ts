@@ -20,6 +20,7 @@ export interface RacConfigData {
     k: number;
     useRAC: boolean;
     showKnowledge: boolean;
+    outputAudio: boolean;
 }
 
 @Injectable({

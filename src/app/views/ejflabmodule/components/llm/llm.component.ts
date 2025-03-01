@@ -28,6 +28,7 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
     maxDistance: 0.6,
     useRAC: false,
     showKnowledge: false,
+    outputAudio: false,
   };
 
   constructor(

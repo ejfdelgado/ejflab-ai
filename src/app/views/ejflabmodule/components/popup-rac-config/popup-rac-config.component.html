@@ -34,8 +34,7 @@
                 <div class="container_horizontal">
                     <div class="container_horizontal vcentered full gap_10">
                         <label class="switch">
-                            <input type="checkbox" [(ngModel)]="data.useRAC" (ngModelChange)="changeUseRAC($event)"
-                                [ngModelOptions]=" 
+                            <input type="checkbox" [(ngModel)]="data.useRAC" [ngModelOptions]=" 
                  {standalone: true}">
                             <div class="slider round"></div>
                         </label>
@@ -43,12 +42,19 @@
                     </div>
                     <div class="container_horizontal vcentered full gap_10">
                         <label class="switch">
-                            <input type="checkbox" [(ngModel)]="data.showKnowledge"
-                                (ngModelChange)="changeShowKnowledge($event)" [ngModelOptions]=" 
+                            <input type="checkbox" [(ngModel)]="data.showKnowledge" [ngModelOptions]=" 
                  {standalone: true}">
                             <div class="slider round"></div>
                         </label>
                         <div>Show knowledge?</div>
+                    </div>
+                    <div class="container_horizontal vcentered full gap_10">
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="data.outputAudio" [ngModelOptions]=" 
+                 {standalone: true}">
+                            <div class="slider round"></div>
+                        </label>
+                        <div>Output audio?</div>
                     </div>
                 </div>
                 <div class="margin_10"></div>

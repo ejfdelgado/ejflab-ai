@@ -35,7 +35,8 @@ export class PopupRacConfigComponent {
       maxDistance: temp.maxDistance,
       k: temp.k,
       useRAC: temp.useRAC,
-      showKnowledge: temp.showKnowledge
+      showKnowledge: temp.showKnowledge,
+      outputAudio: temp.outputAudio,
     }
   }
 
@@ -68,13 +69,5 @@ export class PopupRacConfigComponent {
     this.data.k = this.formRight.get('k')?.getRawValue();
     // Rewrite all
     this.dialogRef.close(this.data);
-  }
-
-  changeUseRAC(event: any) {
-
-  }
-
-  changeShowKnowledge(event: any) {
-
   }
 }

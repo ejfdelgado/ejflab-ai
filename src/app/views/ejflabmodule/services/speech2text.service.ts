@@ -271,7 +271,7 @@ export class Speech2TextService {
     }
 
     pause() {
-        if (this.myvad) {
+        if (this.myvad && this.listening == true) {
             this.myvad.pause();
             this.listening = false;
             this.states.listening = 0;
@@ -288,7 +288,7 @@ export class Speech2TextService {
             });
             const startTime = new Date().getTime();
             const payload: FlowchartProcessRequestData = {
-                loadingIndicator: false,
+                loadingIndicator: true,
                 channel: 'post',
                 processorMethod: 'speechToText1.transcript',
                 room: 'processors',
