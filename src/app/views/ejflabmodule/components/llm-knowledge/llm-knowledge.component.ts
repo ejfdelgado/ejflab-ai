@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
@@ -35,6 +35,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   MIN_CHARACTERS = 50;
   text2speechArray: string[] = [];
   wasListening: boolean = false;
+  @ViewChild('scrollableDiv') scrollableDiv!: ElementRef<HTMLDivElement>;
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +49,11 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   ) {
     super();
     this.config = this.knowledgeSrv.loadLocalConfig();
+  }
+
+  scrollToBottom() {
+    const div = this.scrollableDiv.nativeElement;
+    div.scrollTop = div.scrollHeight; // Scroll to the bottom
   }
 
   async resetChat() {
@@ -91,6 +97,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         this.answers.push(event.chat);
         const field = this.formRight.get('text');
         field?.setValue("");
+        this.scrollToBottom();
       } else if (event.name == "chatStart") {
         this.toc();
         this.textIndex = 0;
@@ -120,6 +127,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
             this.checkPlay();
           }
         }
+        this.scrollToBottom();
       }
       // scroll down
       this.cdr.detectChanges();
