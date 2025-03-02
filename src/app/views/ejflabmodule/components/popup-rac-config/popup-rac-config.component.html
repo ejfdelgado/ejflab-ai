@@ -9,20 +9,22 @@
     <form class="form-container layout_columna border_bottom" [formGroup]="formRight">
         <div class="container_horizontal width_100">
             <div class="container_vertical full">
-                <div class="container_horizontal gap_10 full">
-                    <mat-form-field>
+                <div class="container_horizontal gap_10 width_100">
+                    <mat-form-field class="full">
                         <mat-label>Max tokens:</mat-label>
                         <input type="number" matInput formControlName="maxTokens">
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field class="full">
                         <mat-label>Top:</mat-label>
                         <input type="number" matInput formControlName="k">
                     </mat-form-field>
-                    <mat-form-field>
+                </div>
+                <div class="container_horizontal gap_10 width_100">
+                    <mat-form-field class="full">
                         <mat-label>Max Distance:</mat-label>
                         <input type="number" matInput formControlName="maxDistance">
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field class="full">
                         <mat-label>Language</mat-label>
                         <select matNativeControl formControlName="language">
                             <option [ngValue]="'es'">Español</option>
