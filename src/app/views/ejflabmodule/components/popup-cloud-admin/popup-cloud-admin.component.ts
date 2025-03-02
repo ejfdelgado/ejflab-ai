@@ -23,7 +23,8 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
   services: { [key: string]: ServiceMetaData } = {
     "database": {
       label: "Database",
-      status: "pending"
+      status: "pending",
+      serviceName: "general",
     },
     "llm": {
       label: "LLM",
@@ -69,6 +70,22 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
 
   }
 
+  async updateDatabase(state: boolean, service: ServiceMetaData) {
+    if (state) {
+      const response: any = await this.httpSrv.get(`srv/rac/db/on?name=${service.serviceName}`);
+    } else {
+      const response: any = await this.httpSrv.get(`srv/rac/db/off?name=${service.serviceName}`);
+    }
+  }
+
+  async updateCloudRun(state: boolean, service: ServiceMetaData) {
+    if (state) {
+      const response: any = await this.httpSrv.get(`srv/rac/run/on?name=${service.serviceName}`);
+    } else {
+      const response: any = await this.httpSrv.get(`srv/rac/run/off?name=${service.serviceName}`);
+    }
+  }
+
   async readDBState(service: ServiceMetaData) {
     service.status = "pending";
     try {
@@ -101,11 +118,25 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
 
   async refresh(id: string, service: ServiceMetaData) {
     if (id == "database") {
-      // Use database
       await this.readDBState(service);
     } else {
-      // Use cloud function
       await this.readCloudRunState(service);
+    }
+  }
+
+  async startService(id: string, service: ServiceMetaData) {
+    if (id == "database") {
+      await this.updateDatabase(true, service);
+    } else {
+      await this.updateCloudRun(true, service);
+    }
+  }
+
+  async stopService(id: string, service: ServiceMetaData) {
+    if (id == "database") {
+      await this.updateDatabase(false, service);
+    } else {
+      await this.updateCloudRun(false, service);
     }
   }
 

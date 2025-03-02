@@ -12,11 +12,11 @@
                 <mat-icon (click)="refresh(service.key, service.value)" class="indicator" [ngClass]="service.value.status">{{
                     service.value.status }}</mat-icon>
                 <label class="full">{{ service.value.label }}</label>
-                <button class="btn btn-primary action start" [ngClass]="service.value.status">
+                <button (click)="startService(service.key, service.value)" class="btn btn-primary action start" [ngClass]="service.value.status">
                     <mat-icon>play_arrow</mat-icon>
                     Start
                 </button>
-                <button class="btn btn-primary action stop" [ngClass]="service.value.status">
+                <button (click)="stopService(service.key, service.value)" class="btn btn-primary action stop" [ngClass]="service.value.status">
                     <mat-icon>pause</mat-icon>
                     Pause
                 </button>
