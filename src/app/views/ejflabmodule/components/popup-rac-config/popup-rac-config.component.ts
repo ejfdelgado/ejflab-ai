@@ -49,6 +49,7 @@ export class PopupRacConfigComponent implements OnInit {
       schema: temp.schema,
       table: temp.table,
       language: temp.language,
+      assistantName: temp.assistantName
     }
   }
 
@@ -62,6 +63,7 @@ export class PopupRacConfigComponent implements OnInit {
       schema: [this.data.schema, []],
       table: [this.data.table, []],
       language: [this.data.language, []],
+      assistantName: [this.data.assistantName, []],
     });
 
     if (this.data.schema) {
@@ -107,6 +109,8 @@ export class PopupRacConfigComponent implements OnInit {
     this.data.schema = this.formRight.get('schema')?.getRawValue();
     this.data.table = this.formRight.get('table')?.getRawValue();
     this.data.language = this.formRight.get('language')?.getRawValue();
+    this.data.assistantName = this.formRight.get('assistantName')?.getRawValue();
+    
     // Rewrite all
     const base64 = Buffer.from(JSON.stringify(this.data), "utf8").toString('base64');
     MyCookies.setCookie("RAC_CONFIG", base64);

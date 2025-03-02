@@ -136,11 +136,36 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
           this.wasListening = false;
         }
         this.cdr.detectChanges();
-        this.chat();
+        // Check if the speech was directed to the assistant
+        const name = this.config.assistantName;
+        const control = this.formRight.get('text');
+        if (control) {
+          const query: string = control.getRawValue();
+          const index = this.sanitizeText(query).indexOf(this.sanitizeText(name));
+          //console.log(`The name ${name} found at ${index} inside ${query}`);
+          if (index >= 0 && index <= 10) {
+            const truncated = query.substring(index + name.length).replace(/^\s*[,.;!]\s*/, "");
+            control.setValue(truncated);
+            this.chat();
+          } else {
+            if (this.wasListening) {
+              this.speech2TextSrv.start();
+            }
+          }
+        }
       }
       this.cdr.detectChanges();
     });
     await this.speech2TextSrv.turnOn(this.config);
+  }
+
+  sanitizeText(text: string) {
+    text = text.toLocaleLowerCase().replace('á', "a");
+    text = text.toLocaleLowerCase().replace('é', "e");
+    text = text.toLocaleLowerCase().replace('í', "i");
+    text = text.toLocaleLowerCase().replace('ó', "o");
+    text = text.toLocaleLowerCase().replace('ú', "u");
+    return text;
   }
 
   async ngOnDestroy() {

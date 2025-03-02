@@ -26,6 +26,7 @@ export interface RacConfigData {
     schema?: string;
     table?: string;
     language: string;
+    assistantName: string;
 }
 
 export interface ProgressIndexData {
@@ -238,6 +239,7 @@ export class KnowledgeService {
             showKnowledge: false,
             outputAudio: false,
             language: "es",
+            assistantName: "pinpon"
         };
     }
 }
