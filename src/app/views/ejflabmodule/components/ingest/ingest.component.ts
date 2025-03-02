@@ -22,6 +22,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   currentMatches: QADataType[] = [];
   lastAction: string = "";
   config: RacConfigData;
+  indexProgress: number = 0;
   paging: PagingData = {
     limit: 10,
     offset: 0,
@@ -53,15 +54,22 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   }
 
   async indexQA() {
+    this.indexProgress = 0;
     const text = this.formRight.get('text');
     const documentId = this.formRight.get('documentId');
     if (!text || !documentId) {
       return;
     }
-    const response = await this.knowledgeSrv.index(text.value, documentId.value, this.config);
-    this.lastAction = "index";
-    const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
-    this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+    const emitter = this.knowledgeSrv.index(text.value, documentId.value, this.config);
+    if (emitter) {
+      emitter.subscribe((event) => {
+        this.indexProgress = Math.ceil(100*event.processed / event.total);
+        this.cdr.detectChanges();
+      });
+      this.lastAction = "index";
+      //const html = "<pre>" + this.jsonColorPipe.transform(response) + "</pre>";
+      //this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
+    }
   }
 
   async search() {

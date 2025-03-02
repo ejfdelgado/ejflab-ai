@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { FlowchartProcessRequestData, FlowchartService, HttpService, PagingData } from 'ejflab-front-lib';
 import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
 import { Buffer } from 'buffer';
@@ -28,17 +28,26 @@ export interface RacConfigData {
     language: string;
 }
 
+export interface ProgressIndexData {
+    total: number;
+    processed: number;
+    response: any;
+    error: any;
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class KnowledgeService {
+    ITEMS_PER_INVOCATION = 5;
+
     constructor(
         private httpSrv: HttpService,
         public flowchartSrv: FlowchartService,
     ) { }
 
-    async index(text: string, documentId: string, config: RacConfigData) {
-
+    index(text: string, documentId: string, config: RacConfigData): EventEmitter<ProgressIndexData> | null {
+        const emitter: EventEmitter<ProgressIndexData> = new EventEmitter<ProgressIndexData>();
         // Split text into... ==, then with => if it exists
         const chunksTokens = text.trim().split(/[\n\r]/g);
         const chunks = chunksTokens
@@ -63,6 +72,38 @@ export class KnowledgeService {
         if (chunks.length == 0) {
             return null;
         }
+        this.processAllChunks(chunks, config, emitter);
+        return emitter;
+    }
+
+    async processAllChunks(chunks: string[], config: RacConfigData, emitter: EventEmitter<ProgressIndexData>) {
+
+        const total = chunks.length;
+        let processed = 0;
+        do {
+            const subChunks = chunks.splice(0, this.ITEMS_PER_INVOCATION);
+            try {
+                const response = await this.processChunks(subChunks, config);
+                processed += subChunks.length;
+                emitter.emit({
+                    total,
+                    processed,
+                    response,
+                    error: null,
+                });
+            } catch (err: any) {
+                processed += subChunks.length;
+                emitter.emit({
+                    total,
+                    processed,
+                    response: null,
+                    error: err,
+                });
+            }
+        } while (chunks.length > 0);
+    }
+
+    async processChunks(chunks: string[], config: RacConfigData) {
         const payload: FlowchartProcessRequestData = {
             channel: 'post',
             processorMethod: 'baai.index',
