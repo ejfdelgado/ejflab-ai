@@ -14,18 +14,24 @@
     color: green;
 }
 
-.indicator.help {
+.indicator.pending {
     color: gray;
+    /*pointer-events: none;*/
 }
 
-.indicator.pendig {
-    pointer-events: none;
-}
-
-.action.start {
+.btn.action.start {
     background-color: green;
 }
 
-.action.start {
+.btn.action.stop {
     background-color: red;
+}
+
+
+.btn.action.pending,
+.btn.action.start.mood,
+.btn.action.stop.sentiment_very_dissatisfied
+ {
+    background-color: lightgray !important;
+    pointer-events: none;
 }

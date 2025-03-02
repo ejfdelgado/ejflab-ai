@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpService, ModalService } from 'ejflab-front-lib';
 
 export interface ServiceMetaData {
   label: string;
-  status: "sentiment_very_dissatisfied" | "mood" | "help" | "pending";
+  status: "sentiment_very_dissatisfied" | "mood" | "pending";
+  serviceName?: string;
 }
 
 @Component({
@@ -18,34 +19,39 @@ export interface ServiceMetaData {
     './popup-cloud-admin.component.css'
   ]
 })
-export class PopupCloudAdminComponent {
-  services: {[key: string]: ServiceMetaData} = {
+export class PopupCloudAdminComponent implements OnInit, OnDestroy {
+  services: { [key: string]: ServiceMetaData } = {
     "database": {
       label: "Database",
-      status: "help"
+      status: "pending"
     },
     "llm": {
       label: "LLM",
-      status: "help"
+      status: "pending",
+      serviceName: "llm",
     },
     "speech2text": {
       label: "Speech to Text",
-      status: "help"
+      status: "pending",
+      serviceName: "speech2text",
     },
     "text2speech": {
       label: "Text to Speech",
-      status: "help"
+      status: "pending",
+      serviceName: "text2speech",
     },
     "baai": {
       label: "Text Indexer",
-      status: "help"
+      status: "pending",
+      serviceName: "baai",
     },
     "chunker": {
       label: "Text Chunker",
-      status: "help"
+      status: "pending",
+      serviceName: "chunker",
     }
   };
-    
+
   constructor(
     private dialogRef: MatDialogRef<PopupCloudAdminComponent>,
     private modalSrv: ModalService,
@@ -55,8 +61,52 @@ export class PopupCloudAdminComponent {
     //
   }
 
-  async refresh(service?: string) {
+  ngOnDestroy(): void {
 
+  }
+
+  async ngOnInit(): Promise<void> {
+
+  }
+
+  async readDBState(service: ServiceMetaData) {
+    service.status = "pending";
+    try {
+      const response: any = await this.httpSrv.get("srv/rac/db/state", { showIndicator: false });
+      if (response.status == true) {
+        service.status = "mood";
+      } else {
+        service.status = "sentiment_very_dissatisfied";
+      }
+      this.cdr.detectChanges();
+    } catch (err) {
+
+    }
+  }
+
+  async readCloudRunState(service: ServiceMetaData) {
+    service.status = "pending";
+    try {
+      const response: any = await this.httpSrv.get(`srv/rac/run/state?name=${service.serviceName}`, { showIndicator: false });
+      if (response.status == "CONDITION_SUCCEEDED" && response.minInstanceCount > 0) {
+        service.status = "mood";
+      } else {
+        service.status = "sentiment_very_dissatisfied";
+      }
+      this.cdr.detectChanges();
+    } catch (err) {
+
+    }
+  }
+
+  async refresh(id: string, service: ServiceMetaData) {
+    if (id == "database") {
+      // Use database
+      await this.readDBState(service);
+    } else {
+      // Use cloud function
+      await this.readCloudRunState(service);
+    }
   }
 
   cancel() {
