@@ -66,13 +66,7 @@ mat-icon.no_text {
     color: white;
 }
 
-.row_options {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.row_options button.button_general {
+.container_horizontal button.button_general {
     height: 54px;
 }
 

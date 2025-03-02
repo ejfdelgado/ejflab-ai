@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModalService } from 'ejflab-front-lib';
 import { RACDatabaseService, SchemaDataType, TableDataType } from '../../services/racDatabase.service';
+import { RacConfigData } from '../../services/knowledge.service';
 
 @Component({
   selector: 'app-popup-database-edit',
@@ -19,8 +20,10 @@ export class PopupDatabaseEditComponent implements OnInit {
   form: FormGroup;
   schemas: SchemaDataType[] = [];
   tables: TableDataType[] = [];
+  tablesSelect: TableDataType[] = [];
   schemaName: string = "";
   tableName: string = "";
+  data: RacConfigData;
 
   constructor(
     public fb: FormBuilder,
@@ -30,13 +33,29 @@ export class PopupDatabaseEditComponent implements OnInit {
     private rACDatabaseSrv: RACDatabaseService,
     private cdr: ChangeDetectorRef,
   ) {
-    //
+    const temp = dataIn.data as RacConfigData;
+    this.data = {
+      systemPrompt: temp.systemPrompt,
+      queryPrompt: temp.queryPrompt,
+      maxTokens: temp.maxTokens,
+      maxDistance: temp.maxDistance,
+      k: temp.k,
+      useRAC: temp.useRAC,
+      showKnowledge: temp.showKnowledge,
+      outputAudio: temp.outputAudio,
+      schema: temp.schema,
+      table: temp.table,
+      language: temp.language,
+      assistantName: temp.assistantName
+    }
   }
 
   async ngOnInit(): Promise<void> {
     this.form = this.fb.group({
       schemaName: ["", []],
       tableName: ["", []],
+      schema: [this.data.schema, []],
+      table: [this.data.table, []],
     });
 
     this.form.get('schemaName')?.valueChanges.subscribe((next) => {
@@ -44,6 +63,12 @@ export class PopupDatabaseEditComponent implements OnInit {
     });
     this.form.get('tableName')?.valueChanges.subscribe((next) => {
       this.tableName = next;
+    });
+    if (this.data.schema) {
+      this.refreshTablesSelect();
+    }
+    this.form.get('schema')?.valueChanges.subscribe((next) => {
+      this.refreshTablesSelect();
     });
     this.refreshSchemas();
   }
@@ -69,6 +94,14 @@ export class PopupDatabaseEditComponent implements OnInit {
   async refreshSchemas() {
     this.schemas = await this.rACDatabaseSrv.getSchemas();
     this.cdr.detectChanges();
+  }
+
+  async refreshTablesSelect() {
+    const name = this.form.get('schema')?.getRawValue().trim();
+    if (name) {
+      this.tablesSelect = await this.rACDatabaseSrv.getTables(name);
+      this.cdr.detectChanges();
+    }
   }
 
   async refreshTables() {
@@ -108,6 +141,7 @@ export class PopupDatabaseEditComponent implements OnInit {
         await this.rACDatabaseSrv.destroySchema(name);
         this.tables = [];
         this.refreshSchemas();
+        this.refreshTablesSelect();
       }
     }
   }
@@ -118,6 +152,7 @@ export class PopupDatabaseEditComponent implements OnInit {
     if (this.isNameValid(schemaName) && this.isNameValid(tableName)) {
       await this.rACDatabaseSrv.createTable(schemaName, tableName);
       this.refreshTables();
+      this.refreshTablesSelect();
     }
   }
 
@@ -129,11 +164,16 @@ export class PopupDatabaseEditComponent implements OnInit {
       if (confirm) {
         await this.rACDatabaseSrv.destroyTable(schemaName, tableName);
         this.refreshTables();
+        this.refreshTablesSelect();
       }
     }
   }
 
   cancel() {
+    this.dialogRef.close();
+  }
+
+  accept() {
     this.dialogRef.close();
   }
 }

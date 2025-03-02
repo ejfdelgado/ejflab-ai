@@ -4,13 +4,11 @@ import { ModalService } from 'ejflab-front-lib';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
 import { MyTemplate } from '@ejfdelgado/ejflab-common/src/MyTemplate';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
 import { Speech2TextEventData, Speech2TextService } from '../../services/speech2text.service';
 import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
-import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
-import { PopupCloudAdminComponent } from '../popup-cloud-admin/popup-cloud-admin.component';
+import { ConfigRacService } from '../../services/configRac.service';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -28,7 +26,6 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
   renderer = new MyTemplate();
-  config: RacConfigData;
   onSpeechStartSubscription: Subscription | null = null;
   llmEvents: Subscription | null = null;
   speechToTextEvents: Subscription | null = null;
@@ -41,15 +38,14 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
   constructor(
     private fb: FormBuilder,
     private modalSrv: ModalService,
-    private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     public speech2TextSrv: Speech2TextService,
     private text2speechSrv: Text2SpeechService,
     private LLMSrv: LLMService,
-    private knowledgeSrv: KnowledgeService,
+    public configSrv: ConfigRacService,
   ) {
     super();
-    this.config = this.knowledgeSrv.loadLocalConfig();
+
   }
 
   scrollToBottom() {
@@ -73,7 +69,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     if (this.text2speechArray.length > 0) {
       // gets the first element
       const firstText = this.text2speechArray.splice(0, 1)[0];
-      this.text2speechSrv.convert(firstText, this.config);
+      this.text2speechSrv.convert(firstText, this.configSrv.getConfig());
     }
   }
 
@@ -113,7 +109,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         if ((complete_words && complete_words[0].length > this.MIN_CHARACTERS) || event.name == "chatEnds") {
           if (event.name == "chatEnds") {
             this.text2speechArray.push(sub);
-            if (!this.config.outputAudio) {
+            if (!this.configSrv.getConfig().outputAudio) {
               if (this.wasListening) {
                 this.speech2TextSrv.start();
               }
@@ -124,7 +120,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
               this.textIndex += complete_words[0].length;
             }
           }
-          if (this.config.outputAudio) {
+          if (this.configSrv.getConfig().outputAudio) {
             this.checkPlay();
           }
         }
@@ -146,7 +142,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         }
         this.cdr.detectChanges();
         // Check if the speech was directed to the assistant
-        const name = this.config.assistantName;
+        const name = this.configSrv.getConfig().assistantName;
         const control = this.formRight.get('text');
         if (control) {
           const query: string = control.getRawValue();
@@ -165,7 +161,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       }
       this.cdr.detectChanges();
     });
-    await this.speech2TextSrv.turnOn(this.config);
+    await this.speech2TextSrv.turnOn(this.configSrv.getConfig());
   }
 
   sanitizeText(text: string) {
@@ -199,34 +195,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     if (text.trim().length == 0) {
       return;
     }
-    await this.LLMSrv.chat(text, this.gpt4allSession, this.config);
-  }
-
-  async openConfiguration() {
-    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
-      data: {
-        data: this.config
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.config = result;
-          this.cdr.detectChanges();
-        }
-      });
-    }
-  }
-
-  async manageCloud() {
-    const dialogRef = this.dialog.open(PopupCloudAdminComponent, {
-      data: {
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
+    await this.LLMSrv.chat(text, this.gpt4allSession, this.configSrv.getConfig());
   }
 
   changeVideoKnowledge(event: any) {

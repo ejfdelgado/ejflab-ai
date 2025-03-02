@@ -3,6 +3,7 @@ import { Auth } from '@angular/fire/auth';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, BackendPageService, BaseComponent, CallService, FileService, FlowchartService, ModalService, OptionData, TupleService, WebcamService } from 'ejflab-front-lib';
+import { ConfigRacService } from './services/configRac.service';
 
 @Component({
   selector: 'app-ejflabmodule',
@@ -27,6 +28,7 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
     public override webcamService: WebcamService,
     public override auth: Auth,
     private router: Router,
+    private configSrv: ConfigRacService,
   ) {
     super(
       flowchartSrv,
@@ -42,6 +44,31 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
       webcamService,
       auth
     );
+
+    this.extraOptions.push({
+      action: () => {
+        this.configSrv.manageCloud();
+      },
+      icon: 'cloud',
+      label: "Manage Cloud",
+    });
+
+    this.extraOptions.push({
+      action: () => {
+        this.configSrv.manageDatabase();
+      },
+      icon: 'menu_book',
+      label: "Manage Database",
+    });
+
+    this.extraOptions.push({
+      action: () => {
+        this.configSrv.openConfiguration();
+      },
+      icon: 'settings',
+      label: "Manage Configuration",
+    });
+
     const VIEW_OPTIONS = [
       { pathname: 'llm', label: 'LLM', icon: 'psychology' },
       { pathname: 'speech_to_text', label: 'Speech to Text', icon: 'mic' },

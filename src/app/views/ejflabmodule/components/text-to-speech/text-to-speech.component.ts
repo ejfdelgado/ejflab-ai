@@ -5,6 +5,7 @@ import { KnowledgeService, RacConfigData } from '../../services/knowledge.servic
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
 import { EjflabBaseComponent } from '../../ejflabbase.component';
+import { ConfigRacService } from '../../services/configRac.service';
 
 @Component({
   selector: 'app-text-to-speech',
@@ -18,18 +19,14 @@ import { EjflabBaseComponent } from '../../ejflabbase.component';
 })
 export class TextToSpeechComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
-  config: RacConfigData;
   isProcessing: boolean = false;
 
   constructor(
     public fb: FormBuilder,
     public text2SpeechSrv: Text2SpeechService,
-    private knowledgeSrv: KnowledgeService,
-    private dialog: MatDialog,
-    private cdr: ChangeDetectorRef,
+    public configSrv: ConfigRacService,
   ) {
     super();
-    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   convert() {
@@ -45,7 +42,7 @@ export class TextToSpeechComponent extends EjflabBaseComponent implements OnInit
       return;
     }
     this.isProcessing = true;
-    this.text2SpeechSrv.convert(value, this.config);
+    this.text2SpeechSrv.convert(value, this.configSrv.getConfig());
   }
 
   ngOnInit(): void {
@@ -61,24 +58,6 @@ export class TextToSpeechComponent extends EjflabBaseComponent implements OnInit
         this.toc();
       }
     });
-  }
-
-  async configure() {
-    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
-      data: {
-        data: this.config
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.config = result;
-          this.cdr.detectChanges();
-        }
-      });
-    }
   }
 
   onKeydown(event: KeyboardEvent) {

@@ -60,33 +60,9 @@ export class PopupRacConfigComponent implements OnInit {
       maxTokens: [this.data.maxTokens, [Validators.required]],
       k: [this.data.k, [Validators.required]],
       maxDistance: [this.data.maxDistance, [Validators.required]],
-      schema: [this.data.schema, []],
-      table: [this.data.table, []],
       language: [this.data.language, []],
       assistantName: [this.data.assistantName, []],
     });
-
-    if (this.data.schema) {
-      this.refreshTables(this.data.schema);
-    }
-
-    this.formRight.get('schema')?.valueChanges.subscribe((next) => {
-      if (next) {
-        this.refreshTables(next);
-      }
-    });
-
-    this.refreshSchemas();
-  }
-
-  async refreshSchemas() {
-    this.schemas = await this.rACDatabaseSrv.getSchemas();
-    this.cdr.detectChanges();
-  }
-
-  async refreshTables(schemaName: string) {
-    this.tables = await this.rACDatabaseSrv.getTables(schemaName);
-    this.cdr.detectChanges();
   }
 
   cancel() {
@@ -115,24 +91,5 @@ export class PopupRacConfigComponent implements OnInit {
     const base64 = Buffer.from(JSON.stringify(this.data), "utf8").toString('base64');
     MyCookies.setCookie("RAC_CONFIG", base64);
     this.dialogRef.close(this.data);
-  }
-
-  async manageDatabase() {
-    const dialogRef = this.dialog.open(PopupDatabaseEditComponent, {
-      data: {
-
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        this.refreshSchemas();
-        const schema = this.formRight.get('schema')?.getRawValue();
-        if (schema) {
-          this.refreshTables(schema);
-        }
-      });
-    }
   }
 }

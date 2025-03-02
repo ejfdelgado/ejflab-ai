@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
+import { ConfigRacService } from '../../services/configRac.service';
 
 @Component({
   selector: 'app-speech-to-text',
@@ -23,7 +24,6 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
   onSpeechStartSubscription: Subscription | null = null;
   onSpeechEnd: Subscription | null = null;
   speechToTextEvents: Subscription | null = null;
-  config: RacConfigData;
 
   constructor(
     public cdr: ChangeDetectorRef,
@@ -33,10 +33,9 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
     public httpSrv: HttpService,
     public jsonColorPipe: JsonColorPipe,
     public speech2TextSrv: Speech2TextService,
-    private knowledgeSrv: KnowledgeService,
-    private dialog: MatDialog,
+    public configSrv: ConfigRacService,
   ) {
-    this.config = this.knowledgeSrv.loadLocalConfig();
+
   }
 
   async ngOnInit() {
@@ -44,7 +43,7 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       display: ['', []],
       displayFileUpload: ['', []],
     });
-    await this.speech2TextSrv.turnOn(this.config);
+    await this.speech2TextSrv.turnOn(this.configSrv.getConfig());
     this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
       if (event.name == "transcriptStarts" && event.audio) {
         this.audios.unshift(event.audio);
@@ -88,23 +87,5 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
   showAudioDetail(audio: AudioData) {
     const html = "<pre>" + this.jsonColorPipe.transform(audio) + "</pre>";
     this.modalSrv.alert({ title: "Detail", txt: html, ishtml: true });
-  }
-
-  async configure() {
-    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
-      data: {
-        data: this.config
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.config = result;
-          this.cdr.detectChanges();
-        }
-      });
-    }
   }
 }

@@ -5,7 +5,6 @@
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -16,33 +15,4 @@
     font-size: 1.4em;
     height: 18px;
     width: 18px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-    color: white;
-}
-
-.btn {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
-}
-
-.btn mat-icon {
-    font-size: 1.4em;
-    height: 18px;
-    width: 18px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
 }

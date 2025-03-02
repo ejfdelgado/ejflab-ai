@@ -5,6 +5,8 @@ import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '..
 import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
+import { ConfigRacService } from '../../services/configRac.service';
+import { ModalService } from 'ejflab-front-lib';
 
 @Component({
   selector: 'app-llm',
@@ -20,20 +22,25 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   gpt4allSession: Array<ChatGPT4AllSessionData> = [];
   answers: Array<AnswerData> = [];
-  config: RacConfigData;
 
   constructor(
     private fb: FormBuilder,
     private LLMSrv: LLMService,
     private cdr: ChangeDetectorRef,
-    private knowledgeSrv: KnowledgeService,
-    private dialog: MatDialog,
+    private modalSrv: ModalService,
+    public configSrv: ConfigRacService,
   ) {
     super();
-    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
-  resetChat() {
+  async resetChat() {
+    const confirm = await this.modalSrv.confirm({
+      title: '¿Sure?',
+      txt: "Can't be undone.",
+    });
+    if (!confirm) {
+      return;
+    }
     this.gpt4allSession = [];
     this.answers = [];
   }
@@ -67,24 +74,13 @@ export class LlmComponent extends EjflabBaseComponent implements OnInit {
     if (text.trim().length == 0) {
       return;
     }
-    await this.LLMSrv.chat(text, this.gpt4allSession, this.config);
+    await this.LLMSrv.chat(text, this.gpt4allSession, this.configSrv.getConfig());
   }
 
-  async configure() {
-    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
-      data: {
-        data: this.config
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.config = result;
-          this.cdr.detectChanges();
-        }
-      });
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.chat();
     }
   }
 }
