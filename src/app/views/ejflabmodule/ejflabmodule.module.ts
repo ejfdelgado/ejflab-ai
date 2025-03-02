@@ -25,6 +25,7 @@ import { PopupRacConfigComponent } from './components/popup-rac-config/popup-rac
 import { SpeechToTextComponent } from './components/speech-to-text/speech-to-text.component';
 import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
 import { PopupDatabaseEditComponent } from './components/popup-database-edit/popup-database-edit.component';
+import { PopupCloudAdminComponent } from './components/popup-cloud-admin/popup-cloud-admin.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { PopupDatabaseEditComponent } from './components/popup-database-edit/pop
     PopupRacConfigComponent,
     SpeechToTextComponent,
     TextToSpeechComponent,
-    PopupDatabaseEditComponent
+    PopupDatabaseEditComponent,
+    PopupCloudAdminComponent
   ],
   imports: [
     CommonModule,

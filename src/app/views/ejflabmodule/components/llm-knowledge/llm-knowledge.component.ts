@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { AnswerData, ChatGPT4AllSessionData, LLMEventData, LLMService } from '../../services/llm.service';
 import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
+import { PopupCloudAdminComponent } from '../popup-cloud-admin/popup-cloud-admin.component';
 
 @Component({
   selector: 'app-llm-knowledge',
@@ -217,6 +218,15 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
         }
       });
     }
+  }
+
+  async manageCloud() {
+    const dialogRef = this.dialog.open(PopupCloudAdminComponent, {
+      data: {
+      },
+      //disableClose: true,
+      panelClass: ['popup_1', 'nogalespopup'],
+    });
   }
 
   changeVideoKnowledge(event: any) {

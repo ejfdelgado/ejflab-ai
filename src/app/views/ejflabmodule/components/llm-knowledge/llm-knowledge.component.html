@@ -24,8 +24,12 @@
             mode="determinate" value="0"></mat-progress-bar>
         <mat-progress-bar *ngIf="speech2TextSrv.isListening() && speech2TextSrv.getListeningState()!==0"
             mode="buffer"></mat-progress-bar>
-        <div class="container_horizontal">
+        <div class="container_horizontal gap_10">
             <div class="container_horizontal gap_10">
+                <button class="btn" (click)="manageCloud()">
+                    <mat-icon>cloud</mat-icon>
+                    Cloud
+                </button>
                 <button class="btn" (click)="openConfiguration()">
                     <mat-icon>settings</mat-icon>
                     Configure

@@ -1,0 +1,31 @@
+.indicator {
+    cursor: pointer;
+}
+
+.indicator:hover {
+    color: black;
+}
+
+.indicator.sentiment_very_dissatisfied {
+    color: red;
+}
+
+.indicator.mood {
+    color: green;
+}
+
+.indicator.help {
+    color: gray;
+}
+
+.indicator.pendig {
+    pointer-events: none;
+}
+
+.action.start {
+    background-color: green;
+}
+
+.action.start {
+    background-color: red;
+}

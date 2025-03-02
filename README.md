@@ -15,7 +15,7 @@ ng generate component views/ejflabmodule/views/my-view --standalone false --skip
 ## Add new component
 
 ```
-ng generate component views/ejflabmodule/components/popup-database-edit --standalone false  --skip-tests
+ng generate component views/ejflabmodule/components/popup-cloud-admin --standalone false  --skip-tests
 ```
 
 ```
