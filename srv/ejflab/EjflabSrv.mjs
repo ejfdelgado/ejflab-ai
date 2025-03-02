@@ -24,5 +24,9 @@ export class EjflabSrv {
     app.get("/srv/rac/db/schemas/:schema/tables", [commonHeaders, handleErrorsDecorator(RACServices.getTableOfschemas),]);
     app.get("/srv/rac/db/schemas/:schema/tables/:table/create", [commonHeaders, handleErrorsDecorator(RACServices.createTableOfschema),]);
     app.get("/srv/rac/db/schemas/:schema/tables/:table/destroy", [commonHeaders, handleErrorsDecorator(RACServices.destroyTableOfschema),]);
+
+    app.get("/srv/rac/run/on", [commonHeaders, handleErrorsDecorator(RACServices.cloudRunOn),]);
+    app.get("/srv/rac/run/off", [commonHeaders, handleErrorsDecorator(RACServices.cloudRunOff),]);
+    app.get("/srv/rac/run/state", [commonHeaders, handleErrorsDecorator(RACServices.getCloudRunState),]);
   }
 }
