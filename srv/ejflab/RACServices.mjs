@@ -2,6 +2,7 @@
 import { General } from "@ejfdelgado/ejflab-back/srv/common/General.mjs";
 import { PostgresSrv } from "@ejfdelgado/ejflab-back/srv/PostgresSrv.mjs";
 import { ServicesClient } from '@google-cloud/run';
+import { google } from 'googleapis';
 
 export class RACServices {
   static async index(req, res, next) {
@@ -89,6 +90,40 @@ export class RACServices {
     });
   }
 
+  static getSqlManager() {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS, // Replace with your key file
+      scopes: ['https://www.googleapis.com/auth/sqlservice.admin'],
+    });
+    const sqlAdmin = google.sqladmin({ version: 'v1', auth });
+    return sqlAdmin;
+  }
+
+  static async getCloudSqlInstanceState(instanceName, projectId) {
+    const sqlAdmin = RACServices.getSqlManager();
+    const res = await sqlAdmin.instances.get({
+      project: projectId,
+      instance: instanceName,
+    });
+
+    // Extract the instance status
+    return res.data;
+  }
+
+  static async toggleCloudSqlInstance(instanceName, projectId, start = true) {
+    const sqlAdmin = RACServices.getSqlManager();
+    const activationPolicy = start ? 'ALWAYS' : 'NEVER';
+    const res = await sqlAdmin.instances.patch({
+      project: projectId,
+      instance: instanceName,
+      requestBody: {
+        settings: {
+          activationPolicy,
+        },
+      },
+    });
+  }
+
   static async getCloudRunManager(serviceName) {
     const client = new ServicesClient();
     const projectId = 'ejfexperiments';
@@ -135,6 +170,31 @@ export class RACServices {
     await RACServices.updateCloudRunMinInstances(name, 0);
     res.status(200).send({
       'status': 'ok',
+    });
+  }
+
+  // toggleCloudSqlInstance
+  static async dbOn(req, res, next) {
+    const name = General.readParam(req, "name", null, true);
+    await RACServices.toggleCloudSqlInstance(name, "ejfexperiments", true);
+    res.status(200).send({
+      'status': 'ok',
+    });
+  }
+
+  static async dbOff(req, res, next) {
+    const name = General.readParam(req, "name", null, true);
+    await RACServices.toggleCloudSqlInstance(name, "ejfexperiments", false);
+    res.status(200).send({
+      'status': 'ok',
+    });
+  }
+
+  static async dBState(req, res, next) {
+    const status = await PostgresSrv.checkSelect1();
+    res.status(200).send({
+      // RUNNABLE 
+      'status': status,
     });
   }
 }

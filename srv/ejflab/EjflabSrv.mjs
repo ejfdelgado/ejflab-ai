@@ -28,5 +28,9 @@ export class EjflabSrv {
     app.get("/srv/rac/run/on", [commonHeaders, handleErrorsDecorator(RACServices.cloudRunOn),]);
     app.get("/srv/rac/run/off", [commonHeaders, handleErrorsDecorator(RACServices.cloudRunOff),]);
     app.get("/srv/rac/run/state", [commonHeaders, handleErrorsDecorator(RACServices.getCloudRunState),]);
+
+    app.get("/srv/rac/db/on", [commonHeaders, handleErrorsDecorator(RACServices.dbOn),]);
+    app.get("/srv/rac/db/off", [commonHeaders, handleErrorsDecorator(RACServices.dbOff),]);
+    app.get("/srv/rac/db/state", [commonHeaders, handleErrorsDecorator(RACServices.dBState),]);
   }
 }
