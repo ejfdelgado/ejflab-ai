@@ -9,7 +9,7 @@
     <div class="container_horizontal">
         <div class="container_vertical gap_10">
             <div *ngFor="let service of services | keyvalue" class="container_horizontal vcentered gap_10">
-                <mat-icon (click)="refresh(service.key, service.value)" class="indicator" [ngClass]="service.value.status">{{
+                <mat-icon class="indicator" [ngClass]="service.value.status">{{
                     service.value.status }}</mat-icon>
                 <label class="full">{{ service.value.label }}</label>
                 <button (click)="startService(service.key, service.value)" class="btn btn-primary action start" [ngClass]="service.value.status">

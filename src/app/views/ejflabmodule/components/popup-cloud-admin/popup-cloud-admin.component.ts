@@ -52,6 +52,8 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
       serviceName: "chunker",
     }
   };
+  runStatus: boolean = true;
+  currentRefresh: string | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<PopupCloudAdminComponent>,
@@ -63,11 +65,42 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.runStatus = false;
   }
 
   async ngOnInit(): Promise<void> {
+    this.runForever();
+  }
 
+  async runForever() {
+    while (this.runStatus) {
+      await this.iterateRefresh();
+      await this.sleep(1000);
+    }
+  }
+
+  async sleep(millis: number) {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, millis);
+    });
+  }
+
+  async iterateRefresh() {
+    const servicesKeys = Object.keys(this.services).sort();
+    if (this.currentRefresh == null) {
+      this.currentRefresh = servicesKeys[0];
+    } else {
+      // Get the next on
+      const index = servicesKeys.indexOf(this.currentRefresh);
+      if (index == servicesKeys.length - 1) {
+        this.currentRefresh = servicesKeys[0];
+      } else {
+        this.currentRefresh = servicesKeys[index + 1];
+      }
+    }
+    await this.refresh(this.currentRefresh, this.services[this.currentRefresh]);
   }
 
   async updateDatabase(state: boolean, service: ServiceMetaData) {
