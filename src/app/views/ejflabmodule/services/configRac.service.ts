@@ -39,15 +39,6 @@ export class ConfigRacService {
         }
     }
 
-    async manageCloud() {
-        const dialogRef = this.dialog.open(PopupCloudAdminComponent, {
-            data: {
-            },
-            //disableClose: true,
-            panelClass: ['popup_1', 'nogalespopup'],
-        });
-    }
-
     async manageDatabase() {
         const dialogRef = this.dialog.open(PopupDatabaseEditComponent, {
             data: {
@@ -64,5 +55,14 @@ export class ConfigRacService {
                 }
             });
         }
+    }
+
+    async manageCloud() {
+        const dialogRef = this.dialog.open(PopupCloudAdminComponent, {
+            data: {
+            },
+            //disableClose: true,
+            panelClass: ['popup_1', 'nogalespopup'],
+        });
     }
 }

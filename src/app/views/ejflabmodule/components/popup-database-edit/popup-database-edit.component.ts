@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModalService } from 'ejflab-front-lib';
 import { RACDatabaseService, SchemaDataType, TableDataType } from '../../services/racDatabase.service';
 import { RacConfigData } from '../../services/knowledge.service';
+import { MyCookies } from '@ejfdelgado/ejflab-common/src/MyCookies';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-popup-database-edit',
@@ -174,6 +176,19 @@ export class PopupDatabaseEditComponent implements OnInit {
   }
 
   accept() {
-    this.dialogRef.close();
+    if (!this.form.valid) {
+      this.modalSrv.alert({
+        title: 'Ups!',
+        txt: 'Verify the fields',
+      });
+      return;
+    }
+    this.data.schema = this.form.get('schema')?.getRawValue();
+    this.data.table = this.form.get('table')?.getRawValue();
+
+    // Rewrite all
+    const base64 = Buffer.from(JSON.stringify(this.data), "utf8").toString('base64');
+    MyCookies.setCookie("RAC_CONFIG", base64);
+    this.dialogRef.close(this.data);
   }
 }

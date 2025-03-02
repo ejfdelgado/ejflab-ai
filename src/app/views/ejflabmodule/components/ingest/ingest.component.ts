@@ -5,6 +5,7 @@ import { JsonColorPipe, ModalService, PagingData } from 'ejflab-front-lib';
 import { KnowledgeService, QADataType, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
+import { ConfigRacService } from '../../services/configRac.service';
 
 @Component({
   selector: 'app-ingest',
@@ -21,7 +22,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
   formLeft: FormGroup;
   currentMatches: QADataType[] = [];
   lastAction: string = "";
-  config: RacConfigData;
   indexProgress: number = 0;
   paging: PagingData = {
     limit: 10,
@@ -35,11 +35,10 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     public modalSrv: ModalService,
     public knowledgeSrv: KnowledgeService,
     public jsonColorPipe: JsonColorPipe,
-    private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
+    public configSrv: ConfigRacService,
   ) {
     super();
-    this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   ngOnInit(): void {
@@ -60,7 +59,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!text || !documentId) {
       return;
     }
-    const emitter = this.knowledgeSrv.index(text.value, documentId.value, this.config);
+    const emitter = this.knowledgeSrv.index(text.value, documentId.value, this.configSrv.getConfig());
     if (emitter) {
       emitter.subscribe((event) => {
         this.indexProgress = Math.ceil(100*event.processed / event.total);
@@ -77,7 +76,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
     if (!query) {
       return;
     }
-    const rerank = await this.knowledgeSrv.search(query.value, this.config);
+    const rerank = await this.knowledgeSrv.search(query.value, this.configSrv.getConfig());
     if (rerank) {
       this.currentMatches = rerank;
     } else {
@@ -96,7 +95,7 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
       this.resetMatches();
     }
     this.paging.offset = this.currentMatches.length;
-    const parts = await this.knowledgeSrv.page(this.paging, this.config);
+    const parts = await this.knowledgeSrv.page(this.paging, this.configSrv.getConfig());
     if (parts.length > 0) {
       const temp = [];
       temp.push(...this.currentMatches);
@@ -123,24 +122,6 @@ export class IngestComponent extends EjflabBaseComponent implements OnInit {
         .map((line: string) => { return line.replace(/[\n\r]/g, " ") })
         .join('\n\n');
       text.setValue(replacementText);
-    }
-  }
-
-  async configure() {
-    const dialogRef = this.dialog.open(PopupRacConfigComponent, {
-      data: {
-        data: this.config
-      },
-      //disableClose: true,
-      panelClass: ['popup_1', 'nogalespopup'],
-    });
-    if (dialogRef) {
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.config = result;
-          this.cdr.detectChanges();
-        }
-      });
     }
   }
 }
