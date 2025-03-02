@@ -8,21 +8,6 @@
     justify-content: center;
 }
 
-.container_horizontal {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.container_vertical.no_gap,
-.container_horizontal.no_gap {
-    gap: 0;
-}
-
-.container_horizontal.centered {
-    justify-content: center;
-}
-
 .full {
     flex: 1;
 }

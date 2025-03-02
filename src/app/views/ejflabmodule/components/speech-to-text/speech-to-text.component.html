@@ -15,7 +15,7 @@
         <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
     </div>
     <div>
-        <div *ngFor="let audio of audios; trackBy:audioIdentity" class="container_horizontal">
+        <div *ngFor="let audio of audios; trackBy:audioIdentity" class="container_horizontal gap_10">
             <button class="button_general" mat-raised-button (click)="removeAudio(audio)">
                 <mat-icon class="no_text">close</mat-icon>
             </button>
