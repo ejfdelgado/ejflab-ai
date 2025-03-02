@@ -161,7 +161,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       }
       this.cdr.detectChanges();
     });
-    await this.speech2TextSrv.turnOn(this.configSrv.getConfig());
+    await this.speech2TextSrv.turnOn();
   }
 
   sanitizeText(text: string) {

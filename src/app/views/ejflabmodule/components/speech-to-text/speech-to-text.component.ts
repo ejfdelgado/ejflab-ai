@@ -43,7 +43,7 @@ export class SpeechToTextComponent implements OnInit, OnDestroy {
       display: ['', []],
       displayFileUpload: ['', []],
     });
-    await this.speech2TextSrv.turnOn(this.configSrv.getConfig());
+    await this.speech2TextSrv.turnOn();
     this.speech2TextSrv.speechToTextEvents.subscribe((event: Speech2TextEventData) => {
       if (event.name == "transcriptStarts" && event.audio) {
         this.audios.unshift(event.audio);

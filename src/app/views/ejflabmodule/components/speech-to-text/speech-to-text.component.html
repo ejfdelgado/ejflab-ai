@@ -14,14 +14,13 @@
         <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()==0" mode="determinate" value="0"></mat-progress-bar>
         <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
     </div>
-    <div>
+    <div class="container_vertical gap_10">
         <div *ngFor="let audio of audios; trackBy:audioIdentity" class="container_horizontal gap_10">
             <button class="button_general" mat-raised-button (click)="removeAudio(audio)">
                 <mat-icon class="no_text">close</mat-icon>
             </button>
             <audio src="{{ audio.base64 }}" controls></audio>
-            <button class="button_general" mat-raised-button
-                (click)="speech2TextSrv.speechToText(audio, configSrv.getConfig())">
+            <button class="button_general" mat-raised-button (click)="speech2TextSrv.speechToText(audio)">
                 <mat-icon class="no_text">chat</mat-icon>
             </button>
             <button class="button_general" mat-raised-button (click)="showAudioDetail(audio)">

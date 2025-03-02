@@ -3,6 +3,7 @@ import { FlowchartProcessRequestData, FlowchartService, HttpService, ModalServic
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
 import { MicVAD } from "@ricky0123/vad-web";
 import { RacConfigData } from "./knowledge.service";
+import { ConfigRacService } from "./configRac.service";
 
 export interface WordData {
     word: string;
@@ -71,6 +72,7 @@ export class Speech2TextService {
     constructor(
         public flowchartSrv: FlowchartService,
         public modalSrv: ModalService,
+        public configSrv: ConfigRacService,
     ) {
 
     }
@@ -89,7 +91,7 @@ export class Speech2TextService {
         }
     }
 
-    async turnOn(config: RacConfigData) {
+    async turnOn() {
         this.myvad = await MicVAD.new({
             baseAssetPath: this.getRoot() + "assets/processors/",
             onnxWASMBasePath: this.getRoot() + "assets/processors/onnxruntime-web/",
@@ -129,7 +131,7 @@ export class Speech2TextService {
                     name: "listenEnds",
                     audio: audio
                 });
-                this.speechToText(audio, config);
+                this.speechToText(audio);
             },
         });
     }
@@ -278,7 +280,7 @@ export class Speech2TextService {
         }
     }
 
-    async speechToText(audio: AudioData, config: RacConfigData) {
+    async speechToText(audio: AudioData) {
         this.states.speech2text += 1;
         try {
             audio.transcriptProgress.processTime = 0;
@@ -301,7 +303,7 @@ export class Speech2TextService {
                     }
                 },
                 data: {
-                    language: config.language,
+                    language: this.configSrv.getConfig().language,
                     extension: audio.extension,
                     min_duration_ms: audio.duration,
                 },
