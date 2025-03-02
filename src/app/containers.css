@@ -52,3 +52,9 @@
 .container_horizontal.end {
     justify-content: end;
 }
+
+@media screen and (max-width: 600px) {
+    .container_horizontal {
+        flex-direction: column;
+    }
+}
