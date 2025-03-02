@@ -41,6 +41,33 @@ export class LLMService {
         return MyConstants.SRV_ROOT;
     }
 
+    truncateSession(gpt4allSession: Array<ChatGPT4AllSessionData>): Array<ChatGPT4AllSessionData> {
+        const MAX_TOKENS = 8192;
+        const MAX_TOKENS_FOR_INPUT_PROPORTION = 0.8;
+        const MAX_TOKENS_FINAL = MAX_TOKENS * MAX_TOKENS_FOR_INPUT_PROPORTION;
+        // 1 token ≈ 4 characters (for English text).
+        // 1 token ≈ 3–4 characters (for Spanish).
+        const TOKEN_TO_WORD_PROPORTION = 4;
+        const MAX_INPUT_CHARACTERS = MAX_TOKENS_FINAL * TOKEN_TO_WORD_PROPORTION;
+        const list = [];
+        list.push(...gpt4allSession);
+        let characterCount = 0;
+        let startTruncate = false;
+        list.reverse().filter((element) => {
+            if (startTruncate) {
+                return false;
+            }
+            const actualLength = element.content.length + element.role.length;
+            if (characterCount + actualLength > MAX_INPUT_CHARACTERS) {
+                startTruncate = true;
+                return false;
+            }
+            characterCount += actualLength;
+            return true;
+        });
+        return list.reverse();
+    }
+
     async chat(text: string, gpt4allSession: Array<ChatGPT4AllSessionData>, config: RacConfigData) {
         if (text.trim().length == 0) {
             return;
@@ -72,7 +99,7 @@ export class LLMService {
             processorMethod: 'llm.chat',
             room: 'processors',
             namedInputs: {
-                session: gpt4allSession,
+                session: this.truncateSession(gpt4allSession),
                 message: modifiedText,
             },
             data: {
