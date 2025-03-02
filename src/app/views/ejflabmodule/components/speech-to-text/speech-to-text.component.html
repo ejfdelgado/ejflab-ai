@@ -1,5 +1,9 @@
 <div class="container_vertical padding_10">
     <form class="row_options form-container layout_columna border_bottom" [formGroup]="formLeft">
+        <button class="btn" (click)="configure()">
+            <mat-icon class="peque">settings</mat-icon>
+            Configure
+        </button>
         <button *ngIf="!speech2TextSrv.isListening()" class="button_general full" mat-raised-button (click)="speech2TextSrv.start()">
             <mat-icon class="peque">play_arrow</mat-icon>
             <span>Start</span>
@@ -18,7 +22,7 @@
                 <mat-icon class="no_text">close</mat-icon>
             </button>
             <audio src="{{ audio.base64 }}" controls></audio>
-            <button class="button_general" mat-raised-button (click)="speech2TextSrv.speechToText(audio)">
+            <button class="button_general" mat-raised-button (click)="speech2TextSrv.speechToText(audio, config)">
                 <mat-icon class="no_text">chat</mat-icon>
             </button>
             <button class="button_general" mat-raised-button (click)="showAudioDetail(audio)">

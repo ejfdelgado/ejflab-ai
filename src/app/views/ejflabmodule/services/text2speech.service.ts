@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { FlowchartProcessRequestData, FlowchartService, ModalService } from "ejflab-front-lib";
+import { RacConfigData } from "./knowledge.service";
 
 export interface HeartBeatData {
     text: string;
@@ -20,6 +21,7 @@ export class Text2SpeechService {
     step2Buffer: HeartBeatData[] = [];
     step1: HeartBeatData | null = null;
     step2: HeartBeatData | null = null;
+    config: RacConfigData | null = null;
 
     constructor(
         public flowchartSrv: FlowchartService,
@@ -64,6 +66,7 @@ export class Text2SpeechService {
                 text: data.text,
             },
             data: {
+                language: this.config ? this.config.language : 'es',
             },
         };
         const response = await this.flowchartSrv.process(payload, false);
@@ -77,7 +80,8 @@ export class Text2SpeechService {
         }
     }
 
-    async convert(text: string) {
+    async convert(text: string, config: RacConfigData) {
+        this.config = config;
         const ident: HeartBeatData = {
             // Remove all non characters or numbers
             text: text.replace(/[^a-záéíóúÁÉÍÓÚüÜñÑA-Z0-9,.:\?\!\s]/g, " "),

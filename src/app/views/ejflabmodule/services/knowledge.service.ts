@@ -25,6 +25,7 @@ export interface RacConfigData {
     outputAudio: boolean;
     schema?: string;
     table?: string;
+    language: string;
 }
 
 @Injectable({
@@ -195,6 +196,7 @@ export class KnowledgeService {
             useRAC: false,
             showKnowledge: false,
             outputAudio: false,
+            language: "es",
         };
     }
 }

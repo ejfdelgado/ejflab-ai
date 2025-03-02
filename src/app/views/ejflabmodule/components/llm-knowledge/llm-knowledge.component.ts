@@ -66,7 +66,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
     if (this.text2speechArray.length > 0) {
       // gets the first element
       const firstText = this.text2speechArray.splice(0, 1)[0];
-      this.text2speechSrv.convert(firstText);
+      this.text2speechSrv.convert(firstText, this.config);
     }
   }
 
@@ -140,7 +140,7 @@ export class LlmKnowledgeComponent extends EjflabBaseComponent implements OnInit
       }
       this.cdr.detectChanges();
     });
-    await this.speech2TextSrv.turnOn();
+    await this.speech2TextSrv.turnOn(this.config);
   }
 
   async ngOnDestroy() {

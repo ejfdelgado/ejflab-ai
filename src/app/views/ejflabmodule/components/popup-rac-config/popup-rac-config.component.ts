@@ -48,6 +48,7 @@ export class PopupRacConfigComponent implements OnInit {
       outputAudio: temp.outputAudio,
       schema: temp.schema,
       table: temp.table,
+      language: temp.language,
     }
   }
 
@@ -60,6 +61,7 @@ export class PopupRacConfigComponent implements OnInit {
       maxDistance: [this.data.maxDistance, [Validators.required]],
       schema: [this.data.schema, []],
       table: [this.data.table, []],
+      language: [this.data.language, []],
     });
 
     if (this.data.schema) {
@@ -104,6 +106,7 @@ export class PopupRacConfigComponent implements OnInit {
     this.data.k = this.formRight.get('k')?.getRawValue();
     this.data.schema = this.formRight.get('schema')?.getRawValue();
     this.data.table = this.formRight.get('table')?.getRawValue();
+    this.data.language = this.formRight.get('language')?.getRawValue();
     // Rewrite all
     const base64 = Buffer.from(JSON.stringify(this.data), "utf8").toString('base64');
     MyCookies.setCookie("RAC_CONFIG", base64);

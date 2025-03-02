@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { FlowchartProcessRequestData, FlowchartService, HttpService, ModalService } from "ejflab-front-lib";
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
 import { MicVAD } from "@ricky0123/vad-web";
+import { RacConfigData } from "./knowledge.service";
 
 export interface WordData {
     word: string;
@@ -65,7 +66,6 @@ export class Speech2TextService {
             listening: 0,
             speech2text: 0,
         };
-    language: string = 'es';
     speechToTextEvents: EventEmitter<Speech2TextEventData> = new EventEmitter();
 
     constructor(
@@ -89,7 +89,7 @@ export class Speech2TextService {
         }
     }
 
-    async turnOn() {
+    async turnOn(config: RacConfigData) {
         this.myvad = await MicVAD.new({
             baseAssetPath: this.getRoot() + "assets/processors/",
             onnxWASMBasePath: this.getRoot() + "assets/processors/onnxruntime-web/",
@@ -129,7 +129,7 @@ export class Speech2TextService {
                     name: "listenEnds",
                     audio: audio
                 });
-                this.speechToText(audio);
+                this.speechToText(audio, config);
             },
         });
     }
@@ -278,7 +278,7 @@ export class Speech2TextService {
         }
     }
 
-    async speechToText(audio: AudioData) {
+    async speechToText(audio: AudioData, config: RacConfigData) {
         this.states.speech2text += 1;
         try {
             audio.transcriptProgress.processTime = 0;
@@ -301,7 +301,7 @@ export class Speech2TextService {
                     }
                 },
                 data: {
-                    language: this.language,
+                    language: config.language,
                     extension: audio.extension,
                     min_duration_ms: audio.duration,
                 },
