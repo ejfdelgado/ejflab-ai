@@ -5,10 +5,11 @@ import { RacConfigData } from "./knowledge.service";
 export interface HeartBeatData {
     text: string;
     audio?: any;
+    showIndicator: boolean;
 };
 
 export interface Text2SpeechEventData {
-    name: "starts" | "ends" | "endsAll";
+    name: "starts" | "funStart" | "funEnds" | "ends" | "endsAll";
 }
 
 @Injectable({
@@ -58,7 +59,7 @@ export class Text2SpeechService {
 
     async callService(data: HeartBeatData) {
         const payload: FlowchartProcessRequestData = {
-            loadingIndicator: false,
+            loadingIndicator: data.showIndicator,
             channel: 'post',
             processorMethod: 'textToSpeech.convert',
             room: 'processors',
@@ -69,7 +70,9 @@ export class Text2SpeechService {
                 language: this.config ? this.config.language : 'es',
             },
         };
+        this.audioEvents.emit({name: "funStart"});
         const response = await this.flowchartSrv.process(payload, false);
+        this.audioEvents.emit({name: "funEnds"});
         const base64Audio = response?.response?.data?.audio;
         if (base64Audio) {
             const audio = new Audio(base64Audio);
@@ -80,11 +83,12 @@ export class Text2SpeechService {
         }
     }
 
-    async convert(text: string, config: RacConfigData) {
+    async convert(text: string, config: RacConfigData, showIndicator = false) {
         this.config = config;
         const ident: HeartBeatData = {
             // Remove all non characters or numbers
             text: text.replace(/[^a-záéíóúÁÉÍÓÚüÜñÑA-Z0-9,.:\?\!\s]/g, " "),
+            showIndicator,
         };
         this.step1Buffer.push(ident);
         this.heartBeat.emit();

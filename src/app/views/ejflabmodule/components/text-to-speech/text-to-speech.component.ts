@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Text2SpeechService } from '../../services/text2speech.service';
+import { Text2SpeechEventData, Text2SpeechService } from '../../services/text2speech.service';
 import { KnowledgeService, RacConfigData } from '../../services/knowledge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.component';
+import { EjflabBaseComponent } from '../../ejflabbase.component';
 
 @Component({
   selector: 'app-text-to-speech',
@@ -15,9 +16,10 @@ import { PopupRacConfigComponent } from '../popup-rac-config/popup-rac-config.co
     './text-to-speech.component.css'
   ],
 })
-export class TextToSpeechComponent implements OnInit {
+export class TextToSpeechComponent extends EjflabBaseComponent implements OnInit {
   formRight: FormGroup;
   config: RacConfigData;
+  isProcessing: boolean = false;
 
   constructor(
     public fb: FormBuilder,
@@ -26,10 +28,14 @@ export class TextToSpeechComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {
+    super();
     this.config = this.knowledgeSrv.loadLocalConfig();
   }
 
   convert() {
+    if (this.isProcessing) {
+      return;
+    }
     const text = this.formRight.get("text");
     if (!text) {
       return;
@@ -38,12 +44,22 @@ export class TextToSpeechComponent implements OnInit {
     if (value.length == 0) {
       return;
     }
+    this.isProcessing = true;
     this.text2SpeechSrv.convert(value, this.config);
   }
 
   ngOnInit(): void {
     this.formRight = this.fb.group({
       text: ['', []],
+    });
+    this.text2SpeechSrv.audioEvents.subscribe((event: Text2SpeechEventData) => {
+      if (event.name == "endsAll") {
+        this.isProcessing = false;
+      } else if (event.name == "funStart") {
+        this.tic();
+      } else if (event.name == "funEnds") {
+        this.toc();
+      }
     });
   }
 

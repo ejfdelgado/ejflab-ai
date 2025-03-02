@@ -4,15 +4,22 @@
             <mat-label>Your message</mat-label>
             <textarea rows="1" (keydown)="onKeydown($event)" matInput formControlName="text"></textarea>
         </mat-form-field>
-        <div class="container_horizontal end gap_10">
-            <button class="btn" (click)="configure()">
-                <mat-icon class="peque">settings</mat-icon>
-                Configure
-            </button>
-            <button class="btn" (click)="convert()">
-                <mat-icon>play_arrow</mat-icon>
-                Play
-            </button>
+        <mat-progress-bar *ngIf="!isProcessing" mode="determinate" value="0"></mat-progress-bar>
+        <mat-progress-bar *ngIf="!!isProcessing" mode="buffer"></mat-progress-bar>
+        <div class="container_horizontal gap_10">
+            <div class="container_horizontal">
+                <p>{{ seconds }}</p>
+            </div>
+            <div class="container_horizontal end gap_10 full">
+                <button class="btn" [ngClass]="{'disabled': isProcessing}" (click)="configure()">
+                    <mat-icon class="peque">settings</mat-icon>
+                    Configure
+                </button>
+                <button class="btn" [ngClass]="{'disabled': isProcessing}" (click)="convert()">
+                    <mat-icon>play_arrow</mat-icon>
+                    Play
+                </button>
+            </div>
         </div>
     </form>
 </div>
