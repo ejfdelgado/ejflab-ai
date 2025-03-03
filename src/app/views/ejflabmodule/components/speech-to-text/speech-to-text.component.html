@@ -1,19 +1,19 @@
 <div class="container_vertical padding_10">
-    <form class="container_horizontal" [formGroup]="formLeft">
-        <button *ngIf="!speech2TextSrv.isListening()" class="btn full" (click)="speech2TextSrv.start()">
-            <mat-icon class="peque">play_arrow</mat-icon>
-            <span>Start</span>
+    <div class="container_horizontal">
+        <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()==0" mode="determinate" value="0"></mat-progress-bar>
+        <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
+    </div>
+    <form class="container_horizontal end" [formGroup]="formLeft">
+        <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
+            <mat-icon class="peque">graphic_eq</mat-icon>
+            <span>Listen</span>
         </button>
-        <button *ngIf="speech2TextSrv.isListening()" class="btn full" (click)="speech2TextSrv.pause()"
+        <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
             [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
             <mat-icon class="peque">pause</mat-icon>
             <span>Pause</span>
         </button>
     </form>
-    <div class="container_horizontal">
-        <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()==0" mode="determinate" value="0"></mat-progress-bar>
-        <mat-progress-bar *ngIf="speech2TextSrv.getListeningState()!==0" mode="buffer"></mat-progress-bar>
-    </div>
     <div class="container_vertical gap_10">
         <div *ngFor="let audio of audios; trackBy:audioIdentity" class="container_horizontal gap_10">
             <button class="button_general" mat-raised-button (click)="removeAudio(audio)">
