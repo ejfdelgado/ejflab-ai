@@ -230,7 +230,7 @@ export class KnowledgeService {
             }
         }
         return {
-            systemPrompt: 'Eres un asistente que solo habla español',
+            systemPrompt: 'Eres un asistente que solo habla español sin traducir a otro idioma.',
             queryPrompt: 'Responde la pregunta: "${text}" enfocandose en que: "${knowledge}"',
             maxTokens: 1024,
             k: 2,//top
@@ -239,7 +239,7 @@ export class KnowledgeService {
             showKnowledge: false,
             outputAudio: false,
             language: "es",
-            assistantName: "pinpon"
+            assistantName: "pimpon"
         };
     }
 }

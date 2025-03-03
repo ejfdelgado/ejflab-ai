@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpService, ModalService } from 'ejflab-front-lib';
+import { CloudManagerService, ServiceMetaData } from '../../services/cloudManager.service';
 
-export interface ServiceMetaData {
-  label: string;
-  status: "sentiment_very_dissatisfied" | "mood" | "pending";
-  serviceName?: string;
-}
+
 
 @Component({
   selector: 'app-popup-cloud-admin',
@@ -57,9 +54,8 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialogRef: MatDialogRef<PopupCloudAdminComponent>,
-    private modalSrv: ModalService,
     private cdr: ChangeDetectorRef,
-    private httpSrv: HttpService,
+    public cloudManagerSrv: CloudManagerService,
   ) {
     //
   }
@@ -100,77 +96,17 @@ export class PopupCloudAdminComponent implements OnInit, OnDestroy {
         this.currentRefresh = servicesKeys[index + 1];
       }
     }
-    await this.refresh(this.currentRefresh, this.services[this.currentRefresh]);
-  }
-
-  async updateDatabase(state: boolean, service: ServiceMetaData) {
-    if (state) {
-      const response: any = await this.httpSrv.get(`srv/rac/db/on?name=${service.serviceName}`);
-    } else {
-      const response: any = await this.httpSrv.get(`srv/rac/db/off?name=${service.serviceName}`);
-    }
-  }
-
-  async updateCloudRun(state: boolean, service: ServiceMetaData) {
-    if (state) {
-      const response: any = await this.httpSrv.get(`srv/rac/run/on?name=${service.serviceName}`);
-    } else {
-      const response: any = await this.httpSrv.get(`srv/rac/run/off?name=${service.serviceName}`);
-    }
+    await this.cloudManagerSrv.refresh(this.currentRefresh, this.services[this.currentRefresh]);
   }
 
   async readDBState(service: ServiceMetaData) {
-    service.status = "pending";
-    try {
-      const response: any = await this.httpSrv.get("srv/rac/db/state", { showIndicator: false });
-      if (response.status == true) {
-        service.status = "mood";
-      } else {
-        service.status = "sentiment_very_dissatisfied";
-      }
-      this.cdr.detectChanges();
-    } catch (err) {
-
-    }
+    await this.cloudManagerSrv.readDBState(service);
+    this.cdr.detectChanges();
   }
 
   async readCloudRunState(service: ServiceMetaData) {
-    service.status = "pending";
-    try {
-      const response: any = await this.httpSrv.get(`srv/rac/run/state?name=${service.serviceName}`, { showIndicator: false });
-      if (response.status == "CONDITION_SUCCEEDED" && response.minInstanceCount > 0) {
-        service.status = "mood";
-      } else {
-        service.status = "sentiment_very_dissatisfied";
-      }
-      this.cdr.detectChanges();
-    } catch (err) {
-
-    }
-  }
-
-  async refresh(id: string, service: ServiceMetaData) {
-    if (id == "database") {
-      await this.readDBState(service);
-    } else {
-      await this.readCloudRunState(service);
-    }
-  }
-
-  async startService(id: string, service: ServiceMetaData) {
-    if (id == "database") {
-      await this.updateDatabase(true, service);
-    } else {
-      await this.updateCloudRun(true, service);
-    }
-  }
-
-  async stopService(id: string, service: ServiceMetaData) {
-    if (id == "database") {
-      await this.updateDatabase(false, service);
-    } else {
-      await this.updateCloudRun(false, service);
-    }
+    await this.cloudManagerSrv.readCloudRunState(service);
+    this.cdr.detectChanges();
   }
 
   cancel() {

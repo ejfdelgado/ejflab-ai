@@ -37,8 +37,7 @@
                     Send
                 </button>
                 <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
-                    <mat-icon class="peque">mic</mat-icon>
-                    <span>Speak</span>
+                    <mat-icon class="peque">graphic_eq</mat-icon>
                 </button>
                 <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
                     [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
