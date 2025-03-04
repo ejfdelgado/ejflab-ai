@@ -1,0 +1,17 @@
+<div class="complete_container" #container_preview>
+    <video #video_ref className="size" autoPlay playsInline muted width="600" height="500" id="frame"></video>
+    <div #container_overlay class="container_overlay noselect" [ngStyle]="styleOverlay">
+        <div class="the_label noselect no_mouse" *ngFor="let tag of currentTags" [ngStyle]="tag.style">
+            <div class="the_class white_subtitle">{{ tag.bbox.theclass }}</div>
+        </div>
+    </div>
+    <canvas #canvas_ref style="overflow:auto; display:none;"></canvas>
+    <div class ="white_subtitle elapsed_time">{{ elapsedSeconds }}</div>
+    <div class="buttons_container">
+        <button *ngIf="!running && !runningBackground" mat-raised-button color="primary" (click)="startRunning()"
+            type="button">Iniciar</button>
+        <button *ngIf="videoReady" mat-raised-button color="" (click)="toggleVideo()" type="button">Toggle</button>
+        <button *ngIf="videoReady" mat-raised-button color="" (click)="capturePhoto()" type="button">Tomar foto</button>
+        <button mat-raised-button color="warn" (click)="stopRunning()" type="button">Salir</button>
+    </div>
+</div>

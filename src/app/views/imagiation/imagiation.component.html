@@ -1,0 +1,19 @@
+<div class="level_0">
+    <div class="head_part">
+        <app-statusbar [title]="getPageTitle()" [extraOptions]="extraOptions" [saveState]="getSaveState()">
+        </app-statusbar>
+    </div>
+    <div class="body_part" *ngIf="currentUser == null">
+        <app-license></app-license>
+    </div>
+    <div class="body_part" *ngIf="currentUser != null">
+        <app-imagegallery *ngIf="currentView == 'tag'" [page]="page" [bussyState]="bussyState">
+        </app-imagegallery>
+        <app-jobgallery *ngIf="currentView == 'jobgallery'" [page]="page"></app-jobgallery>
+        <app-testcomponent *ngIf="currentView == 'play'" [page]="page">
+        </app-testcomponent>
+        <app-autophoto *ngIf="currentView == 'photo'" [page]="page">
+        </app-autophoto>
+        <app-statistics *ngIf="page && page.id && currentView == 'statistics'" [page]="page"></app-statistics>
+    </div>
+</div>

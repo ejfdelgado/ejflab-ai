@@ -1,0 +1,83 @@
+.bottom_buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: right;
+  margin-top: 10px;
+}
+
+[mat-dialog-title] {
+  display: flex;
+  margin: 0;
+}
+
+[mat-dialog-title] h1 {
+  flex: 1;
+}
+
+[mat-dialog-title] .boton_cerrar {
+  cursor: pointer;
+  color: rgb(158, 158, 158);
+  position: relative;
+  top: -5px;
+  left: 0;
+  margin-left: 10px;
+}
+
+[mat-dialog-title] .boton_cerrar:hover {
+  color: rgb(57, 57, 57);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content.con_form {
+  min-height: 315px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.list_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.my_pair_element {
+  display: flex;
+  flex-direction: row;
+  margin-top: 19px;
+}
+
+.the_identity {
+  flex: 1;
+  padding: 0 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.the_role {
+  max-width: 115px;
+}
+
+.the_button {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.date_picker_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

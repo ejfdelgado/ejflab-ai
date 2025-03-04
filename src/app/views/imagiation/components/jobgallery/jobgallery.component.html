@@ -1,0 +1,30 @@
+<div class="jobgallery_container">
+    <div class="row_container">
+        <button mat-raised-button color="primary" (click)="createJob()" type="button">
+            Crear entrenamiento
+        </button>
+    </div>
+    <hr>
+    <div class="row_container manito no_select" (click)="openJob(oneJob)" *ngFor="let oneJob of loadedJobs">
+        <div class="card_job" [ngClass]="oneJob.state">
+            <div class="read_only_container">
+                <div class="key">Estado</div>
+                <div class="value">{{ oneJob.state }}</div>
+            </div>
+            <div class="read_only_container">
+                <div class="key">Fecha de creación</div>
+                <div class="value">{{ oneJob.created | epoch2date }}</div>
+            </div>
+            <div class="read_only_container vertical">
+                <div class="key" style="margin-bottom: 10px;">Progreso {{ oneJob.progress }}%</div>
+                <mat-progress-bar class="value" mode="determinate" value="{{ oneJob.progress ? oneJob.progress : 0 }}">
+                </mat-progress-bar>
+            </div>
+        </div>
+    </div>
+    <div class="row_container">
+        <button mat-raised-button color="" (click)="askForJobs()" type="button">
+            Leer más...
+        </button>
+    </div>
+</div>

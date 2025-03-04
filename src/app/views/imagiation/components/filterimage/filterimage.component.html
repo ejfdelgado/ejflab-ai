@@ -1,0 +1,45 @@
+<div mat-dialog-title>
+    <h1 class="centrado">Filtrar imágenes</h1>
+    <span class="boton_cerrar" [mat-dialog-close]>
+        <mat-icon>close</mat-icon>
+    </span>
+</div>
+<mat-dialog-content class="mat-typography con_form">
+    <p class="texto_descripcion">Definir filtro de imágenes:</p>
+    <form class="form-container layout_columna" [formGroup]="form" (ngSubmit)="apply()">
+        <div class="list_container">
+            <mat-form-field class="form-control">
+                <mat-label>Offset</mat-label>
+                <input matInput formControlName="min_offset" type="number" required />
+            </mat-form-field>
+            <mat-form-field class="form-control">
+                <mat-label>Máximo número de fotos (0 significa sin límite)</mat-label>
+                <input matInput formControlName="max_count" type="number" required />
+            </mat-form-field>
+            <mat-form-field class="form-control">
+                <mat-label>¿Cuántas fotos leer en cada solicitud?</mat-label>
+                <input matInput formControlName="max" type="number" required />
+            </mat-form-field>
+            <div class="date_picker_container">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate formControlName="min_date" placeholder="Fecha inicial">
+                    <input matEndDate formControlName="max_date" placeholder="Fecha final">
+                </mat-date-range-input>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <canvas id="qrcanvas"></canvas>
+                <a style="word-break: break-all;" href="{{ currentUrl }}">{{ currentUrl }}</a>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<div class="bottom_buttons">
+    <button mat-raised-button color="" (click)="cancelar()" type="button">
+        Cancelar
+    </button>
+    <button mat-raised-button color="primary" (click)="apply()" type="button">
+        Aplicar
+    </button>
+</div>

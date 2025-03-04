@@ -1,0 +1,16 @@
+<div mat-dialog-title>
+    <h1 class="centrado">{{ title }}</h1>
+    <span class="boton_cerrar" [mat-dialog-close]>
+        <mat-icon>close</mat-icon>
+    </span>
+</div>
+<mat-dialog-content class="mat-typography con_form">
+    <p class="texto_descripcion">{{ description }}</p>
+    <div class="list_container">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <canvas id="qrcanvas"></canvas>
+            <a style="word-break: break-all;" href="{{ currentUrl }}">{{ currentUrl }}</a>
+        </div>
+    </div>
+
+</mat-dialog-content>

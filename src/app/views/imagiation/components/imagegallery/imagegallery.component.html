@@ -1,0 +1,80 @@
+<div class="container_image_gallery" #container_gallery [ngInit]="bindOverlayParentEventsThis">
+    <div class="container_preview" #container_preview>
+        <div *ngIf="currentImage != null" class="container_big_image noselect" [ngClass]="{'invisible': !viewAdjusted}"
+            [ngStyle]="boundingBoxBigImage.style">
+            <img [src]="completeImagePath(currentImage.urlBig)" #big_image_ref class="big_image noselect"
+                [ngStyle]="boundingBoxBigImage.styleImage">
+            <div #container_overlay [ngInit]="bindOverlayEventsThis" [ngClass]="{'no_tags': !showTags}"
+                class="container_overlay noselect" [ngStyle]="boundingBoxBigImage.styleOverlay">
+                <div class="the_label noselect no_mouse" *ngFor="let tag of currentTags" [ngStyle]="tag.style">
+                    <div class="the_class white_subtitle">{{ tag.bbox.theclass }}</div>
+                </div>
+                <div class="the_label noselect no_mouse" [ngStyle]="boundingBoxBigImage.styleBBoxNew"></div>
+            </div>
+        </div>
+        <div class="key_helper noselect no_mouse">
+            <img [src]="getImgKeyHelper()">
+        </div>
+        <div class="container_menu">
+            <div class="menu_icon_user_parent" [matMenuTriggerFor]="mainMenu" aria-label="Menú principal">
+                <div class="menu_icon_user white manito">
+                    <mat-icon>menu</mat-icon>
+                </div>
+            </div>
+            <mat-menu #mainMenu="matMenu">
+                <button mat-menu-item (click)="takePhoto()">
+                    <mat-icon>photo_camera</mat-icon>
+                    <span>Agregar foto</span>
+                </button>
+                <button mat-menu-item (click)="openTakePhotoPopUp()">
+                    <mat-icon>qr_code_2</mat-icon>
+                    <span>Compartir tomar foto</span>
+                </button>
+                <button mat-menu-item (click)="openHelperPopUp()">
+                    <mat-icon>rocket_launch</mat-icon>
+                    <span>Definir modelo de colaboración</span>
+                </button>
+                <button *ngIf="changedImages.length > 0" mat-menu-item (click)="saveChangedImages()">
+                    <mat-icon>save</mat-icon>
+                    <span>Guardar</span>
+                </button>
+                <button mat-menu-item (click)="openFilterPopUp()">
+                    <mat-icon>filter_alt</mat-icon>
+                    <span>Filtrar imagenes</span>
+                </button>
+                <button *ngIf="currentView == 'thumbnails'" mat-menu-item (click)="setView('full')">
+                    <mat-icon>fullscreen</mat-icon>
+                    <span>Pantalla completa</span>
+                </button>
+                <button *ngIf="currentView == 'full'" mat-menu-item (click)="setView('thumbnails')">
+                    <mat-icon>collections</mat-icon>
+                    <span>Galería de imágenes</span>
+                </button>
+                <button *ngIf="currentImage !== null" mat-menu-item (click)="eraseImage()">
+                    <mat-icon>delete</mat-icon>
+                    <span>Borrar foto</span>
+                </button>
+            </mat-menu>
+        </div>
+        <div class="container_class">
+            <label class="manito" (click)="openClassPopUp()">Clase actual: <b>{{ getCurrentClass() }}</b></label>
+        </div>
+    </div>
+    <div class="container_thumbnails" *ngIf="currentView == 'thumbnails'">
+        <div class="scroll_thumbnails">
+            <div class="scroll_thumbnails_all">
+                <div class="my_thumbnail manito" [ngClass]="{'hightlight': currentImage == image.value}"
+                    (click)="setCurrentImage(image.value)"
+                    *ngFor="let image of localmodel.imagegallery | keyvalue | sortByName:'created':'desc'; index as i"
+                    [ngStyle]="{'background-image': 'url('+completeImagePath(image.value.urlThumbnail)+')'}">
+                    <p class="photo_date white_subtitle">{{ getPhotoCreatedDate(image.value) }}</p>
+                    <p class="photo_detail white_subtitle">{{ getPhotoDetail(image.value) }}</p>
+                    <p class="photo_count white_subtitle">{{ i+1 }}</p>
+                </div>
+                <div class="my_thumbnail manito noselect" (click)="loadMorePhotos()">
+                    <p class="ver_mas">Ver más fotos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

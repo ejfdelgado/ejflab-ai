@@ -1,0 +1,115 @@
+<div mat-dialog-title>
+    <h1 class="centrado">Configuración</h1>
+    <span class="boton_cerrar" [mat-dialog-close]>
+        <mat-icon>close</mat-icon>
+    </span>
+</div>
+<mat-dialog-content class="mat-typography con_form">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <canvas id="qrcanvas"></canvas>
+        <a style="word-break: break-all;" href="{{ currentUrl }}">{{ currentUrl }}</a>
+    </div>
+    <p class="texto_descripcion">Detalle de la configuración:</p>
+    <form class="form-container layout_columna" [formGroup]="form">
+        <div class="list_container">
+            <mat-form-field class="form-control">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="name" type="text" required />
+            </mat-form-field>
+            <mat-form-field class="form-control">
+                <mat-label>Model Id</mat-label>
+                <input matInput formControlName="modelId" type="text" required />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Modo</mat-label>
+                <select matNativeControl formControlName="facingMode" required>
+                    <option *ngFor="let modeType of modeTypes" [ngValue]="modeType.id">{{modeType.txt}}</option>
+                </select>
+            </mat-form-field>
+            <mat-form-field class="form-control">
+                <mat-label>Milisegundos entre cada detección</mat-label>
+                <input matInput formControlName="delayMillis" type="number" required />
+            </mat-form-field>
+            <mat-form-field class="form-control">
+                <mat-label>Número de clases</mat-label>
+                <input matInput formControlName="numClasses" type="number" required />
+            </mat-form-field>
+            <button mat-raised-button class="manito" type="button" color="primary" (click)="agregarConfig()">
+                Agregar notificación
+            </button>
+            <div [formArrayName]="'formArrayName'">
+                <div class="my_pair_element" *ngFor="let config of model.configs; index as i;">
+                    <div [formGroupName]="i" class="one_sub_config_row">
+                        <div class="one_sub_config_col">
+                            <mat-form-field>
+                                <mat-label>Tipo</mat-label>
+                                <select matNativeControl formControlName="type" required>
+                                    <option *ngFor="let notificationType of notificationTypes"
+                                        [ngValue]="notificationType.id">{{notificationType.txt}}</option>
+                                </select>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="config.type == 'notifyByMail'" class="form-control">
+                                <mat-label>Destinatarios (separar con coma)</mat-label>
+                                <input matInput formControlName="recipients" type="text" required />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="config.type == 'notifyByMail'" class="form-control">
+                                <mat-label>Asunto</mat-label>
+                                <input matInput formControlName="subject" type="text" required />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="['notifyByMail', 'statistic','playSound'].indexOf(config.type) >= 0"
+                                class="form-control">
+                                <mat-label>Tags detectados (separar con coma)</mat-label>
+                                <input matInput formControlName="detectedTags" type="text" />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="['notifyByMail', 'statistic', 'playSound'].indexOf(config.type) >= 0"
+                                class="form-control">
+                                <mat-label>Score mínimo (0.0 a 1.0)</mat-label>
+                                <input matInput formControlName="minScore" type="number" min="0" max="1" required />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="config.type == 'notifyByMail'" class="form-control">
+                                <mat-label>Cantidad de fotos a incluir en un correo</mat-label>
+                                <input matInput formControlName="snapshotTimes" min="1" type="number" required />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="['notifyByMail', 'statistic'].indexOf(config.type) >= 0"
+                                class="form-control">
+                                <mat-label>Tiempo mínimo entre finalizaciones (en segundos)</mat-label>
+                                <input matInput formControlName="minSecondsBetweenMails" type="number" required />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="['notifyByMail', 'statistic'].indexOf(config.type) >= 0"
+                                class="form-control">
+                                <mat-label>Usar sonidos</mat-label>
+                                <select matNativeControl formControlName="useSounds" required>
+                                    <option *ngFor="let soundType of yesNoTypes" [ngValue]="soundType.id">
+                                        {{soundType.txt}}</option>
+                                </select>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="['notifyByMail', 'statistic'].indexOf(config.type) >= 0"
+                                class="form-control">
+                                <mat-label>Resaltar detecciones</mat-label>
+                                <select matNativeControl formControlName="useBBox" required>
+                                    <option *ngFor="let yesNoType of yesNoTypes" [ngValue]="yesNoType.id">
+                                        {{yesNoType.txt}}</option>
+                                </select>
+                            </mat-form-field>
+                        </div>
+                        <div class="the_button" (click)="borrarConfig(i, config)">
+                            <mat-icon>delete</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <canvas #canvas_ref width="500" height="500" style="overflow:auto; display:none;"></canvas>
+        </div>
+    </form>
+</mat-dialog-content>
+<div class="bottom_buttons">
+    <button mat-raised-button color="" (click)="cancelar()" type="button">
+        Cancelar
+    </button>
+    <button mat-raised-button color="" (click)="test()" type="button">
+        Test
+    </button>
+    <button mat-raised-button color="primary" (click)="save()" type="button">
+        Guardar
+    </button>
+</div>

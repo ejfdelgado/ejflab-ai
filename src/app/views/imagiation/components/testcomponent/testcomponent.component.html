@@ -1,0 +1,39 @@
+<div class="jobgallery_container">
+    <div class="row_container">
+        <button mat-raised-button color="primary" (click)="createConfiguration()" type="button">
+            Crear configuración
+        </button>
+    </div>
+    <hr>
+    <div class="row_container manito no_select"
+        *ngFor=" let oneConfig of loadedConfigurations | sortByName:'created':'desc'; index as i">
+        <div class="card_job">
+            <div class="read_only_container">
+                <div class="key">Nombre</div>
+                <div class="value">{{ oneConfig.name }}</div>
+            </div>
+            <div class="read_only_container">
+                <div class="key">Creado</div>
+                <div class="value">{{ oneConfig.created | epoch2date }}</div>
+            </div>
+            <div class="row_container">
+                <button mat-raised-button color="" (click)="openConfiguration(oneConfig)" type="button">
+                    Editar
+                </button>
+                <button mat-raised-button color="primary" (click)="executeConfiguration(oneConfig)" type="button">
+                    Ejecutar
+                </button>
+                <button mat-raised-button color="warn" (click)="eraseConfiguration(oneConfig)" type="button">
+                    Borrar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row_container">
+        <button mat-raised-button color="" (click)="askForConfs()" type="button">
+            Leer más...
+        </button>
+    </div>
+</div>
+<app-videodetection *ngIf="currentPlayDetection != null" [actualModel]="currentPlayDetection"
+    (detections)="detected($event)" (askClose)="askClose()" [page]="page"></app-videodetection>

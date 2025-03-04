@@ -1,0 +1,17 @@
+<div class="level_0">
+    <div class="head_part">
+        <app-statusbar [title]="'Visibilidad de Servidores'" [extraOptions]="extraOptions"></app-statusbar>
+    </div>
+    <div class="body_part" *ngIf="currentUser == null">
+
+    </div>
+    <div class="body_part" *ngIf="currentUser != null">
+        <div class="contenedor_elems_scroll">
+            <div class="contenedor_elems">
+                <app-serverview [serverData]="server"
+                    *ngFor="let server of serverMap | keyvalue | sortByName:'name':'desc'; index as i">
+                </app-serverview>
+            </div>
+        </div>
+    </div>
+</div>

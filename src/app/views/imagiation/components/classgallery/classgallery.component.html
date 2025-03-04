@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+    <h1 class="centrado">Clases</h1>
+    <span class="boton_cerrar" (click)="cancelar()">
+        <mat-icon>close</mat-icon>
+    </span>
+</div>
+<mat-dialog-content class="mat-typography con_form" #container_scroll>
+    <p class="texto_descripcion">Definir clase:</p>
+    <form class="form-container layout_columna" [formGroup]="form">
+        <div class="list_container">
+            <button mat-raised-button class="manito" type="button" color="primary" (click)="agregarClase()">
+                Agregar clase
+            </button>
+            <div [formArrayName]="'formArrayName'">
+
+                <div class="my_pair_element" *ngFor="let tag of tagsProcessed; index as i;">
+                    <div class="the_identity">
+                        <button mat-raised-button class="manito" color="{{ getTagColor(tag) }}" (click)="usarTag(tag)">
+                            {{ tag.num }}
+                        </button>
+                    </div>
+                    <div class="the_role" [formGroupName]="i">
+                        <mat-form-field class="input_referencia">
+                            <input matInput formControlName="classref" placeholder="referencia" type="text" />
+                        </mat-form-field>
+                        <mat-form-field class="input_nombre">
+                            <input matInput formControlName="classname" placeholder="nombre" type="text" required />
+                        </mat-form-field>
+                    </div>
+                    <div class="the_button" (click)="borrarClase(i, tag)">
+                        <mat-icon>delete</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<div class="bottom_buttons">
+    <button mat-raised-button color="" (click)="cancelar()" type="button">
+        Cancelar
+    </button>
+    <button *ngIf="tag" mat-raised-button color="warn" (click)="wantsToDelete()" type="button">
+        Borrar etiqueta
+    </button>
+    <button mat-raised-button color="primary" (click)="guardarCerrar()" type="button">
+        Guardar
+    </button>
+</div>

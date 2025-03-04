@@ -1,0 +1,55 @@
+<div class="global_container">
+    <div class="inner_container">
+        <div class="row_data">
+            <label class="key">Nombre:</label>
+            <label class="value">{{ serverData.value.name }}</label>
+        </div>
+        <div class="row_data">
+            <label class="key">Precio:</label>
+            <label class="value">{{ serverData.value.price }}/hora</label>
+        </div>
+        <div class="row_data">
+            <label class="key">Estado:</label>
+            <label class="value">{{ serverData.value.state }}</label>
+        </div>
+        <div class="row_data">
+            <label class="key">Capacidad {{ serverData.value.stateDetail?.capacity }}%</label>
+        </div>
+        <div class="row_data">
+            <mat-progress-bar class="value" mode="determinate" value="{{ serverData.value.stateDetail?.capacity }}">
+            </mat-progress-bar>
+        </div>
+        <div class="row_data">
+            <label class="key">Procesador {{ serverData.value.stateDetail?.cpu_percent }}%</label>
+        </div>
+        <div class="row_data">
+            <mat-progress-bar class="value" mode="determinate" value="{{ serverData.value.stateDetail?.cpu_percent }}">
+            </mat-progress-bar>
+        </div>
+        <div class="row_data">
+            <label class="key">Memoria {{ serverData.value.stateDetail?.virtual_memory }}%</label>
+        </div>
+        <div class="row_data">
+            <mat-progress-bar class="value" mode="determinate"
+                value="{{ serverData.value.stateDetail?.virtual_memory }}">
+            </mat-progress-bar>
+        </div>
+        <div class="row_data">
+            <label class="key">Zona:</label>
+            <label class="value">{{ serverData.value.zone }}</label>
+        </div>
+        <div class="row_data log_container_scroll">
+            <div class="log_container">
+                <div class="one_log_line" *ngFor="let linea of serverData.value.log">{{ linea }}</div>
+            </div>
+        </div>
+        <div class="row_data margin_top_20 alinear_al_final">
+            <mat-slide-toggle (change)="updateState($event)">
+                Actualizar
+            </mat-slide-toggle>
+            <mat-slide-toggle (change)="updateIterate($event)">
+                Iterar
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>

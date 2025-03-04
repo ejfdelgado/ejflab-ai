@@ -1,0 +1,23 @@
+:host(.parent_class) {
+  position: relative;
+}
+
+.my_container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  width: 100vw;
+}
+
+.my_container pre {
+  padding: 15px;
+}
+
+.highlight {
+  color: black;
+  white-space: pre-wrap;
+}

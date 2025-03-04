@@ -22,8 +22,6 @@ import { SecretsSrv } from "@ejfdelgado/ejflab-back/srv/SecretsSrv.mjs";
 
 import { MyShell } from "@ejfdelgado/ejflab-back/srv/MyShell.mjs";
 import { MyFileServiceLocal } from "@ejfdelgado/ejflab-back/srv/MyFileServiceLocal.mjs";
-import { ImagiationSrv } from "@ejfdelgado/ejflab-back/srv/ImagiationSrv.mjs";
-import { ComputeEngineSrv } from "@ejfdelgado/ejflab-back/srv/ComputeEngineSrv.mjs";
 import { EmailHandler } from "@ejfdelgado/ejflab-back/srv/EmailHandler.mjs";
 import { SocketIOCall } from "@ejfdelgado/ejflab-back/srv/SocketIOCall.mjs";
 import bodyParser from "body-parser"
@@ -33,6 +31,8 @@ import { MilvusSrv } from "@ejfdelgado/ejflab-back/srv/MilvusSrv.mjs";
 import { PostgresSrv } from "@ejfdelgado/ejflab-back/srv/PostgresSrv.mjs";
 import { MyConstants } from "@ejfdelgado/ejflab-common/src/MyConstants.js";
 import { EjflabSrv } from "./srv/ejflab/EjflabSrv.mjs";
+import { ImagiationSrv } from "./srv/ejflab/ImagiationSrv.mjs";
+import { ComputeEngineSrv } from "./srv/ejflab/ComputeEngineSrv.mjs";
 
 // Overwrite constants
 MyConstants.overwriteEnvVariables();

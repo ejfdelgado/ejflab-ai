@@ -1,0 +1,56 @@
+.global_container {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+}
+
+.inner_container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.row_data {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.row_data label.key {
+  font-weight: bold;
+}
+
+.row_data label.value {
+  flex: 1;
+}
+
+.margin_top_20 {
+  margin-top: 20px;
+}
+
+.alinear_al_final {
+  justify-content: end;
+}
+
+.log_container_scroll {
+  background: black;
+  color: white;
+  margin-right: 5px;
+  border-radius: 5px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 100px;
+  height: 100px;
+  width: 100%;
+}
+
+.log_container {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+}

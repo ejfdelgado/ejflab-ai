@@ -1,0 +1,202 @@
+.invisible {
+  display: none !important;
+}
+
+.container_image_gallery {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container_image_gallery .container_preview {
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.container_image_gallery .container_preview .big_image {
+  max-width: 100%;
+  max-height: 100%;
+  display: inline-block;
+}
+
+.container_image_gallery .container_preview .container_big_image {
+  position: relative;
+}
+
+.container_image_gallery
+  .container_preview
+  .container_big_image
+  .container_overlay {
+  position: absolute;
+}
+
+.container_image_gallery
+  .container_preview
+  .container_big_image
+  .container_overlay
+  .the_label {
+  position: absolute;
+  border: 1px solid;
+  border-color: red;
+}
+
+.container_image_gallery
+  .container_preview
+  .container_big_image
+  .container_overlay.red {
+  border: 1px solid;
+  border-color: red;
+}
+
+.container_image_gallery .container_thumbnails {
+  height: 30vh;
+  width: 100%;
+  background-color: #efefef;
+  position: relative;
+}
+
+.container_image_gallery .container_thumbnails .scroll_thumbnails {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 10px;
+  bottom: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.container_image_gallery .container_thumbnails .scroll_thumbnails_all {
+  width: 100%;
+}
+
+.container_image_gallery
+  .container_thumbnails
+  .scroll_thumbnails
+  .my_thumbnail {
+  display: block;
+  float: left;
+  margin: 2px;
+  width: 20vh;
+  height: 20vh;
+  background-color: white;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  position: relative;
+  border: 3px solid;
+  border-color: white;
+}
+
+.container_image_gallery
+  .container_thumbnails
+  .scroll_thumbnails
+  .my_thumbnail.hightlight {
+  border-color: red;
+}
+
+.container_image_gallery
+  .container_thumbnails
+  .scroll_thumbnails
+  .my_thumbnail:hover {
+  background-color: rgb(205, 205, 205);
+}
+
+.container_menu {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 60px;
+  height: 60px;
+}
+
+.container_menu > * {
+  width: 100%;
+  height: 100%;
+}
+
+.menu_icon_user {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  box-shadow: 1px 1px 4px 1px #c7c8ca;
+  font-size: 1.8em;
+  color: #0ec9f4;
+
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.menu_icon_user.white {
+  background: white;
+}
+
+.the_class {
+  position: absolute;
+  top: -18px;
+  left: -1px;
+  font-size: 16px;
+}
+
+.container_class {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 5px;
+}
+
+.container_class label {
+  background: aliceblue;
+  border-radius: 5px;
+  color: #5974ff;
+  font-size: 20px;
+  padding: 5px;
+}
+
+p.ver_mas {
+  color: #5974ff;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 13%;
+}
+
+.my_thumbnail .photo_date {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+
+.my_thumbnail .photo_detail {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  margin-bottom: 0;
+}
+
+.my_thumbnail .photo_count {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  margin-bottom: 0;
+  font-size: 30px;
+}
+
+.no_tags {
+  visibility: hidden;
+}
+
+.key_helper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+}
+
+.key_helper img {
+  width: 60px;
+}

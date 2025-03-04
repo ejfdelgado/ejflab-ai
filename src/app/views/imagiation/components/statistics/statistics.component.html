@@ -1,0 +1,47 @@
+<div class="container_statistics">
+    <div class="container_top">
+        <div class="container_left" id="map"></div>
+        <div class="container_right">
+            <div *ngIf="current" class="big_photo">
+                <div class="the_image" [ngStyle]="{'background-image': 'url('+current.big+')'}"></div>
+                <div class="left_top_text black_subtitle">{{ getTitleFounds(current) }}</div>
+                <div class="left_bottom_text black_subtitle">{{ current.t | epoch2date }}</div>
+            </div>
+            <div class="container_menu">
+                <div class="menu_icon_user_parent" [matMenuTriggerFor]="mainMenu" aria-label="Menú principal">
+                    <div class="menu_icon_user white manito">
+                        <mat-icon>menu</mat-icon>
+                    </div>
+                </div>
+                <mat-menu #mainMenu="matMenu">
+                    <button *ngIf="currentInterval !== null" mat-menu-item (click)="openShareThis()">
+                        <mat-icon>qr_code_2</mat-icon>
+                        <span>Compartir reporte</span>
+                    </button>
+                    <button mat-menu-item (click)="eraseStatistic(current)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Borrar</span>
+                    </button>
+                    <button *ngIf="currentInterval !== null" mat-menu-item (click)="pauseGallery()">
+                        <mat-icon>pause_circle</mat-icon>
+                        <span>Pausar galería</span>
+                    </button>
+                    <button *ngIf="currentInterval === null" mat-menu-item (click)="resumeGallery()">
+                        <mat-icon>play_circle</mat-icon>
+                        <span>Reproducir galería</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
+    </div>
+    <div class="container_bottom scroll_x">
+        <div class="container_thumbnails">
+            <div class="one_image manito" [ngClass]="{'current': statistic == current }"
+                *ngFor="let statistic of statistics" (click)="setCurrentImage(statistic)">
+                <div class="the_image" [ngStyle]="{'background-image': 'url('+statistic.thumb+')'}"></div>
+                <div class="left_top_text black_subtitle">{{ statistic.confName }}</div>
+                <div class="right_bottom_text black_subtitle">{{ statistic.t | epoch2date }}</div>
+            </div>
+        </div>
+    </div>
+</div>
