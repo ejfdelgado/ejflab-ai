@@ -70,6 +70,7 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
     });
 
     const VIEW_OPTIONS = [
+      { pathname: 'ocr', label: 'OCR', icon: 'spellcheck' },
       { pathname: 'llm', label: 'LLM', icon: 'psychology' },
       { pathname: 'speech_to_text', label: 'Speech to Text', icon: 'mic' },
       { pathname: 'text_to_speech', label: 'Text to Speech', icon: 'volume_up' },

@@ -26,6 +26,7 @@ import { SpeechToTextComponent } from './components/speech-to-text/speech-to-tex
 import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
 import { PopupDatabaseEditComponent } from './components/popup-database-edit/popup-database-edit.component';
 import { PopupCloudAdminComponent } from './components/popup-cloud-admin/popup-cloud-admin.component';
+import { OcrComponent } from './components/ocr/ocr.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { PopupCloudAdminComponent } from './components/popup-cloud-admin/popup-c
     SpeechToTextComponent,
     TextToSpeechComponent,
     PopupDatabaseEditComponent,
-    PopupCloudAdminComponent
+    PopupCloudAdminComponent,
+    OcrComponent
   ],
   imports: [
     CommonModule,

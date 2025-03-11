@@ -7,6 +7,7 @@ import { IngestComponent } from './components/ingest/ingest.component';
 import { LlmKnowledgeComponent } from './components/llm-knowledge/llm-knowledge.component';
 import { SpeechToTextComponent } from './components/speech-to-text/speech-to-text.component';
 import { TextToSpeechComponent } from './components/text-to-speech/text-to-speech.component';
+import { OcrComponent } from './components/ocr/ocr.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'text_to_speech', component: TextToSpeechComponent, },
       { path: 'milvus', component: MilvusComponent, },
       { path: 'ingest', component: IngestComponent, },
+      { path: 'ocr', component: OcrComponent, },
     ]
   }
 ];

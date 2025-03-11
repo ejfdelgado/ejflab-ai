@@ -38,5 +38,9 @@
     "chunker": {
         "postUrl": "http://chunker:8098",
         "topicUrl": ""
+    },
+    "ocr": {
+        "postUrl": "http://ocr_processor:8100",
+        "topicUrl": ""
     }
 }
