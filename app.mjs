@@ -9,6 +9,7 @@ import { cors, commonHeaders, handleErrorsDecorator, handleErrors } from "@ejfde
 import { MainHandler } from "@ejfdelgado/ejflab-back/srv/MainHandler.mjs";
 import { checkAuthenticated, checkAuthenticatedSilent } from "@ejfdelgado/ejflab-back/srv/common/FirebasConfig.mjs";
 import { MyFileService } from "@ejfdelgado/ejflab-back/srv/MyFileService.mjs";
+import { OpenCVSrv } from "@ejfdelgado/ejflab-back/srv/OpenCVSrv.mjs";
 import https from 'https'
 import http from 'http'
 import compression from 'compression';
@@ -170,6 +171,8 @@ app.get('/srv/:pageType/:pageId/localtuple.json', [commonHeaders, checkAuthentic
 app.post('/srv/:pageType/:pageId/localpage.json', [commonHeaders, checkAuthenticatedSilent, express.json(), handleErrorsDecorator(MyFileServiceLocal.uploadFile)]);
 app.delete('/srv/:pageType/:pageId/localpage.json', [commonHeaders, checkAuthenticatedSilent, handleErrorsDecorator(MyFileServiceLocal.deleteFile)]);
 app.get('/srv/:pageType/:pageId/localpage.json', [commonHeaders, checkAuthenticatedSilent, handleErrorsDecorator(MyFileServiceLocal.readFile)]);
+
+app.post('/srv/opencv/solvepnp', [commonHeaders, express.json({ limit: '50mb' }), handleErrorsDecorator(OpenCVSrv.solvePnP)]);
 
 // Configure wideSight api
 EjflabSrv.configure(app);
