@@ -21,6 +21,7 @@ const routes: Routes = [
       { path: 'milvus', component: MilvusComponent, },
       { path: 'ingest', component: IngestComponent, },
       { path: 'ocr', component: OcrComponent, },
+      { path: 'ocr/:id', component: OcrComponent, },
     ]
   }
 ];
