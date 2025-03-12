@@ -1,0 +1,35 @@
+<div #myparent class="theparent no_caret">
+    <div class="onedot no_caret" *ngFor="let dot of DOTS_MODEL | keyvalue" [ngStyle]="get2DCoordinates(dot)">
+        <div *ngIf="seeCalibPoints && dot.value.v2" class="onedot_center no_caret"
+            [ngClass]="{'selected': selectedDot == dot.key}" (click)="select2DPoint(dot)" [ngStyle]="DOT_OPTIONS.style">
+        </div>
+    </div>
+    <div *ngIf="mymodel.globalState?.playingState === 'stoped'" class="my_custom_cursor no_caret"
+        [ngStyle]="{'left': mousePosition.x+'px', 'top': mousePosition.y+'px'}">
+        <img class="no_caret" src="/assets/img/cursorx2.png" />
+    </div>
+    <canvas #mycanvas class="canvas_style" width="1" height="1">
+        Tu navegador no admite el elemento &lt;canvas&gt;.
+    </canvas>
+    <div *ngIf="(states.fullScreen && mymodel.globalState?.playingState === 'stoped')" class="fantasma with_border">
+        <div class="fantasma_child1">
+            <div class="fantasma_child2"></div>
+            <div class="fantasma_child2_line"></div>
+            <div class="fantasma_child2"></div>
+        </div>
+        <div class="fantasma_child1_line"></div>
+        <div class="fantasma_child1">
+            <div class="fantasma_child2"></div>
+            <div class="fantasma_child2_line"></div>
+            <div class="fantasma_child2"></div>
+        </div>
+    </div>
+    <video style="display: none;" #video>
+    </video>
+    <canvas #videocanvas class="videocanvas" width="1" height="1">
+        Tu navegador no admite el elemento &lt;canvas&gt;.
+    </canvas>
+    <canvas #canvas_heat_map class="canvas_heat_map" width="50" height="300">
+        Tu navegador no admite el elemento &lt;canvas&gt;.
+    </canvas>
+</div>

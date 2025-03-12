@@ -25,6 +25,7 @@ const PAGINAS = [
   { id: 'ejflabmodule', module: 'EjflabmoduleModule' },
   { id: 'imagiation', module: 'ImagiationModule' },
   { id: 'gcp', module: 'GcpModule' },
+  { id: 'projection', module: 'ProjectionModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {

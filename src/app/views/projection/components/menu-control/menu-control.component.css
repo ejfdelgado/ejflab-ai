@@ -1,0 +1,220 @@
+button {
+  cursor: pointer;
+}
+
+.margin_y_5 {
+  margin: 5px 0;
+}
+
+.padding_5 {
+  padding: 5px;
+}
+
+.mi_tab {
+  display: flex;
+  width: 100%;
+  background-color: white;
+  flex-direction: row;
+  border-bottom: 1px solid;
+  gap: 5px;
+  border-color: rgb(87, 50, 24);
+}
+
+.mi_tab .one_tab {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 5px;
+  background-color: chocolate;
+  cursor: pointer;
+}
+
+.mi_tab .one_tab.active {
+  background-color: rgb(87, 50, 24);
+}
+
+.mi_tab .one_tab .el_texto {
+  color: white;
+}
+
+.mi_tab .one_tab.active .el_texto {
+  font-weight: bold;
+}
+
+.mi_tab .one_tab .el_texto:hover {
+  text-decoration: underline;
+}
+
+.tab_view {
+  width: 100%;
+}
+
+/**/
+
+.input_with_icon_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.my_input {
+  flex: 1;
+  padding: 5px;
+}
+
+.my_label {
+  margin: 5px 0;
+  display: flex;
+}
+
+.my_input option {
+  margin: 5px;
+}
+
+.my_button_with_text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.my_button_with_text.full_width,
+.my_input.full_width {
+  width: 100%;
+}
+
+.my_panel {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.my_panel_h {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.my_panel.vh3 {
+  height: 30vh;
+}
+
+.my_panel.vh2 {
+  height: 50vh;
+}
+
+.my_panel .my_decoration {
+  border-radius: 5px;
+  margin: 15px 0;
+  border: 1px solid;
+  flex: 1;
+  border-color: gray;
+  position: relative;
+}
+
+.my_panel .my_decoration .mi_titulo {
+  position: absolute;
+  top: -11px;
+  left: 5px;
+  font-size: 13px;
+  background-color: white;
+  padding: 0 3px;
+}
+
+.my_panel .my_decoration .mi_scroll {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  overflow-y: scroll;
+}
+
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.flex_row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.one_point_item {
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  border-radius: 5px;
+  border-color: turquoise;
+  padding: 5px;
+  position: relative;
+}
+
+.one_point_item .my_action {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  cursor: pointer;
+}
+
+.one_point_item .my_content {
+  cursor: pointer;
+}
+
+.one_point_item .my_content:hover {
+  background-color: #e6fff7;
+}
+
+.one_point_item .my_content.active {
+  background-color: aquamarine;
+}
+
+.one_point_item .point_value {
+  font-weight: bold;
+}
+
+.timer_count {
+  font-size: 30px;
+  text-align: center;
+  margin: 10px;
+}
+
+.label_checkbox {
+  display: flex;
+  flex-direction: row;
+}
+
+.label_checkbox input {
+  width: 50px;
+}
+
+.label_checkbox label {
+  flex: 1;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+img.ayuda_visual {
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.manito {
+  cursor: pointer;
+}
+
+.vertical_panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontal_panel {
+  display: flex;
+  flex-direction: row;
+}

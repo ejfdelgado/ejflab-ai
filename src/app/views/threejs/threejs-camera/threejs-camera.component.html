@@ -1,0 +1,13 @@
+<div class="parent_video">
+    <div #threejs_parent class="container_video">
+        <video #video>
+        </video>
+        <div [ngStyle]="{'width': forcedWidth+'px', 'left': forcedLeft+'px'}" class="threejs_container">
+            <app-threejs-projection #three_ref [DOTS_MODEL]="parent.getCurrentPair()" [mymodel]="parent.mymodel"
+                [seeCalibPoints]="parent.states.seeCalibPoints" [states]="parent.states"
+                [ngStyle]="{'display': 'flex', 'position': 'absolute'}"
+                (selectedDotEvent)="parent.states.selectedDot=$event;" (modelChangedEvent)="parent.saveAll()">
+            </app-threejs-projection>
+        </div>
+    </div>
+</div>

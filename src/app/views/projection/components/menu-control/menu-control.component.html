@@ -1,0 +1,231 @@
+<select class="my_input full_width" [(ngModel)]="localModel.currentEnvironment"
+    (ngModelChange)="changedEnvironment($event)">
+    <option disabled hidden [value]="null">-- opción --</option>
+    <option *ngFor="let c of getEnvironmentOptions()" [ngValue]="c.val">{{c.txt}}</option>
+</select>
+<button *ngIf="states.fullScreen === false" class="my_button_with_text margin_y_5 full_width"
+    (click)="turnFullscreen(true)" mat-menu-item>
+    <mat-icon>fullscreen</mat-icon>
+    <span>Ver pantalla completa</span>
+</button>
+<button *ngIf="states.fullScreen === true" class="my_button_with_text margin_y_5 full_width"
+    (click)="turnFullscreen(false)" mat-menu-item>
+    <mat-icon>fullscreen_exit</mat-icon>
+    <span>Salir de pantalla completa</span>
+</button>
+<button class="my_button_with_text margin_y_5 full_width" (click)="useOrbitControls()" mat-menu-item>
+    <mat-icon>3d_rotation</mat-icon>
+    <span>Usar controles</span>
+</button>
+<button *ngIf="states.seeCalibPoints === false" class="my_button_with_text margin_y_5 full_width"
+    (click)="turnReferencePoints(true)" mat-menu-item>
+    <mat-icon>visibility</mat-icon>
+    <span>Ver puntos de referencia</span>
+</button>
+<button *ngIf="states.seeCalibPoints === true" class="my_button_with_text margin_y_5 full_width"
+    (click)="turnReferencePoints(false)" mat-menu-item>
+    <mat-icon>visibility_off</mat-icon>
+    <span>Esconder puntos de referencia</span>
+</button>
+<!-- Top Side -->
+<div class="mi_tab">
+    <div *ngFor="let myTab of tabOptions" class="one_tab" (click)="openTab(myTab.id)"
+        [ngClass]="{'active': localModel.currentTab == myTab.id}">
+        <div class="el_texto">{{myTab.label}}</div>
+    </div>
+</div>
+<div class="invisible" *ngFor="let model of mymodel.models | keyvalue">
+    <app-video-canvas #videoListRef *ngIf="model.value.videoUrl" [url]="model.value.videoUrl" [uid]="model.key"
+        [timeSeconds]="localModel.timeSeconds" [useLoop]="model.value.useLoop" [useVideo]="localModel.useVideo"
+        (imageOut)="imageOut.emit($event)" [options]="model.value.texture">
+    </app-video-canvas>
+</div>
+<div class="tab_view" *ngIf="localModel.currentTab == 'views'">
+    <label class="my_label">Selecciona o crea una vista:</label>
+    <div class="input_with_icon_container">
+        <select class="my_input" [(ngModel)]="localModel.currentViewName" (ngModelChange)="changedView($event)">
+            <option disabled hidden [value]="null">-- vista --</option>
+            <option *ngFor="let c of getViewOptionsList()" [ngValue]="c.val">{{c.txt}}</option>
+        </select>
+        <button class="my_button" (click)="addView()" mat-menu-item>
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div *ngIf="localModel.currentView" class="my_panel">
+        <label class="my_label">Nombre:</label>
+        <input class="my_input" type="text" [(ngModel)]="localModel.currentView.name"
+            (ngModelChange)="saveEvent.emit();" />
+        <label class="my_label">Field of View (grados °) <mat-icon (click)="toggleFOVHelp()" class="manito">help_outline
+            </mat-icon>:</label>
+        <div class="vertical_panel" *ngIf="helpFOVVisible">
+            <img class="ayuda_visual" src="/assets/img/projection/pro_field_of_view.jpg" alt="Ayuda para Field of View">
+            <label class="my_label">W:</label>
+            <input class="my_input" type="number" [(ngModel)]="localModel.currentView.W"
+                (ngModelChange)="saveEvent.emit();" />
+            <label class="my_label">D:</label>
+            <input class="my_input" type="number" [(ngModel)]="localModel.currentView.D"
+                (ngModelChange)="saveEvent.emit();" />
+            <button class="my_button_with_text margin_y_5" (click)="calcularFieldOfView()" mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Calcular</span>
+            </button>
+        </div>
+        <input class="my_input" type="number" min="5" max="100" [(ngModel)]="localModel.currentView.fov"
+            (ngModelChange)="changedFovEvent.emit($event); saveEvent.emit();" />
+        <label class="my_label">View Offset (%) <mat-icon (click)="toggleViewOffsetHelp()" class="manito">help_outline
+            </mat-icon>:</label>
+        <div class="vertical_panel" *ngIf="helpViewOffsetVisible">
+            <img class="ayuda_visual" src="/assets/img/projection/pro_view_offset.jpg" alt="Ayuda para View Offset">
+            <label class="my_label">B:</label>
+            <input class="my_input" type="number" [(ngModel)]="localModel.currentView.B"
+                (ngModelChange)="saveEvent.emit();" />
+            <label class="my_label">H:</label>
+            <input class="my_input" type="number" [(ngModel)]="localModel.currentView.H"
+                (ngModelChange)="saveEvent.emit();" />
+            <button class="my_button_with_text margin_y_5" (click)="calcularViewOffset()" mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Calcular</span>
+            </button>
+        </div>
+        <input class="my_input" type="number" min="0" max="1.5" step="0.01"
+            [(ngModel)]="localModel.currentView.viewOffset"
+            (ngModelChange)="changedViewOffsetEvent.emit($event); saveEvent.emit();" />
+        <button class="my_button_with_text margin_y_5" (click)="calibrateView()" mat-menu-item>
+            <mat-icon>view_in_ar</mat-icon>
+            <span>Calibrar</span>
+        </button>
+        <button class="my_button_with_text full_width margin_y_5" (click)="askEraseAllPoints()" mat-menu-item>
+            <mat-icon>close</mat-icon>
+            <span>Borrar puntos de referencia</span>
+        </button>
+    </div>
+    <div *ngIf="localModel.currentView && states.seeCalibPoints === true" class="my_panel vh2">
+        <div class="my_decoration">
+            <div class="mi_titulo">Puntos de referencia</div>
+            <div class="mi_scroll">
+                <div *ngIf="localModel.currentView" class="flex_column">
+                    <div *ngFor="let onePoint of localModel.currentView.pairs | keyvalue" class="one_point_item">
+                        <div class="my_action" (click)="askErasePoint(onePoint.key)">
+                            <mat-icon>close</mat-icon>
+                        </div>
+                        <div class="flex_column my_content" [ngClass]="{'active': states.selectedDot == onePoint.key}"
+                            (click)="askLocatePoint(onePoint.key)">
+                            <div class="point_label">Punto 2D:</div>
+                            <div class="point_value">{{ format2DPoint(onePoint.value.v2) }}</div>
+                            <div class="point_label">Punto 3D:</div>
+                            <div class="point_value">{{ format3DPoint(onePoint.value.v3) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="localModel.currentViewName != null">
+        <button class="my_button_with_text full_width margin_y_5" (click)="removeView(localModel.currentViewName)"
+            mat-menu-item>
+            <mat-icon>close</mat-icon>
+            <span>Borrar Vista</span>
+        </button>
+    </div>
+</div>
+<div class="tab_view" *ngIf="localModel.currentTab == 'object3d'">
+    <button class="my_button_with_text full_width margin_y_5" (click)="add3DModel()" mat-menu-item>
+        <mat-icon>add</mat-icon>
+        <span>Agregar Modelo 3D</span>
+    </button>
+    <div class="my_panel" *ngFor="let model of mymodel.models | keyvalue | sortByName">
+        <div class="my_decoration my_panel_h">
+            <div class="my_panel padding_5">
+                <label class="my_label">Nombre:</label>
+                <input class="my_input" type="text" [(ngModel)]="model.value.name"
+                    (ngModelChange)="saveEvent.emit();" />
+                <div class="label_checkbox">
+                    <label class="my_label">Visible:</label>
+                    <input type="checkbox" [(ngModel)]="model.value.isVisible"
+                        (ngModelChange)="adjustVisibility(model.key, model.value); saveEvent.emit();" />
+                </div>
+                <label class="my_label">Inicia en (segundos):</label>
+                <input class="my_input" type="number" min="0" [(ngModel)]="model.value.startTime"
+                    (ngModelChange)="saveEvent.emit();" />
+                <label class="my_label">Archivo *.obj:</label>
+                <app-blobeditor [options]="blobOptions" [subFolder]="'models/'+model.key+'/mesh'"
+                    [url]="model.value.objUrl"
+                    (urlChange)="model.value.objUrl=$event; load3DModel.emit({uid: model.key, url: $event}); saveEvent.emit();">
+                </app-blobeditor>
+                <label class="my_label">Archivo de video:</label>
+                <app-blobeditor [options]="blobOptionsPublic" [subFolder]="'models/'+model.key+'/video'"
+                    [url]="model.value.videoUrl" (urlChange)="model.value.videoUrl=$event; saveEvent.emit();">
+                </app-blobeditor>
+                <div class="label_checkbox">
+                    <label class="my_label">Bucle infinito:</label>
+                    <input type="checkbox" [(ngModel)]="model.value.useLoop" (ngModelChange)="saveEvent.emit();" />
+                </div>
+                <button class="my_button_with_text full_width margin_y_5" (click)="delete3DModel(model.key)"
+                    mat-menu-item>
+                    <mat-icon>delete</mat-icon>
+                    <span>Borrar Modelo</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab_view" *ngIf="localModel.currentTab == 'play'">
+    <div class="my_panel">
+        <div class="label_checkbox">
+            <label class="my_label">Usar arenera:</label>
+            <input type="checkbox" [(ngModel)]="localModel.useSand" />
+        </div>
+        <div class="label_checkbox">
+            <label class="my_label">Precargar videos:</label>
+            <input type="checkbox" [(ngModel)]="localModel.useVideo" />
+        </div>
+        <button *ngIf="mymodel.globalState?.playingState === 'stoped'" class="my_button_with_text full_width margin_y_5"
+            (click)="prepareToPlay()" mat-menu-item>
+            <mat-icon>play_arrow</mat-icon>
+            <span>Reproducir</span>
+        </button>
+        <button *ngIf="mymodel.globalState?.playingState !== 'stoped'" class="my_button_with_text full_width margin_y_5"
+            (click)="callToStop()" mat-menu-item>
+            <mat-icon>stop</mat-icon>
+            <span>Detener</span>
+        </button>
+        <div *ngIf="mymodel.globalState?.playingState == 'preparing' || mymodel.globalState?.playingState == 'playing'"
+            class="timer_count">
+            {{ localFormatTime }}
+        </div>
+    </div>
+</div>
+<div class="tab_view" *ngIf="localModel.currentTab == 'sand'">
+    <div class="my_panel">
+        <label class="my_label">Video de entrada:</label>
+        <select class="my_input full_width" [(ngModel)]="mymodel.sand.cameraId" (ngModelChange)="changedCamera($event)">
+            <option disabled hidden [value]="null">-- cámara --</option>
+            <option *ngFor="let c of videoOptions" [ngValue]="c.label">{{c.label}}</option>
+        </select>
+        <button *ngIf="mymodel.sand.cameraId != null" class="my_button_with_text full_width margin_y_5"
+            (click)="askPlayVideoLocal(mymodel.sand.cameraId)" mat-menu-item>
+            <mat-icon>play_arrow</mat-icon>
+            <span>Ver cámara</span>
+        </button>
+        <label class="my_label">Modelo 3d de simple:</label>
+        <app-blobeditor *ngIf="mymodel.sand" [options]="blobOptions" [subFolder]="'models/sand_mesh'"
+            [url]="mymodel.sand.meshUrl" (urlChange)="mymodel.sand.meshUrl=$event; saveEvent.emit();">
+        </app-blobeditor>
+        <label class="my_label">Modelo 3d de detallado:</label>
+        <app-blobeditor *ngIf="mymodel.sand" [options]="blobOptions" [subFolder]="'models/sand_mesh2'"
+            [url]="mymodel.sand.meshUrl2" (urlChange)="mymodel.sand.meshUrl2=$event; saveEvent.emit();">
+        </app-blobeditor>
+        <button *ngIf="mymodel.sand.cameraId != null" class="my_button_with_text full_width margin_y_5"
+            (click)="compute3d2DMask()" mat-menu-item>
+            <mat-icon>play_arrow</mat-icon>
+            <span>Calcular relación de vértices 3d - 2d</span>
+        </button>
+        <app-txtfileeditor #map3d2d_ref *ngIf="mymodel.sand.cameraId != null" [options]="textOptions"
+            [fileName]="'map3d2d.txt'" [url]="mymodel.sand.map3d2dUrl"
+            (urlChange)="saveMap3d2d($event); saveEvent.emit();">
+        </app-txtfileeditor>
+    </div>
+</div>
+<div class="tab_view" *ngIf="localModel.currentTab == 'debug_local_model'">
+    <pre>{{ localModel.currentView | json }}</pre>
+</div>

@@ -10,5 +10,7 @@
     "src/app/views/gcp/*.ts",
     "src/app/views/ejflabmodule/*.ts",
     "src/app/views/threejs/*.ts",
+    "src/app/views/tensorflow/*.ts",
+    "src/app/views/projection/*.ts",
   ]
 }

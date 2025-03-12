@@ -1,0 +1,41 @@
+<div class="level_0">
+    <div class="head_part" *ngIf="states.fullScreen !== true">
+        <app-statusbar [title]="'Título'" [extraOptions]="extraOptions" [saveState]="saveState"></app-statusbar>
+    </div>
+    <div class="body_part" *ngIf="currentUser == null">
+        <app-license></app-license>
+    </div>
+    <div class="body_part" *ngIf="currentUser != null">
+        <div class="left_part" *ngIf="localModel.currentEnvironment == '3d'">
+            <app-threejs-projection #three_ref [DOTS_MODEL]="getCurrentPair()" [ngInit]="resizeSceneLocalThis"
+                [mymodel]="mymodel" [seeCalibPoints]="states.seeCalibPoints" [states]="states"
+                [ngStyle]="{'display': 'flex', 'position': (states.fullScreen ? 'fixed': 'absolute')}"
+                (selectedDotEvent)="states.selectedDot=$event;" (modelChangedEvent)="saveAll()"
+                [useSand]="localModel.useSand">
+            </app-threejs-projection>
+        </div>
+        <div class="left_part" *ngIf="localModel.currentEnvironment == 'video'">
+            <app-threejs-camera [parent]="getSelf()" #camera_ref></app-threejs-camera>
+        </div>
+        <div class="right_part" [ngStyle]="{'bottom': states.menuTop.bottom+'px', 'right': states.menuTop.right+'px'}"
+            [ngClass]="{'floating': states.fullScreen && states.openedFloatingMenu, 'invisible': !(!states.fullScreen || states.openedFloatingMenu)}">
+            <div class="top_menu_control" *ngIf="states.fullScreen && states.openedFloatingMenu"
+                (mousedown)="mouseDownMenuTop($event)" (mouseup)="mouseUpMenuTop($event)">
+                <div class="drag_handler"></div>
+                <mat-icon class="close_icon" (click)="closeFloating()">close</mat-icon>
+            </div>
+            <div class="scroll_menu_container">
+                <app-menu-control #menuControlRef [mymodel]="mymodel" [states]="states" [localModel]="localModel"
+                    (saveEvent)="saveAll()" (imageOut)="receiveVideo($event)" (remove3DModel)="remove3DObject($event)"
+                    (load3DModel)="add3DObject($event.uid, $event.url, true)" (fullScreenEvent)="turnFullscreen($event)"
+                    (calibrateEvent)="calibCamera()" (useControlsEvent)="useOrbitControls()"
+                    (askErasePointEvent)="askErasePoint($event)" (askEraseAllPointsEvent)="askEraseAllPoints()"
+                    (askLocatePointEvent)="askLocatePoint($event)" (changedFovEvent)="changedFov($event)"
+                    (changedViewOffsetEvent)="changedViewOffset($event)" (changedViewEvent)="changedView($event)"
+                    (askPlayVideo)="askPlayVideo($event)" (askcompute3d2DMaskEvent)="askcompute3d2DMaskEvent()"
+                    (adjustVisibilityEvent)="adjustVisibilityEvent($event)">
+                </app-menu-control>
+            </div>
+        </div>
+    </div>
+</div>
