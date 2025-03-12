@@ -27,6 +27,7 @@ const PAGINAS = [
   { id: 'gcp', module: 'GcpModule' },
   { id: 'projection', module: 'ProjectionModule' },
   { id: 'humanpose', module: 'HumanposeModule' },
+  { id: 'calendar', module: 'CalendarModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {

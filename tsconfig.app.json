@@ -13,5 +13,6 @@
     "src/app/views/tensorflow/*.ts",
     "src/app/views/projection/*.ts",
     "src/app/views/humanpose/*.ts",
+    "src/app/views/calendar/*.ts",
   ]
 }

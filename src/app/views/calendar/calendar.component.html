@@ -1,0 +1,30 @@
+<div class="year">
+    <div class="calendar">
+        <div class="month">
+            <div class="dow titulo_anio">{{ anio }}</div>
+            <div class="dow">L</div>
+            <div class="dow">M</div>
+            <div class="dow">I</div>
+            <div class="dow">J</div>
+            <div class="dow">V</div>
+            <div class="dow fds">S</div>
+            <div class="dow fds">D</div>
+        </div>
+    </div>
+    <div class="myscroll">
+        <div class="calendar">
+            <div class="month">
+                <div class="titulo" [ngStyle]="{'grid-row': titulo.fila+' / span '+titulo.semanas}"
+                    *ngFor="let titulo of titulos; index as i;"><div class="titulo_child">{{ titulo.txt }}</div></div>
+                <div class="noselect day" [ngClass]="{'fds': dia.fds, 'fes': dia.fes}"
+                    *ngFor="let dia of dias; index as i;" (click)="explain(dia)">
+                    <div class="ind"
+                        [ngClass]="{'sad': dia.sad, 'jardin': dia.jardin, 'happy': dia.happy, 'happyjoyce': dia.happyjoyce, 'hoy': dia.hoy}">
+                        {{ dia.txt }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
