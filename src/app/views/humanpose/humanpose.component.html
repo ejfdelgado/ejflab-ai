@@ -1,0 +1,69 @@
+<div class="level_0">
+    <div class="head_part">
+        <app-statusbar [title]="getLocalTitle()" [extraOptions]="extraOptions"></app-statusbar>
+    </div>
+    <div class="body_part">
+        <div class="left_part">
+            <app-threejs #three_ref [ngStyle]="{'display': (currentView == 'threejs' ? 'flex' : 'none')}"></app-threejs>
+            <div class="multiple_views_parent" [ngStyle]="{'display': (currentView == 'tensorflow' ? 'flex' : 'none')}">
+                <div class="tab_scroll_files">
+                    <button (click)="showTensorflowDetail('data')" class="mat-menu-item"
+                        [ngClass]="{'highlight': tensorflowDetail == 'data'}">
+                        <mat-icon>cookie</mat-icon>
+                        <span>Datos</span>
+                    </button>
+                    <button (click)="showTensorflowDetail('configuration')" class="mat-menu-item"
+                        [ngClass]="{'highlight': tensorflowDetail == 'configuration'}">
+                        <mat-icon>settings</mat-icon>
+                        <span>Configuración</span>
+                    </button>
+                    <button (click)="showTensorflowDetail('training')" class="mat-menu-item"
+                        [ngClass]="{'highlight': tensorflowDetail == 'training'}">
+                        <mat-icon>model_training</mat-icon>
+                        <span>Entrenamiento</span>
+                    </button>
+                </div>
+                <div class="multiple_views">
+                    <app-tensorflow *ngIf="tensorflowDetail == 'configuration' && neuralNetworkModel"
+                        [view]="'neural_network'" [model]="neuralNetworkModel" [data]="tupleModel?.data">
+                    </app-tensorflow>
+                    <app-tensorflow *ngIf="tensorflowDetail == 'data'" [view]="'data'" [data]="tupleModel?.data">
+                    </app-tensorflow>
+                    <app-tensorflow *ngIf="tensorflowDetail == 'training' && neuralNetworkModel" [view]="'training'"
+                        [model]="neuralNetworkModel" [data]="tupleModel?.data">
+                    </app-tensorflow>
+                </div>
+            </div>
+            <app-prejson [ngStyle]="{'display': (currentView == 'prejson' ? 'flex' : 'none')}"
+                [model]="{theTimeLineTracker, tupleModel}">
+            </app-prejson>
+        </div>
+        <div class="right_part">
+            <div class="tab_scroll_files">
+                <button (click)="showFiles('csv')" class="mat-menu-item"
+                    [ngClass]="{'highlight': listedFiles == 'csv'}">
+                    <mat-icon>table_view</mat-icon>
+                    <span>Archivos CSV</span>
+                </button>
+                <button (click)="showFiles('tensorflow')" class="mat-menu-item"
+                    [ngClass]="{'highlight': listedFiles == 'tensorflow'}">
+                    <mat-icon>psychology</mat-icon>
+                    <span>Redes</span>
+                </button>
+            </div>
+            <app-scrollfiles *ngIf="listedFiles == 'csv'" [archivos]="tupleModel?.archivosCsv"
+                (openFile)="openCsvFile($event)" (deleteFile)="deleteCsvFile($event)" [actions]="scrollFiles1Actions">
+            </app-scrollfiles>
+            <app-scrollfiles *ngIf="listedFiles == 'tensorflow'" [archivos]="tupleModel?.archivosTensorflow"
+                (openFile)="openTensorflowFile($event)" (deleteFile)="deleteTensorflowFile($event)"
+                [actions]="scrollFiles2Actions">
+            </app-scrollfiles>
+        </div>
+    </div>
+    <div class="foot_part">
+        <app-scrollnav *ngIf="tupleModel?.data" #myScrollNav [columnName]="tupleModel.data.out.column"
+            [data]="model.timeline" (showPose)="showPose($event)"
+            (markCurrentFileAsChanged)="markCurrentFileAsChanged()"></app-scrollnav>
+    </div>
+
+</div>

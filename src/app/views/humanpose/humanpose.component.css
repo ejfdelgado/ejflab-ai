@@ -1,0 +1,119 @@
+.level_0 {
+  background-color: aqua;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+}
+
+.head_part {
+  width: 100%;
+  background-color: darksalmon;
+}
+
+.body_part {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  max-height: 100%;
+}
+
+.body_part .left_part {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  position: relative;
+}
+
+.body_part .left_part > * {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.multiple_views_parent {
+  display: flex;
+  flex-direction: column;
+}
+
+.multiple_views_parent .multiple_views {
+  flex: 1;
+  position: relative;
+}
+
+.multiple_views > app-tensorflow {
+  flex: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.body_part .right_part {
+  width: 20vw;
+  background-color: olive;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.body_part .right_part app-scrollfiles {
+  flex: 1;
+}
+
+.tab_scroll_files {
+  display: flex;
+  flex-direction: row;
+}
+
+.tab_scroll_files button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tab_scroll_files button,
+.tab_scroll_files button * {
+  color: #b3b3b3;
+  background-color: #525200;
+}
+
+.tab_scroll_files button.highlight,
+.tab_scroll_files button.highlight * {
+  color: black;
+  background-color: #808000;
+}
+
+button.mat-menu-item {
+  width: unset;
+  text-align: center;
+  line-height: unset;
+  height: unset;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+button.mat-menu-item .mat-icon {
+  margin-right: unset;
+  vertical-align: unset;
+}
+
+.foot_part {
+  display: flex;
+  width: 100%;
+  height: 120px;
+  min-height: 100px;
+  background-color: lightslategray;
+}
+
+.foot_part app-scrollnav {
+  width: 100%;
+  margin: 10px;
+  flex: 1;
+}

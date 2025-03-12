@@ -12,5 +12,6 @@
     "src/app/views/threejs/*.ts",
     "src/app/views/tensorflow/*.ts",
     "src/app/views/projection/*.ts",
+    "src/app/views/humanpose/*.ts",
   ]
 }

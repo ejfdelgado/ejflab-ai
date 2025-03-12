@@ -26,6 +26,7 @@ const PAGINAS = [
   { id: 'imagiation', module: 'ImagiationModule' },
   { id: 'gcp', module: 'GcpModule' },
   { id: 'projection', module: 'ProjectionModule' },
+  { id: 'humanpose', module: 'HumanposeModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {
