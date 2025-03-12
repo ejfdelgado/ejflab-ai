@@ -29,6 +29,7 @@ const PAGINAS = [
   { id: 'humanpose', module: 'HumanposeModule' },
   { id: 'calendar', module: 'CalendarModule' },
   { id: 'img2mesh', module: 'Img2meshModule' },
+  { id: 'cv', module: 'CvModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {

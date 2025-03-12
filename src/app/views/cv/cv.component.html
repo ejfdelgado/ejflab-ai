@@ -1,0 +1,19 @@
+<pre>{{ tupleModel | json }}</pre>
+<button (click)="setTime()">Catch Time</button>
+<button (click)="testCifer()">Cipher</button>
+<button (click)="openWebcam({})">Open Webcam</button>
+<div style="padding: 10px;">
+    <app-blobeditor [options]="blobOptions" [url]="tupleModel?.blobFile"
+        (urlChange)="tupleModel.blobFile=$event; saveTuple()">
+    </app-blobeditor>
+</div>
+<div style="padding: 10px;">
+    <app-txtfileeditor [options]="textOptions" [fileName]="'script.txt'" [url]="tupleModel?.txtFile"
+        (urlChange)="tupleModel.txtFile=$event; saveTuple()">
+    </app-txtfileeditor>
+</div>
+<div style="width: 500px; height: 500px;">
+    <app-imagepicker [options]="imageOptions" [fileName]="'imagen.jpg'" [url]="tupleModel?.image"
+        (urlChange)="tupleModel.image=$event; saveTuple()">
+    </app-imagepicker>
+</div>

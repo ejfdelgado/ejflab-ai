@@ -15,5 +15,6 @@
     "src/app/views/humanpose/*.ts",
     "src/app/views/calendar/*.ts",
     "src/app/views/img2mesh/*.ts",
+    "src/app/views/cv/*.ts",
   ]
 }
