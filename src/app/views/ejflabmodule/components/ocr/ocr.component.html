@@ -1,7 +1,7 @@
 <div class="container_vertical gap_10 padding_10">
     <app-imagepicker [options]="imageOptions" (eventSave)="changedImage($event)" [url]="getPageImage()">
     </app-imagepicker>
-    <div class="container_horizontal end">
+    <div class="container_horizontal end gap_10">
         <button class="btn" (click)="recognize()">
             <mat-icon>send</mat-icon>
             Send

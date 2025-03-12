@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FileBase64Data, FlowchartProcessRequestData, FlowchartService, HttpService, ImagepickerOptionsData } from 'ejflab-front-lib';
+import { AuthorizationGetData, FileBase64Data, FlowchartProcessRequestData, FlowchartService, HttpService, ImagepickerOptionsData } from 'ejflab-front-lib';
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
 
 @Component({

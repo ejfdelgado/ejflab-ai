@@ -130,6 +130,16 @@ app-llm-knowledge app-knowledge-list .mdc-text-field--filled:not(.mdc-text-field
   background-color: white;
 }
 
+/* mat dialogs */
+mat-dialog-container .mat-mdc-dialog-surface {
+  overflow-y: hidden;
+  padding: 10px;
+}
+
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-height: 90vh;
+}
+
 @media (max-width: 800px) {
   .edit-user-dialog-container .mat-dialog-container {
     min-width: 80vw;
