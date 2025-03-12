@@ -28,6 +28,7 @@ const PAGINAS = [
   { id: 'projection', module: 'ProjectionModule' },
   { id: 'humanpose', module: 'HumanposeModule' },
   { id: 'calendar', module: 'CalendarModule' },
+  { id: 'img2mesh', module: 'Img2meshModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {

@@ -14,5 +14,6 @@
     "src/app/views/projection/*.ts",
     "src/app/views/humanpose/*.ts",
     "src/app/views/calendar/*.ts",
+    "src/app/views/img2mesh/*.ts",
   ]
 }

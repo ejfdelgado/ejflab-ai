@@ -1,0 +1,16 @@
+<div class="global_container">
+    <div class="inner_container">
+        <div class="row_data my_photo">
+            <img [src]="completeImagePath(photoData.value.urlThumbnail)" class="thumb_image noselect">
+        </div>
+        <div class="row_data">
+            <label class="key">Fecha:</label>
+            <label class="value">{{ photoData.value.created | epoch2date }}</label>
+        </div>
+        <div class="row_data derecha">
+            <button mat-raised-button color="warn" (click)="erasePerson()" type="button">
+                Borrar
+            </button>
+        </div>
+    </div>
+</div>

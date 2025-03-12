@@ -1,0 +1,47 @@
+<div class="level_0">
+    <div class="head_part">
+        <app-statusbar [title]="'Fotogrametría'" [extraOptions]="extraOptions"></app-statusbar>
+    </div>
+    <div class="body_part" *ngIf="currentUser == null">
+
+    </div>
+    <div class="body_part" *ngIf="currentUser != null">
+        <div *ngIf="currentView == 'gallery'" class="contenedor_elems_scroll">
+            <div class="contenedor_elems">
+                <app-imagegallery [photoData]="photo"
+                    *ngFor="let photo of localmodel.imagegallery | keyvalue | sortByName:'created':'desc'; index as i"
+                    (askEdit)="editPhoto($event)" (askErase)="erasePhoto($event)">
+                </app-imagegallery>
+                <div class="contenedor_elems_button">
+                    <button mat-raised-button color="" (click)="loadMorePhotos()" type="button">
+                        Leer más...
+                    </button>
+                </div>
+            </div>
+        </div>
+        <app-jobgallery *ngIf="currentView == 'jobgallery'" [page]="page"></app-jobgallery>
+        <app-autophoto *ngIf="currentView == 'photo'" [page]="page">
+        </app-autophoto>
+        <div class="container_menu">
+            <div class="menu_icon_user_parent" [matMenuTriggerFor]="mainMenu" aria-label="Menú principal">
+                <div class="menu_icon_user white manito">
+                    <mat-icon>menu</mat-icon>
+                </div>
+            </div>
+            <mat-menu #mainMenu="matMenu">
+                <button mat-menu-item (click)="takePhoto()">
+                    <mat-icon>photo_camera</mat-icon>
+                    <span>Agregar foto</span>
+                </button>
+                <button mat-menu-item (click)="openTakePhotoPopUp()">
+                    <mat-icon>qr_code_2</mat-icon>
+                    <span>Compartir tomar foto</span>
+                </button>
+                <button mat-menu-item (click)="openFilterPopUp()">
+                    <mat-icon>filter_alt</mat-icon>
+                    <span>Filtrar imagenes</span>
+                </button>
+            </mat-menu>
+        </div>
+    </div>
+</div>

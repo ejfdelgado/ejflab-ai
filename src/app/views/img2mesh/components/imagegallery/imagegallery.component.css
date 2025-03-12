@@ -1,0 +1,51 @@
+.global_container {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+}
+
+.inner_container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  width: 100%;
+  gap: 15px;
+}
+
+.row_data {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.row_data label.key {
+  font-weight: bold;
+}
+
+.row_data label.value {
+  flex: 1;
+}
+
+.row_data.my_photo {
+  justify-content: center;
+}
+
+.row_data.my_photo img {
+  border-radius: 10px;
+}
+
+.row_data.derecha {
+  justify-content: end;
+}
+
+.margin_top_20 {
+  margin-top: 20px;
+}
+
+.alinear_al_final {
+  justify-content: end;
+}

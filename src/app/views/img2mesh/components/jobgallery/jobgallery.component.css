@@ -1,0 +1,70 @@
+.jobgallery_container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.jobgallery_container .row_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 5px;
+}
+
+.read_only_container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.read_only_container.vertical {
+  flex-direction: column;
+  width: 100%;
+}
+
+.read_only_container .key {
+  color: #3f51b5;
+  padding: 0 10px 0 0;
+}
+
+.read_only_container pre {
+  background: black;
+  color: white;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.card_job.abort,
+.card_job.fail {
+  background-color: #ffdfdf;
+}
+
+.card_job.done {
+  background-color: #e6ffdf;
+}
+
+.card_job.running {
+  background-color: #fcffdf;
+}
+
+.card_job {
+  border: 1px solid;
+  border-color: #d1d1d1;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.card_job:hover {
+  background-color: #f6f6f6;
+}
