@@ -30,6 +30,8 @@ import { MongoSrv } from "@ejfdelgado/ejflab-back/srv/MongoSrv.mjs";
 import { MinioSrv } from "@ejfdelgado/ejflab-back/srv/MinioSrv.mjs";
 import { MilvusSrv } from "@ejfdelgado/ejflab-back/srv/MilvusSrv.mjs";
 import { PostgresSrv } from "@ejfdelgado/ejflab-back/srv/PostgresSrv.mjs";
+import { Image2MeshSrv } from "@ejfdelgado/ejflab-back/srv/Image2MeshSrv.mjs";
+
 import { MyConstants } from "@ejfdelgado/ejflab-common/src/MyConstants.js";
 import { EjflabSrv } from "./srv/ejflab/EjflabSrv.mjs";
 import { ImagiationSrv } from "./srv/ejflab/ImagiationSrv.mjs";
@@ -173,6 +175,10 @@ app.delete('/srv/:pageType/:pageId/localpage.json', [commonHeaders, checkAuthent
 app.get('/srv/:pageType/:pageId/localpage.json', [commonHeaders, checkAuthenticatedSilent, handleErrorsDecorator(MyFileServiceLocal.readFile)]);
 
 app.post('/srv/opencv/solvepnp', [commonHeaders, express.json({ limit: '50mb' }), handleErrorsDecorator(OpenCVSrv.solvePnP)]);
+
+app.post('/srv/img2mesh/:pageId/imagesw', [commonHeaders, checkAuthenticatedSilent, AuthorizationSrv.hasPagePermisions([["fil_w"]]), express.json(), handleErrorsDecorator(Image2MeshSrv.save)]);
+app.post('/srv/img2mesh/:pageId/imagesr', [commonHeaders, checkAuthenticatedSilent, AuthorizationSrv.hasPagePermisions([["fil_r"]]), express.json(), handleErrorsDecorator(Image2MeshSrv.read)]);
+app.post('/srv/img2mesh/:pageId/imagesd', [commonHeaders, checkAuthenticatedSilent, AuthorizationSrv.hasPagePermisions([["fil_w"]]), express.json(), handleErrorsDecorator(Image2MeshSrv.delete)]);
 
 // Configure wideSight api
 EjflabSrv.configure(app);
