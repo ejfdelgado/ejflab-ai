@@ -9,5 +9,6 @@
     "src/app/views/imagiation/*.ts",
     "src/app/views/gcp/*.ts",
     "src/app/views/ejflabmodule/*.ts",
+    "src/app/views/threejs/*.ts",
   ]
 }
