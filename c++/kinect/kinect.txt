@@ -1,0 +1,46 @@
+
+1. Instalación en linux
+
+sudo apt-get -y install v4l-utils
+sudo apt-get -y install v4l2loopback-dkms
+sudo apt-get -y install libswscale5
+sudo apt-get -y install libswscale-dev
+
+v4l2-ctl --list-devices
+
+
+2. v4l2loopback config https://installati.one/install-v4l2loopback-dkms-ubuntu-20-04/
+
+sudo modprobe v4l2loopback devices=1 video_nr=0 card_label=Kinect2 exclusive_caps=1
+modinfo v4l2loopback
+
+3. freenect2 https://github.com/OpenKinect/libfreenect2/blob/master/README.md#linux
+
+git clone https://github.com/OpenKinect/libfreenect2.git
+cd libfreenect2
+mkdir build && cd build
+export OpenCV_DIR=/home/ejfdelgado/desarrollo/vaale/build
+cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/freenect2 -DENABLE_CUDA=OFF -DENABLE_CXX11=ON -DBUILD_STREAMER_RECORDER=ON
+make
+make install
+sudo cp ../platform/linux/udev/90-kinect2.rules /etc/udev/rules.d/
+cd /home/ejfdelgado/desarrollo/c++/libfreenect2/build
+
+./bin/Protonect
+./bin/ProtonectSR -stream
+
+export freenect2_DIR=/home/ejfdelgado/freenect2/lib/cmake/freenect2
+
+4. kinect2pipe https://github.com/swedishborgie/kinect2pipe
+
+mkdir -p /home/ejfdelgado/.config/systemd/user
+git clone https://github.com/swedishborgie/kinect2pipe.git
+cd kinect2pipe
+mkdir build && cd build
+cmake ..
+systemctl --user stop kinect2pipe
+make && sudo cp kinect2pipe /usr/bin/kinect2pipe
+cp ../contrib/systemd/kinect2pipe.service ~/.config/systemd/user/
+systemctl --user enable kinect2pipe
+systemctl --user start kinect2pipe
+vlc v4l2:///dev/video0

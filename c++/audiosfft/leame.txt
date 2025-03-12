@@ -1,0 +1,36 @@
+Linux:
+sudo apt-get install libasound-dev
+cd /home/ejfdelgado/desarrollo/c++/portaudio/
+./configure && make
+sudo make install
+
+sudo apt-get install libjack-dev
+
+
+https://portaudio.com/docs/v19-doxydocs/compile_cmake.html
+
+cmake ./portaudio -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=./portaudio-bin
+cd ./portaudio
+cmake -G "Unix Makefiles"
+make
+sudo make install
+
+sudo apt-get install linux-generic
+
+Check:
+aplay -l
+Then place card id:
+sudo nano /usr/share/alsa/alsa.conf
+defaults.ctl.card 1
+defaults.pcm.card 1
+
+#pcm.rear cards.pcm.rear
+#pcm.center_lfe cards.pcm.center_lfe
+#pcm.side cards.pcm.side
+
+Error:
+Cannot open OSS audio device /dev/dsp
+Solved with:
+sudo apt-get install pulseaudio
+sudo apt-get install libpulse-dev
+sudo apt-get install osspd

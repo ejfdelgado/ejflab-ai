@@ -1,0 +1,4 @@
+ffmpeg -i ../data/recorded/ejemplo.wav -ac 1 ../data/recorded/mono.wav
+
+ffprobe -select_streams a -show_streams ../data/recorded/mono.wav
+ffprobe -select_streams a -show_streams ../data/recorded/ejemplo.wav
