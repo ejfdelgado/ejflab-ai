@@ -7,8 +7,8 @@ import {
 } from '@angular/fire/auth-guard';
 import { EjflabmoduleModule } from './views/ejflabmodule/ejflabmodule.module';
 
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
-const redirectLoggedInToHome = () => redirectLoggedInTo(['customers']);
+//const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
+//const redirectLoggedInToHome = () => redirectLoggedInTo(['customers']);
 
 const routes: Routes = [
   {

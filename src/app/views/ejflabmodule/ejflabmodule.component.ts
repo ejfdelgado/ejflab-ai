@@ -1,8 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, BackendPageService, BaseComponent, CallService, FileService, FlowchartService, ModalService, OptionData, TupleService, WebcamService } from 'ejflab-front-lib';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { OptionData } from 'ejflab-front-lib';
 import { ConfigRacService } from './services/configRac.service';
 
 @Component({
@@ -10,40 +8,15 @@ import { ConfigRacService } from './services/configRac.service';
   templateUrl: './ejflabmodule.component.html',
   styleUrl: './ejflabmodule.component.css'
 })
-export class EjflabmoduleComponent extends BaseComponent implements OnInit {
+export class EjflabmoduleComponent implements OnInit {
 
   public extraOptions: Array<OptionData> = [];
 
   constructor(
-    public override flowchartSrv: FlowchartService,
-    public override callService: CallService,
-    public override route: ActivatedRoute,
-    public override pageService: BackendPageService,
-    public override cdr: ChangeDetectorRef,
-    public override authService: AuthService,
-    public override dialog: MatDialog,
-    public override tupleService: TupleService,
-    public override fileService: FileService,
-    public override modalService: ModalService,
-    public override webcamService: WebcamService,
-    public override auth: Auth,
     private router: Router,
     private configSrv: ConfigRacService,
   ) {
-    super(
-      flowchartSrv,
-      callService,
-      route,
-      pageService,
-      cdr,
-      authService,
-      dialog,
-      tupleService,
-      fileService,
-      modalService,
-      webcamService,
-      auth
-    );
+
 
     this.extraOptions.push({
       action: () => {
@@ -89,12 +62,11 @@ export class EjflabmoduleComponent extends BaseComponent implements OnInit {
     }
   }
 
-  override async ngOnInit() {
-    await super.ngOnInit();
+  async ngOnInit() {
     //this.socketIoConnect(this.builderConfig);
   }
 
-  override bindEvents() {
+  bindEvents() {
 
   }
 }

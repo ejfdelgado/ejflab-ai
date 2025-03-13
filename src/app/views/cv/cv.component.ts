@@ -3,10 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
 
-import { IdGen } from '@ejfdelgado/ejflab-common/src/IdGen';
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
 import { ModuloDatoSeguroFront } from '@ejfdelgado/ejflab-common/src/ModuloDatoSeguroFront';
-import { AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TupleService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
+import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
 
 @Component({
   selector: 'app-cv',
@@ -69,7 +68,11 @@ export class CvComponent extends BaseComponent implements OnInit, OnDestroy {
     if (!this.tupleModel.image) {
       this.tupleModel.image = MyConstants.PAGE.NO_IMAGE;
     }
-    console.log("onTupleReadDone...");
+    super.onTupleReadDone();
+  }
+
+  override onTupleNews() {
+    super.onTupleNews();
   }
 
   async saveTextRef(response: FileSaveResponseData) {
@@ -104,8 +107,9 @@ AKdwJTXS+jdc/GauPDSDogECEQC3G9pqcu1PyBNXGUlZKlzDAhASO74AOK6q8tA2\
     if (!this.tupleModel) {
       return;
     }
-    const tiempo = await IdGen.ahora();
-    this.tupleModel.t = [tiempo];
+    //const tiempo = await IdGen.ahora();
+    //this.tupleModel.t = [tiempo];
+    this.tupleModel.t = new Date().getTime();
     super.saveTuple();
   }
 
