@@ -1,7 +1,15 @@
 #canvas {
-    /*display: none;*/
+    display: none;
 }
 
 #video {
-    /*display: none;*/
+    display: none;
+}
+
+.start_button {
+    left: 10px;
+    top: 10px;
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
 }

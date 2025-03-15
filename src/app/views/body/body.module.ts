@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BodyRoutingModule } from './body-routing.module';
 import { BodyComponent } from './body.component';
 import { MycommonModule } from 'ejflab-front-lib';
+import { ThreejsModule } from '../threejs/threejs.module';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { MycommonModule } from 'ejflab-front-lib';
   imports: [
     CommonModule,
     BodyRoutingModule,
-    MycommonModule
+    MycommonModule,
+    ThreejsModule
   ]
 })
 export class BodyModule { }

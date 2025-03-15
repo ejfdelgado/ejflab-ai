@@ -1,7 +1,7 @@
-<button (click)="startTracking()">Start</button>
-<pre>{{ poses[0].keypoints3D | json }}</pre>
 <!--button (click)="stopTracking()">Stop</button-->
 <canvas id="canvas" width="500" height="500"></canvas>
 <video id="video" width="500" height="500">
     <source src="">
 </video>
+<app-threejs-body [poses]="poses"></app-threejs-body>
+<button class="start_button" (click)="startTracking()">Start</button>

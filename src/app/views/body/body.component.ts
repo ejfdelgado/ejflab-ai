@@ -6,20 +6,7 @@ import { Auth } from '@angular/fire/auth';
 import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
 import { tracker } from 'srcJs/tracker';
 import * as tf from '@tensorflow/tfjs';
-
-export interface BodyKeyPointData {
-  x: number;
-  y: number;
-  z: number;
-  score: number;
-  name: string;
-}
-
-export interface BodyData {
-  score: number;
-  keypoints: BodyKeyPointData[];
-  keypoints3D: BodyKeyPointData[];
-}
+import { BodyData } from '../threejs/threejs-body/types';
 
 @Component({
   selector: 'app-body',

@@ -5,6 +5,7 @@ import { ThreejsGalleryComponent } from './threejs-gallery/threejs-gallery.compo
 import { ThreejsVrComponent } from './threejs-vr/threejs-vr.component';
 import { ThreejsProjectionComponent } from './threejs-projection/threejs-projection.component';
 import { ThreejsCameraComponent } from './threejs-camera/threejs-camera.component';
+import { ThreejsBodyComponent } from './threejs-body/threejs-body.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { ThreejsCameraComponent } from './threejs-camera/threejs-camera.componen
     ThreejsVrComponent,
     ThreejsProjectionComponent,
     ThreejsCameraComponent,
+    ThreejsBodyComponent,
   ],
   imports: [CommonModule],
   exports: [
@@ -21,6 +23,7 @@ import { ThreejsCameraComponent } from './threejs-camera/threejs-camera.componen
     ThreejsVrComponent,
     ThreejsProjectionComponent,
     ThreejsCameraComponent,
+    ThreejsBodyComponent,
   ],
 })
 export class ThreejsModule { }
