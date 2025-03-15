@@ -1,7 +1,7 @@
 //import { GUI } from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-import { BodyData } from './types';
+import { BodyData, BodyKeyPointData } from './types';
 /**
  * A class to set up some basic scene elements to minimize code in the
  * main execution file.
@@ -95,5 +95,49 @@ export class BasicScene extends THREE.Scene {
     this.camera.aspect = this.bounds.width / this.bounds.height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.bounds.width, this.bounds.height);
+  }
+
+  vector3DAll: THREE.Vector3[][] = [];
+
+  get3DVectorBody(index: number): THREE.Vector3[] {
+    const scale = 10;
+    const offset = new THREE.Vector3(-scale / 2, -scale / 2, 0);
+    let response: THREE.Vector3[] = [];
+
+    const originalData = this.poses[index];
+    const original = originalData.keypoints3D;
+    response = this.vector3DAll[index];
+
+    function transform(landmark: BodyKeyPointData) {
+      return {
+        x: landmark.x * scale + offset.x,
+        y: (1 - landmark.y) * scale + offset.y, // Flip y-axis for Three.js
+        z: landmark.z * scale,
+      };
+    }
+
+    if (response == undefined) {
+      response = [];
+      response = original.map(landmark => {
+        const temp = transform(landmark);
+        return new THREE.Vector3(temp.x, temp.y, temp.z);
+      });
+      this.vector3DAll[index] = response;
+    } else {
+      // Replace values
+      original.forEach((landmark, i) => {
+        const temp = transform(landmark);
+        response[i].set(temp.x, temp.y, temp.z);
+      });
+    }
+
+    return response;
+  }
+
+  updatePoses(poses: BodyData[]) {
+    this.poses = poses;
+    for (let i = 0; i < poses.length; i++) {
+      const vectors: THREE.Vector3[] = this.get3DVectorBody(i);
+    }
   }
 }
