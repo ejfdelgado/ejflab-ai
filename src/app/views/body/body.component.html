@@ -1,5 +1,5 @@
 <button (click)="startTracking()">Start</button>
-<pre>{{ poses | json }}</pre>
+<pre>{{ poses[0].keypoints3D | json }}</pre>
 <!--button (click)="stopTracking()">Stop</button-->
 <canvas id="canvas" width="500" height="500"></canvas>
 <video id="video" width="500" height="500">

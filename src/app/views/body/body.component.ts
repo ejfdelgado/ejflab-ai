@@ -18,6 +18,7 @@ export interface BodyKeyPointData {
 export interface BodyData {
   score: number;
   keypoints: BodyKeyPointData[];
+  keypoints3D: BodyKeyPointData[];
 }
 
 @Component({
