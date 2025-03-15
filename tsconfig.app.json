@@ -4,7 +4,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app"
   },
-  "files": ["src/main.ts", "src/polyfills.ts"],
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
   "include": [
     "src/app/views/imagiation/*.ts",
     "src/app/views/gcp/*.ts",
@@ -16,5 +19,6 @@
     "src/app/views/calendar/*.ts",
     "src/app/views/img2mesh/*.ts",
     "src/app/views/cv/*.ts",
+    "src/app/views/body/*.ts",
   ]
 }

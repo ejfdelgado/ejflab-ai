@@ -4,6 +4,7 @@
 
 ```
 ng generate module views/ejflabmodule --route ejflabmodule --module app.module --skip-tests
+ng generate module views/body --route body --module app.module
 ```
 
 ## Add new view

@@ -42,7 +42,7 @@ import { OcrComponent } from './components/ocr/ocr.component';
     TextToSpeechComponent,
     PopupDatabaseEditComponent,
     PopupCloudAdminComponent,
-    OcrComponent
+    OcrComponent,
   ],
   imports: [
     CommonModule,

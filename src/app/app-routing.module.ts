@@ -30,6 +30,7 @@ const PAGINAS = [
   { id: 'calendar', module: 'CalendarModule' },
   { id: 'img2mesh', module: 'Img2meshModule' },
   { id: 'cv', module: 'CvModule' },
+  { id: 'body', module: 'BodyModule' },
 ];
 
 for (let i = 0; i < PAGINAS.length; i++) {
