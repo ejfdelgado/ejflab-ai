@@ -30,6 +30,10 @@ export class BasicScene extends THREE.Scene {
   offsetBody = new THREE.Vector3(0, 0, 0);
   bodyPointMapIndex: { [key: string]: number } = {};
   lineSegments: number[][] = [];
+  lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+  vector3DAll: THREE.Vector3[][] = [];
+  bodyPointMeshes: THREE.Mesh[][] = [];
+  bodyLines: THREE.Line[][] = [];
 
   canvasRef: HTMLCanvasElement;
   constructor(canvasRef: any, bounds: DOMRect) {
@@ -102,8 +106,33 @@ export class BasicScene extends THREE.Scene {
     this.renderer.setSize(this.bounds.width, this.bounds.height);
   }
 
-  vector3DAll: THREE.Vector3[][] = [];
-  bodyPointMeshes: THREE.Mesh[][] = [];
+  get3DBodyLines(index: number) {
+    let response: THREE.Line[] = [];
+    const scaledLandmarks: THREE.Vector3[] = this.vector3DAll[index];
+    response = this.bodyLines[index];
+    if (response == undefined) {
+      response = this.lineSegments.map((segment, i) => {
+        const points = [
+          scaledLandmarks[segment[0]],
+          scaledLandmarks[segment[0]]
+        ];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(geometry, this.lineMaterial);
+        this.add(line);
+        return line;
+      });
+      this.bodyLines[index] = response;
+    } else {
+      response.forEach((line, i) => {
+        const segment = this.lineSegments[i];
+        line.geometry.setFromPoints([
+          scaledLandmarks[segment[0]],
+          scaledLandmarks[segment[1]]
+        ]);
+        line.geometry.attributes['position'].needsUpdate = true;
+      });
+    }
+  }
 
   get3DMeshBody(index: number): THREE.Mesh[] {
     let response: THREE.Mesh[] = [];
@@ -240,6 +269,7 @@ export class BasicScene extends THREE.Scene {
     for (let i = 0; i < poses.length; i++) {
       this.get3DVectorBody(i);
       this.get3DMeshBody(i);
+      this.get3DBodyLines(i);
     }
   }
 }
