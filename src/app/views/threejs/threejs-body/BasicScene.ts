@@ -98,6 +98,39 @@ export class BasicScene extends THREE.Scene {
   }
 
   vector3DAll: THREE.Vector3[][] = [];
+  bodyPointMeshes: THREE.Mesh[][] = [];
+
+  get3DMeshBody(index: number): THREE.Mesh[] {
+    let response: THREE.Mesh[] = [];
+    const scaledLandmarks: THREE.Vector3[] = this.vector3DAll[index];
+    response = this.bodyPointMeshes[index];
+
+    if (response == undefined) {
+      // Create spheres
+      //console.log(`Create spheres ${index}`);
+      response = scaledLandmarks.map(landmark => {
+        const geometry = new THREE.SphereGeometry(0.1, 32, 32); // Small sphere
+        const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.copy(landmark);
+        this.add(sphere);
+        return sphere;
+      });
+      this.bodyPointMeshes[index] = response;
+    } else {
+      //console.log(`Update spheres ${index}`);
+      // Update spheres
+      response.forEach((sphere, i) => {
+        sphere.position.set(
+          scaledLandmarks[i].x,
+          scaledLandmarks[i].y,
+          scaledLandmarks[i].z,
+        );
+      });
+    }
+
+    return response;
+  }
 
   get3DVectorBody(index: number): THREE.Vector3[] {
     const scale = 10;
@@ -117,7 +150,6 @@ export class BasicScene extends THREE.Scene {
     }
 
     if (response == undefined) {
-      response = [];
       response = original.map(landmark => {
         const temp = transform(landmark);
         return new THREE.Vector3(temp.x, temp.y, temp.z);
@@ -137,7 +169,8 @@ export class BasicScene extends THREE.Scene {
   updatePoses(poses: BodyData[]) {
     this.poses = poses;
     for (let i = 0; i < poses.length; i++) {
-      const vectors: THREE.Vector3[] = this.get3DVectorBody(i);
+      this.get3DVectorBody(i);
+      this.get3DMeshBody(i);
     }
   }
 }
