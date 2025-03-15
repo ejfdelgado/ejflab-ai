@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthorizationGetData, FileBase64Data, FlowchartProcessRequestData, FlowchartService, HttpService, ImagepickerOptionsData } from 'ejflab-front-lib';
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-ocr',
@@ -13,8 +14,8 @@ import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
     './ocr.component.css'
   ]
 })
-export class OcrComponent {
-  text: string = "";
+export class OcrComponent implements OnInit {
+  formRight: FormGroup;
   currentSearchImage: string = MyConstants.PAGE.DEFAULT_IMAGE;
   currentSearchBlob: Blob | null = null;
   imageOptions: ImagepickerOptionsData = {
@@ -30,8 +31,15 @@ export class OcrComponent {
   constructor(
     public httpSrv: HttpService,
     public flowchartSrv: FlowchartService,
+    public fb: FormBuilder,
   ) {
 
+  }
+
+  ngOnInit(): void {
+    this.formRight = this.fb.group({
+      text: ['', []],
+    });
   }
 
   freeOldImage() {
@@ -83,7 +91,7 @@ export class OcrComponent {
       };
       const response = await this.flowchartSrv.process(payload, false);
 
-      this.text = response.response.data.text;
+      this.formRight.get("text")?.setValue(response.response.data.text);
     }
   }
 

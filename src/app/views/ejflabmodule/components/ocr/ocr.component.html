@@ -8,6 +8,11 @@
         </button>
     </div>
     <div class="container_horizontal">
-        <pre>{{ text }}</pre>
+        <form class="container_vertical gap_10 full margin_10" [formGroup]="formRight">
+            <mat-form-field>
+                <mat-label>Transcription</mat-label>
+                <textarea rows="10" matInput formControlName="text"></textarea>
+            </mat-form-field>
+        </form>
     </div>
 </div>
