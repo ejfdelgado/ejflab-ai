@@ -26,6 +26,11 @@ export class BasicScene extends THREE.Scene {
   // Poses
   poses: BodyData[] = [];
 
+  scaleBody: number = 3;
+  offsetBody = new THREE.Vector3(0, 0, 0);
+  bodyPointMapIndex: { [key: string]: number } = {};
+  lineSegments: number[][] = [];
+
   canvasRef: HTMLCanvasElement;
   constructor(canvasRef: any, bounds: DOMRect) {
     super();
@@ -109,7 +114,7 @@ export class BasicScene extends THREE.Scene {
       // Create spheres
       //console.log(`Create spheres ${index}`);
       response = scaledLandmarks.map(landmark => {
-        const geometry = new THREE.SphereGeometry(0.1, 32, 32); // Small sphere
+        const geometry = new THREE.SphereGeometry(0.07, 8, 8);
         const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.copy(landmark);
@@ -133,19 +138,18 @@ export class BasicScene extends THREE.Scene {
   }
 
   get3DVectorBody(index: number): THREE.Vector3[] {
-    const scale = 10;
-    const offset = new THREE.Vector3(-scale / 2, -scale / 2, 0);
+
     let response: THREE.Vector3[] = [];
 
     const originalData = this.poses[index];
     const original = originalData.keypoints3D;
     response = this.vector3DAll[index];
 
-    function transform(landmark: BodyKeyPointData) {
+    const transform = (landmark: BodyKeyPointData) => {
       return {
-        x: landmark.x * scale + offset.x,
-        y: (1 - landmark.y) * scale + offset.y, // Flip y-axis for Three.js
-        z: landmark.z * scale,
+        x: landmark.x * this.scaleBody + this.offsetBody.x,
+        y: (1 - landmark.y) * this.scaleBody + this.offsetBody.y, // Flip y-axis for Three.js
+        z: landmark.z * this.scaleBody,
       };
     }
 
@@ -166,8 +170,73 @@ export class BasicScene extends THREE.Scene {
     return response;
   }
 
+  getBodyMapIndexes() {
+    if (this.poses.length == 0 || Object.keys(this.bodyPointMapIndex).length > 0) {
+      return this.bodyPointMapIndex;
+    }
+    const pose = this.poses[0];
+    pose.keypoints3D.forEach((element, index) => {
+      this.bodyPointMapIndex[element.name] = index;
+    });
+    const map = this.bodyPointMapIndex;
+
+    // Face
+    // Eyes
+    this.lineSegments.push([map['left_ear'], map['left_eye']]);
+    this.lineSegments.push([map['left_eye'], map['nose']]);
+    this.lineSegments.push([map['nose'], map['right_eye']]);
+    this.lineSegments.push([map['right_eye'], map['right_ear']]);
+    // Eyes
+    //this.lineSegments.push([map['left_eye_outer'], map['left_eye']]);
+    //this.lineSegments.push([map['left_eye'], map['left_eye_inner']]);
+    //this.lineSegments.push([map['right_eye_outer'], map['right_eye']]);
+    //this.lineSegments.push([map['right_eye'], map['right_eye_inner']]);
+
+    //Mouth
+    this.lineSegments.push([map['mouth_left'], map['mouth_right']]);
+
+    // Tronco
+    this.lineSegments.push([map['left_shoulder'], map['right_shoulder']]);
+    this.lineSegments.push([map['left_shoulder'], map['left_hip']]);
+    this.lineSegments.push([map['right_shoulder'], map['right_hip']]);
+    this.lineSegments.push([map['left_hip'], map['right_hip']]);
+
+    // Brazo izquierdo
+    this.lineSegments.push([map['left_shoulder'], map['left_elbow']]);
+    this.lineSegments.push([map['left_elbow'], map['left_wrist']]);
+    this.lineSegments.push([map['left_wrist'], map['left_thumb']]);
+    this.lineSegments.push([map['left_wrist'], map['left_pinky']]);
+    this.lineSegments.push([map['left_wrist'], map['left_index']]);
+    this.lineSegments.push([map['left_pinky'], map['left_index']]);
+
+    // Brazo derecho
+    this.lineSegments.push([map['right_shoulder'], map['right_elbow']]);
+    this.lineSegments.push([map['right_elbow'], map['right_wrist']]);
+    this.lineSegments.push([map['right_wrist'], map['right_thumb']]);
+    this.lineSegments.push([map['right_wrist'], map['right_pinky']]);
+    this.lineSegments.push([map['right_wrist'], map['right_index']]);
+    this.lineSegments.push([map['right_pinky'], map['right_index']]);
+
+    // Pierna izquierda
+    this.lineSegments.push([map['left_hip'], map['left_knee']]);
+    this.lineSegments.push([map['left_knee'], map['left_ankle']]);
+    this.lineSegments.push([map['left_ankle'], map['left_foot_index']]);
+    this.lineSegments.push([map['left_ankle'], map['left_heel']]);
+    this.lineSegments.push([map['left_heel'], map['left_foot_index']]);
+
+    // Pierna derecha
+    this.lineSegments.push([map['right_hip'], map['right_knee']]);
+    this.lineSegments.push([map['right_knee'], map['right_ankle']]);
+    this.lineSegments.push([map['right_ankle'], map['right_foot_index']]);
+    this.lineSegments.push([map['right_ankle'], map['right_heel']]);
+    this.lineSegments.push([map['right_heel'], map['right_foot_index']]);
+
+    return this.bodyPointMapIndex;
+  }
+
   updatePoses(poses: BodyData[]) {
     this.poses = poses;
+    this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
       this.get3DVectorBody(i);
       this.get3DMeshBody(i);

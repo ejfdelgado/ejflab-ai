@@ -3,5 +3,6 @@
 <video id="video" width="500" height="500">
     <source src="">
 </video>
-<app-threejs-body [poses]="poses"></app-threejs-body>
+<!--app-threejs-body [poses]="poses"></app-threejs-body-->
+<pre>{{ poses[0]?.keypoints3D | json }}</pre>
 <button class="start_button" (click)="startTracking()">Start</button>
