@@ -7,13 +7,26 @@ import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptio
 import { tracker } from 'srcJs/tracker';
 import * as tf from '@tensorflow/tfjs';
 
+export interface BodyKeyPointData {
+  x: number;
+  y: number;
+  z: number;
+  score: number;
+  name: string;
+}
+
+export interface BodyData {
+  score: number;
+  keypoints: BodyKeyPointData[];
+}
+
 @Component({
   selector: 'app-body',
   templateUrl: './body.component.html',
   styleUrl: './body.component.css'
 })
 export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
-  poses: any = {};
+  poses: BodyData[] = [];
   constructor(
     public override route: ActivatedRoute,
     public override pageService: BackendPageService,
