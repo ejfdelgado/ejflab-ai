@@ -68,10 +68,10 @@ export class BasicScene extends THREE.Scene {
       // Adds a grid
       this.add(new THREE.GridHelper(10, 10, 'red'));
       // Adds an axis-helper
-      this.add(new THREE.AxesHelper(3));
+      //this.add(new THREE.AxesHelper(3));
     }
     // set the background color
-    this.background = new THREE.Color(0xefefef);
+    this.background = new THREE.Color(0x000000);
     // create the lights
     for (let i = 0; i < this.lightCount; i++) {
       // Positions evenly in a circle pointed at the origin
@@ -86,7 +86,7 @@ export class BasicScene extends THREE.Scene {
       this.add(light);
       this.lights.push(light);
       // Visual helpers to indicate light positions
-      this.add(new THREE.PointLightHelper(light, 0.5, 0xff9900));
+      //this.add(new THREE.PointLightHelper(light, 0.5, 0xff9900));
     }
 
   }
@@ -144,7 +144,7 @@ export class BasicScene extends THREE.Scene {
       //console.log(`Create spheres ${index}`);
       response = scaledLandmarks.map(landmark => {
         const geometry = new THREE.SphereGeometry(0.07, 8, 8);
-        const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+        const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.copy(landmark);
         this.add(sphere);
@@ -167,18 +167,32 @@ export class BasicScene extends THREE.Scene {
   }
 
   get3DVectorBody(index: number): THREE.Vector3[] {
-
     let response: THREE.Vector3[] = [];
-
     const originalData = this.poses[index];
     const original = originalData.keypoints3D;
     response = this.vector3DAll[index];
 
+    // search the minimum y
+    let maxY = original.reduce<number | null>((minimum, landmark, index) => {
+      if (minimum == null) {
+        return landmark.y;
+      } else {
+        if (landmark.y > minimum) {
+          return landmark.y;
+        } else {
+          return minimum;
+        }
+      }
+    }, null);
+    if (maxY == null) {
+      maxY = 0;
+    }
+
     const transform = (landmark: BodyKeyPointData) => {
       return {
-        x: landmark.x * this.scaleBody + this.offsetBody.x,
-        y: (1 - landmark.y) * this.scaleBody + this.offsetBody.y, // Flip y-axis for Three.js
-        z: landmark.z * this.scaleBody,
+        y: (1 - (landmark.y - maxY + 1)) * this.scaleBody + this.offsetBody.y,//Up direction inverted
+        z: landmark.x * this.scaleBody + this.offsetBody.x,
+        x: landmark.z * this.scaleBody,
       };
     }
 

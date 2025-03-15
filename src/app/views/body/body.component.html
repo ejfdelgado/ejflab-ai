@@ -1,8 +1,12 @@
 <!--button (click)="stopTracking()">Stop</button-->
-<canvas id="canvas" width="500" height="500"></canvas>
-<video id="video" width="500" height="500">
-    <source src="">
-</video>
-<app-threejs-body [poses]="poses"></app-threejs-body>
-<!--pre>{{ poses[0]?.keypoints3D | json }}</pre-->
-<button class="start_button" (click)="startTracking()">Start</button>
+<div class="body_parent">
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <app-threejs-body [poses]="poses"></app-threejs-body>
+    <!--pre>{{ poses[0]?.keypoints3D | json }}</pre-->
+    <button class="start_button" (click)="startTracking()">Start</button>
+</div>
+<div class="body_parent no_mouse">
+    <video id="video" width="50" height="50">
+        <source src="">
+    </video>
+</div>
