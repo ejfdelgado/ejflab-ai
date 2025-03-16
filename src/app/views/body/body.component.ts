@@ -19,6 +19,7 @@ import { tracker } from 'srcJs/tracker';
 import * as tf from '@tensorflow/tfjs';
 import { BodyData, BodyState } from '../threejs/threejs-body/types';
 import { ThreejsBodyComponent } from '../threejs/threejs-body/threejs-body.component';
+import { ModuloSonido } from '@ejfdelgado/ejflab-common/src/ModuloSonido';
 
 @Component({
   selector: 'app-body',
@@ -103,6 +104,11 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
     await super.ngOnInit();
     await tf.ready();
     this.initializeBodyTracker();
+    const response = await ModuloSonido.preload([
+      '/assets/sounds/on.mp3',
+      '/assets/sounds/off.mp3',
+      '/assets/sounds/nature.mp3',
+    ]);
   }
 
   override async ngOnDestroy() {
@@ -111,6 +117,8 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
 
   async startTracking() {
     this.started = true;
+    ModuloSonido.play('/assets/sounds/on.mp3');
+    ModuloSonido.play('/assets/sounds/nature.mp3', true);
     this.activity = this.indicatorSrv.start();
     tracker.run('camera');
   }
