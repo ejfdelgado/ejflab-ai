@@ -7,7 +7,7 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
-    STEP_AMOUNT: number = 2;
+    STEP_AMOUNT: number = 7;
     ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
     UP_REFERENCE = new THREE.Vector3(0, 1, 0);
@@ -40,6 +40,13 @@ export class WalkBody {
 
         camera.lookAt(this.lookAtActual.x, this.lookAtActual.y, this.lookAtActual.z);
 
+    }
+
+    placeLight(light: THREE.PointLight, state: BodyState) {
+
+        light.position.x = this.translationX;
+        light.position.y = state.data['height'] * 2;
+        light.position.z = this.translationZ;
     }
 
     makeSmoot(actual: THREE.Vector3, destination: THREE.Vector3, lastTime: number) {

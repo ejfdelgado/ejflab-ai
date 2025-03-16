@@ -1,12 +1,18 @@
 <!--button (click)="stopTracking()">Stop</button-->
 <div class="body_parent">
     <canvas id="canvas" width="500" height="500"></canvas>
-    <app-threejs-body [poses]="poses" [states]="states"></app-threejs-body>
+    <app-threejs-body #child_reference [poses]="poses" [states]="states"
+        (changedEvent)="renderUpdate($event)"></app-threejs-body>
     <!--pre>{{ poses[0]?.keypoints3D | json }}</pre-->
-    <button class="start_button" (click)="startTracking()">Start</button>
+    <div *ngIf="!started" class="start_container">
+        <button class="start_button" (click)="startTracking()">
+            <mat-icon>play_arrow</mat-icon>
+            <span>Start</span>
+        </button>
+    </div>
 </div>
 <div class="body_parent no_mouse">
-    <pre class="body_state">{{ states | json }}</pre>
+    <!--pre class="body_state">{{ states | json }}</pre-->
     <video id="video" width="50" height="50">
         <source src="">
     </video>

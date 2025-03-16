@@ -1,12 +1,24 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
 
-import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
+import {
+  TupleService,
+  AuthService,
+  BackendPageService,
+  BaseComponent,
+  CallService,
+  FileService, FlowchartService,
+  ModalService,
+  WebcamService,
+  IndicatorService,
+  Wait
+} from 'ejflab-front-lib';
 import { tracker } from 'srcJs/tracker';
 import * as tf from '@tensorflow/tfjs';
 import { BodyData, BodyState } from '../threejs/threejs-body/types';
+import { ThreejsBodyComponent } from '../threejs/threejs-body/threejs-body.component';
 
 @Component({
   selector: 'app-body',
@@ -14,8 +26,11 @@ import { BodyData, BodyState } from '../threejs/threejs-body/types';
   styleUrl: './body.component.css'
 })
 export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
+  @ViewChild('child_reference') childComponent: ThreejsBodyComponent;
   poses: BodyData[] = [];
   states: BodyState[] = [];
+  activity: Wait | null = null;
+  started: boolean = false;
 
   constructor(
     public override route: ActivatedRoute,
@@ -29,7 +44,8 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
     public override webcamService: WebcamService,
     flowchartSrv: FlowchartService,
     callService: CallService,
-    auth: Auth
+    auth: Auth,
+    public indicatorSrv: IndicatorService,
   ) {
     super(
       flowchartSrv,
@@ -94,10 +110,20 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   async startTracking() {
+    this.started = true;
+    this.activity = this.indicatorSrv.start();
     tracker.run('camera');
   }
 
   async stopTracking() {
     tracker.pause();
+  }
+
+  async renderUpdate(event: any) {
+    if (this.activity != null) {
+      this.activity.done();
+      this.activity = null;
+    }
+    // Means the renderer render
   }
 }

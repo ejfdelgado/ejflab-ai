@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { BasicScene } from './BasicScene';
@@ -22,6 +24,7 @@ export class ThreejsBodyComponent implements OnInit, AfterViewInit {
   bounds: DOMRect | null = null;
   @Input() poses: BodyData[] = [];
   @Input() states: BodyState[] = [];
+  @Output() changedEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -50,6 +53,7 @@ export class ThreejsBodyComponent implements OnInit, AfterViewInit {
       this.scene.updatePoses(this.poses, this.states);
       this.scene.renderer?.render(this.scene, this.scene.camera);
       this.scene.orbitals?.update();
+      this.changedEvent.emit();
       requestAnimationFrame(() => {
         this.loop();
       });
