@@ -117,10 +117,11 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
 
   async startTracking() {
     this.started = true;
+    this.enterFullScreen();
     ModuloSonido.play('/assets/sounds/on.mp3');
     ModuloSonido.play('/assets/sounds/nature.mp3', true);
     this.activity = this.indicatorSrv.start();
-    tracker.run('camera');
+    //tracker.run('camera');
   }
 
   async stopTracking() {
@@ -133,5 +134,19 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
       this.activity = null;
     }
     // Means the renderer render
+  }
+
+  enterFullScreen() {
+    const element = document.documentElement; // Target the entire page
+
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if ((element as any)['mozRequestFullScreen']) { // Firefox
+      (element as any)['mozRequestFullScreen']();
+    } else if ((element as any)['webkitRequestFullscreen']) { // Chrome, Safari, and Opera
+      (element as any)['webkitRequestFullscreen']();
+    } else if ((element as any)['msRequestFullscreen']) { // IE/Edge
+      (element as any)['msRequestFullscreen']();
+    }
   }
 }
