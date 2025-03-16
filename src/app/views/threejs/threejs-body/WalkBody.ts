@@ -7,7 +7,8 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
-    STEP_AMOUNT: number = 0.5;
+    STEP_AMOUNT: number = 1;
+    ROTATION_AMOUNT: number = 0.5;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
     UP_REFERENCE = new THREE.Vector3(0, 1, 0);
     front = new THREE.Vector3(0, 0, 0);
@@ -54,7 +55,7 @@ export class WalkBody {
         state.data.lastStep = this.lastStep * 10;
 
         if (makeStep) {
-            this.rotationY += state.data['angle'];
+            this.rotationY += state.data['angle'] * this.ROTATION_AMOUNT;
             const advanceFront = this.FRONT_REFERENCE.clone().applyAxisAngle(this.UP_REFERENCE, this.rotationY).normalize();
             this.translationX += advanceFront.x * this.lastStep * this.STEP_AMOUNT;
             this.translationZ += advanceFront.z * this.lastStep * this.STEP_AMOUNT;
