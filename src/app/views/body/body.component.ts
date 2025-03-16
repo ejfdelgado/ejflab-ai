@@ -6,7 +6,7 @@ import { Auth } from '@angular/fire/auth';
 import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
 import { tracker } from 'srcJs/tracker';
 import * as tf from '@tensorflow/tfjs';
-import { BodyData } from '../threejs/threejs-body/types';
+import { BodyData, BodyState } from '../threejs/threejs-body/types';
 
 @Component({
   selector: 'app-body',
@@ -15,6 +15,8 @@ import { BodyData } from '../threejs/threejs-body/types';
 })
 export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
   poses: BodyData[] = [];
+  states: BodyState[] = [];
+
   constructor(
     public override route: ActivatedRoute,
     public override pageService: BackendPageService,

@@ -1,7 +1,8 @@
 //import { GUI } from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-import { BodyData, BodyKeyPointData } from './types';
+import { BodyData, BodyKeyPointData, BodyState } from './types';
+import { WalkBody } from './WalkBody';
 /**
  * A class to set up some basic scene elements to minimize code in the
  * main execution file.
@@ -25,6 +26,8 @@ export class BasicScene extends THREE.Scene {
   bounds: DOMRect;
   // Poses
   poses: BodyData[] = [];
+  states: BodyState[] = [];
+  walk: WalkBody = new WalkBody();
 
   scaleBody: number = 3;
   offsetBody = new THREE.Vector3(0, 0, 0);
@@ -277,13 +280,19 @@ export class BasicScene extends THREE.Scene {
     return this.bodyPointMapIndex;
   }
 
-  updatePoses(poses: BodyData[]) {
+  updatePoses(poses: BodyData[], states: BodyState[]) {
     this.poses = poses;
+    this.states = states;
+
     this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
       this.get3DVectorBody(i);
       this.get3DMeshBody(i);
       this.get3DBodyLines(i);
+      if (this.states[i] == undefined) {
+        this.states[i] = { data: {} };
+      }
+      this.walk.capture(poses[i].keypoints3D, this.bodyPointMapIndex, this.states[i]);
     }
   }
 }

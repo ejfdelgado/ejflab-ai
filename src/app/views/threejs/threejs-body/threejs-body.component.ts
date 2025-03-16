@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BasicScene } from './BasicScene';
-import { BodyData } from './types';
+import { BodyData, BodyState } from './types';
 
 @Component({
   selector: 'app-threejs-body',
@@ -21,6 +21,7 @@ export class ThreejsBodyComponent implements OnInit, AfterViewInit {
   scene: BasicScene | null = null;
   bounds: DOMRect | null = null;
   @Input() poses: BodyData[] = [];
+  @Input() states: BodyState[] = [];
 
   constructor() { }
 
@@ -46,7 +47,7 @@ export class ThreejsBodyComponent implements OnInit, AfterViewInit {
   loop() {
     if (this.scene != null && this.scene.camera) {
       this.scene.camera?.updateProjectionMatrix();
-      this.scene.updatePoses(this.poses);
+      this.scene.updatePoses(this.poses, this.states);
       this.scene.renderer?.render(this.scene, this.scene.camera);
       this.scene.orbitals?.update();
       requestAnimationFrame(() => {

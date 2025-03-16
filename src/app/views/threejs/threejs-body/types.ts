@@ -11,3 +11,7 @@ export interface BodyData {
     keypoints: BodyKeyPointData[];
     keypoints3D: BodyKeyPointData[];
 }
+
+export interface BodyState {
+    data: any;
+}

@@ -32,3 +32,11 @@
 .no_mouse {
     pointer-events: none;
 }
+
+.body_state {
+    left: 10px;
+    top: 30px;
+    position: absolute;
+    z-index: 2;
+    color: white;
+}
