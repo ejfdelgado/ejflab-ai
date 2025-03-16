@@ -300,6 +300,8 @@ export class BasicScene extends THREE.Scene {
         this.states[i] = {
           data: {
             stepCount: 0,
+            kilometers: 0,
+            calories: 0,
           }
         };
       }

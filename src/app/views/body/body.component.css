@@ -62,9 +62,23 @@
 
 .podometer {
     position: absolute;
-    bottom: 15px;
+    top: 15px;
     left: 15px;
-    font-size: 3em;
+    font-size: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.podometer span {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.meter_icon {
+    width: 25px;
 }
 
 @media screen and (max-width: 360px) {

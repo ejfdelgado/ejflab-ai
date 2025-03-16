@@ -8,7 +8,6 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
-    stepCount: number = 0;
     STEP_AMOUNT: number = 7;
     ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
@@ -27,6 +26,11 @@ export class WalkBody {
     handUpLeft: boolean = false;
     handUpRight: boolean = false;
     handsClose: boolean = false;
+
+    // KPIs
+    stepCount: number = 0;
+    kilometers: number = 0;
+    calories: number = 0;
 
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
 
@@ -200,11 +204,25 @@ export class WalkBody {
         }
 
         state.data['stepCount'] = this.stepCount;
+        this.kilometers = this.computeKilometers(this.stepCount);
+        state.data['kilometers'] = this.kilometers.toFixed(2);
+        this.calories = this.computeCalories(this.stepCount);
+        state.data['calories'] = this.calories.toFixed(1);
         state.data['trans'] = {
             'rotationY': this.rotationY * 180 / Math.PI,
             'translationX': this.translationX,
             'translationZ': this.translationZ,
         };
+    }
+
+    computeKilometers(steps: number) {
+        const METERS_PER_STEP = 0.762;
+        return steps * METERS_PER_STEP / 1000;
+    }
+
+    computeCalories(steps: number) {
+        const CALORIES_PER_STEP = 0.04;
+        return steps * CALORIES_PER_STEP;
     }
 
     getVector(point: BodyKeyPointData) {

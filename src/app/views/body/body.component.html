@@ -12,7 +12,20 @@
     </div>
 </div>
 <div class="body_parent no_mouse">
-    <h1 *ngIf="states[0]" class="podometer white_subtitle">{{ states[0].data.stepCount }}</h1>
+    <p *ngIf="states[0]" class="podometer white_subtitle">
+        <span>
+            <img class="meter_icon" [src]="getRoot()+'assets/img/flame-icon.svg'">
+            <strong>{{ states[0].data.calories }} Kcal</strong>
+        </span>
+        <span>
+            <img class="meter_icon" [src]="getRoot()+'assets/img/earth-icon.svg'">
+            <strong>{{ states[0].data.kilometers }} Km</strong>
+        </span>
+        <span>
+            <img class="meter_icon" [src]="getRoot()+'assets/img/steps-icon.svg'">
+            <strong>{{ states[0].data.stepCount }} Steps</strong>
+        </span>
+    </p>
     <!--pre class="body_state">{{ states | json }}</pre-->
     <video id="video" width="50" height="50">
         <source src="">
