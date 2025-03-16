@@ -90,13 +90,13 @@ export class WalkBody {
         const offTHreshold = 0.9 * height;
         if (wristHeight > onThreshold) {
             if (this.handUpLeft == false) {
-                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                ModuloSonido.play('/assets/sounds/on1.mp3', false);
                 this.handUpLeft = true;
             }
         }
         if (wristHeight < offTHreshold) {
             if (this.handUpLeft == true) {
-                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                //ModuloSonido.play('/assets/sounds/off.mp3', false);
                 this.handUpLeft = false;
             }
         }
@@ -111,13 +111,13 @@ export class WalkBody {
         const offTHreshold = 0.9 * height;
         if (wristHeight > onThreshold) {
             if (this.handUpRight == false) {
-                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                ModuloSonido.play('/assets/sounds/on2.mp3', false);
                 this.handUpRight = true;
             }
         }
         if (wristHeight < offTHreshold) {
             if (this.handUpRight == true) {
-                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                //ModuloSonido.play('/assets/sounds/off.mp3', false);
                 this.handUpRight = false;
             }
         }
@@ -134,12 +134,12 @@ export class WalkBody {
         const FAR = 1.0;
         if (distance <= CLOSE) {
             if (this.handsClose == false) {
-                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                ModuloSonido.play('/assets/sounds/clap.mp3', false);
                 this.handsClose = true;
             }
         } else if (distance > FAR) {
             if (this.handsClose == true) {
-                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                //ModuloSonido.play('/assets/sounds/off.mp3', false);
                 this.handsClose = false;
             }
         }

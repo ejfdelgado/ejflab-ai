@@ -106,7 +106,10 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
     this.initializeBodyTracker();
     const response = await ModuloSonido.preload([
       '/assets/sounds/button.mp3',
+      '/assets/sounds/clap.mp3',
       '/assets/sounds/on.mp3',
+      '/assets/sounds/on1.mp3',
+      '/assets/sounds/on2.mp3',
       '/assets/sounds/off.mp3',
       '/assets/sounds/nature.mp3',
       '/assets/sounds/accepted.mp3',
