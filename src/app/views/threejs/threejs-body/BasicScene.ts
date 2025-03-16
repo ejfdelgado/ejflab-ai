@@ -55,9 +55,10 @@ export class BasicScene extends THREE.Scene {
       0.1,
       1000
     );
-    this.camera.position.z = 12;
-    this.camera.position.y = 12;
-    this.camera.position.x = 12;
+    this.camera.position.z = 0;
+    this.camera.position.y = 0;
+    this.camera.position.x = 0;
+
     // setup renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvasRef,
@@ -298,6 +299,9 @@ export class BasicScene extends THREE.Scene {
       }
       const vectors = this.get3DVectorBody(i);
       this.walk.capture(vectors, this.bodyPointMapIndex, this.states[i]);
+      if (this.camera) {
+        this.walk.placeCamera(this.camera, this.states[i]);
+      }
       this.get3DMeshBody(i);
       this.get3DBodyLines(i);
     }

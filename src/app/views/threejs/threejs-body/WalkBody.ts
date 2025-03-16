@@ -7,19 +7,73 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
-    STEP_AMOUNT: number = 1;
-    ROTATION_AMOUNT: number = 0.5;
+    STEP_AMOUNT: number = 2;
+    ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
     UP_REFERENCE = new THREE.Vector3(0, 1, 0);
     front = new THREE.Vector3(0, 0, 0);
+    cameraSmoot = new THREE.Vector3(0, 0, 0);
+    lastCameraSmoot: number = new Date().getTime();
+
+    lookAtActual = new THREE.Vector3(0, 0, 0);
+    lookAtDestination = new THREE.Vector3(0, 0, 0);
+    lookAtLastT: number = new Date().getTime();
 
     translationX: number = 0;
     translationZ: number = 0;
     rotationY: number = 0;//radians
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
 
+    placeCamera(camera: THREE.PerspectiveCamera, state: BodyState) {
+        // Compute the location behind the avatar
+        // Compute the avatar height
+        this.cameraSmoot.y = state.data['height'] * 2;
+        const advanceFront = this.FRONT_REFERENCE.clone().applyAxisAngle(this.UP_REFERENCE, this.rotationY).normalize();
+        this.cameraSmoot.x = this.translationX - advanceFront.x * 15;
+        this.cameraSmoot.z = this.translationZ - advanceFront.z * 15;
+
+        this.lastCameraSmoot = this.makeSmoot(camera.position, this.cameraSmoot, this.lastCameraSmoot);
+        this.lookAtDestination.setX(this.translationX);
+        this.lookAtDestination.setY(state.data['height']);
+        this.lookAtDestination.setZ(this.translationZ);
+        this.lookAtLastT = this.makeSmoot(this.lookAtActual, this.lookAtDestination, this.lookAtLastT);
+
+        camera.lookAt(this.lookAtActual.x, this.lookAtActual.y, this.lookAtActual.z);
+
+    }
+
+    makeSmoot(actual: THREE.Vector3, destination: THREE.Vector3, lastTime: number) {
+        const actualT = new Date().getTime();
+        const diffTime = actualT - lastTime;
+
+        const trayectoria = new THREE.Vector3(
+            destination.x - actual.x,
+            destination.y - actual.y,
+            destination.z - actual.z,
+        );
+        const length = trayectoria.length();
+        trayectoria.normalize();
+        const thisStep = diffTime * 0.006;
+        const currentStep = Math.min(thisStep, length);
+        if (currentStep >= 0.0001) {
+            trayectoria.multiplyScalar(currentStep);
+            actual.x += trayectoria.x;
+            actual.y += trayectoria.y;
+            actual.z += trayectoria.z;
+        } else {
+            actual.x = destination.x;
+            actual.y = destination.y;
+            actual.z = destination.z;
+        }
+        return actualT;
+    }
+
     capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
         this.computeFront(points, bodyPointMapIndex, state);
+
+        const noseIx = bodyPointMapIndex['nose'];
+        const noseHeight = points[noseIx].y;
+        state.data['height'] = noseHeight;
 
         const leftHeelIx = bodyPointMapIndex['left_heel'];
         const rightHeelIx = bodyPointMapIndex['right_heel'];
