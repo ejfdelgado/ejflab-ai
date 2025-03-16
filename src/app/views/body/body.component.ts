@@ -105,6 +105,7 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
     await tf.ready();
     this.initializeBodyTracker();
     const response = await ModuloSonido.preload([
+      '/assets/sounds/button.mp3',
       '/assets/sounds/on.mp3',
       '/assets/sounds/off.mp3',
       '/assets/sounds/nature.mp3',
@@ -119,8 +120,8 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
   async startTracking() {
     this.started = true;
     this.enterFullScreen();
-    ModuloSonido.play('/assets/sounds/accepted.mp3');
     ModuloSonido.play('/assets/sounds/nature.mp3', true);
+    ModuloSonido.play('/assets/sounds/button.mp3');
     this.activity = this.indicatorSrv.start();
     tracker.run('camera');
   }
@@ -133,6 +134,7 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
     if (this.activity != null) {
       this.activity.done();
       this.activity = null;
+      ModuloSonido.play('/assets/sounds/accepted.mp3');
     }
     // Means the renderer render
   }

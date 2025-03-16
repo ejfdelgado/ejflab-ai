@@ -53,7 +53,9 @@ export class ThreejsBodyComponent implements OnInit, AfterViewInit {
       this.scene.updatePoses(this.poses, this.states);
       this.scene.renderer?.render(this.scene, this.scene.camera);
       this.scene.orbitals?.update();
-      this.changedEvent.emit();
+      if (this.poses.length > 0) {
+        this.changedEvent.emit();
+      }
       requestAnimationFrame(() => {
         this.loop();
       });
