@@ -135,6 +135,11 @@ export class BasicScene extends THREE.Scene {
         line.geometry.attributes['position'].needsUpdate = true;
       });
     }
+
+    response.forEach((line, i) => {
+      line.matrix = (this.walk.transformationMatrix);
+      line.matrixAutoUpdate = false;
+    });
   }
 
   get3DMeshBody(index: number): THREE.Mesh[] {
@@ -158,10 +163,12 @@ export class BasicScene extends THREE.Scene {
       //console.log(`Update spheres ${index}`);
       // Update spheres
       response.forEach((sphere, i) => {
+        const position = new THREE.Vector3(scaledLandmarks[i].x, scaledLandmarks[i].y, scaledLandmarks[i].z);
+        position.applyMatrix4(this.walk.transformationMatrix);
         sphere.position.set(
-          scaledLandmarks[i].x,
-          scaledLandmarks[i].y,
-          scaledLandmarks[i].z,
+          position.x,
+          position.y,
+          position.z,
         );
       });
     }
@@ -286,13 +293,13 @@ export class BasicScene extends THREE.Scene {
 
     this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
-      this.get3DVectorBody(i);
-      this.get3DMeshBody(i);
-      this.get3DBodyLines(i);
       if (this.states[i] == undefined) {
         this.states[i] = { data: {} };
       }
-      this.walk.capture(poses[i].keypoints3D, this.bodyPointMapIndex, this.states[i]);
+      const vectors = this.get3DVectorBody(i);
+      this.walk.capture(vectors, this.bodyPointMapIndex, this.states[i]);
+      this.get3DMeshBody(i);
+      this.get3DBodyLines(i);
     }
   }
 }
