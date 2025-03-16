@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { BodyKeyPointData, BodyState } from "./types";
+import { ModuloSonido } from '@ejfdelgado/ejflab-common/src/ModuloSonido';
 
 export class WalkBody {
     sideState: number = 1;
@@ -7,6 +8,7 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
+    stepCount: number = 0;
     STEP_AMOUNT: number = 7;
     ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
@@ -22,6 +24,10 @@ export class WalkBody {
     translationX: number = 0;
     translationZ: number = 0;
     rotationY: number = 0;//radians
+    handUpLeft: boolean = false;
+    handUpRight: boolean = false;
+    handsClose: boolean = false;
+
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
 
     placeCamera(camera: THREE.PerspectiveCamera, state: BodyState) {
@@ -75,12 +81,79 @@ export class WalkBody {
         return actualT;
     }
 
-    capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
-        this.computeFront(points, bodyPointMapIndex, state);
+    computeLeftHand(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
+        // left hand up
+        const height = state.data['height'];
+        const wristIx = bodyPointMapIndex['left_wrist'];
+        const wristHeight = points[wristIx].y;
+        const onThreshold = 1.1 * height;
+        const offTHreshold = 0.9 * height;
+        if (wristHeight > onThreshold) {
+            if (this.handUpLeft == false) {
+                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                this.handUpLeft = true;
+            }
+        }
+        if (wristHeight < offTHreshold) {
+            if (this.handUpLeft == true) {
+                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                this.handUpLeft = false;
+            }
+        }
+    }
 
+    computeRightHand(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
+        // left hand up
+        const height = state.data['height'];
+        const wristIx = bodyPointMapIndex['right_wrist'];
+        const wristHeight = points[wristIx].y;
+        const onThreshold = 1.1 * height;
+        const offTHreshold = 0.9 * height;
+        if (wristHeight > onThreshold) {
+            if (this.handUpRight == false) {
+                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                this.handUpRight = true;
+            }
+        }
+        if (wristHeight < offTHreshold) {
+            if (this.handUpRight == true) {
+                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                this.handUpRight = false;
+            }
+        }
+    }
+
+    computeHandGet(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
+        const wrist1Ix = bodyPointMapIndex['left_wrist'];
+        const wrist2Ix = bodyPointMapIndex['right_wrist'];
+        const wrist1 = points[wrist1Ix];
+        const wrist2 = points[wrist2Ix];
+        const distance = new THREE.Vector3(wrist1.x, wrist1.y, wrist1.z).distanceTo(new THREE.Vector3(wrist2.x, wrist2.y, wrist2.z));
+        state.data['hands'] = distance;
+        const CLOSE = 0.6;
+        const FAR = 1.0;
+        if (distance <= CLOSE) {
+            if (this.handsClose == false) {
+                ModuloSonido.play('/assets/sounds/on.mp3', false);
+                this.handsClose = true;
+            }
+        } else if (distance > FAR) {
+            if (this.handsClose == true) {
+                ModuloSonido.play('/assets/sounds/off.mp3', false);
+                this.handsClose = false;
+            }
+        }
+    }
+
+    capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
         const noseIx = bodyPointMapIndex['nose'];
         const noseHeight = points[noseIx].y;
         state.data['height'] = noseHeight;
+
+        this.computeFront(points, bodyPointMapIndex, state);
+        this.computeLeftHand(points, bodyPointMapIndex, state);
+        this.computeRightHand(points, bodyPointMapIndex, state);
+        this.computeHandGet(points, bodyPointMapIndex, state);
 
         const leftHeelIx = bodyPointMapIndex['left_heel'];
         const rightHeelIx = bodyPointMapIndex['right_heel'];
@@ -123,8 +196,10 @@ export class WalkBody {
             const translationMatrix = new THREE.Matrix4().makeTranslation(this.translationX, 0, this.translationZ);
             const rotationMatrix = new THREE.Matrix4().makeRotationY(this.rotationY);
             this.transformationMatrix = new THREE.Matrix4().multiplyMatrices(translationMatrix, rotationMatrix);
+            this.stepCount += 1;
         }
 
+        state.data['stepCount'] = this.stepCount;
         state.data['trans'] = {
             'rotationY': this.rotationY * 180 / Math.PI,
             'translationX': this.translationX,

@@ -84,7 +84,7 @@ export class BasicScene extends THREE.Scene {
     // create the lights
     const light = new THREE.AmbientLight(0x404040); // soft white light
     this.add(light);
-    
+
     this.lightFollow.position.set(0, 15, 0);
     this.add(this.lightFollow);
     this.loadAllModels();
@@ -297,7 +297,11 @@ export class BasicScene extends THREE.Scene {
     this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
       if (this.states[i] == undefined) {
-        this.states[i] = { data: {} };
+        this.states[i] = {
+          data: {
+            stepCount: 0,
+          }
+        };
       }
       const vectors = this.get3DVectorBody(i);
       this.walk.capture(vectors, this.bodyPointMapIndex, this.states[i]);

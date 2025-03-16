@@ -60,6 +60,13 @@
     color: white;
 }
 
+.podometer {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-size: 3em;
+}
+
 @media screen and (max-width: 360px) {
     #video {
         right: 5px;

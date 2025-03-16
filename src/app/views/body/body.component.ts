@@ -108,6 +108,7 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
       '/assets/sounds/on.mp3',
       '/assets/sounds/off.mp3',
       '/assets/sounds/nature.mp3',
+      '/assets/sounds/accepted.mp3',
     ]);
   }
 
@@ -118,10 +119,10 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
   async startTracking() {
     this.started = true;
     this.enterFullScreen();
-    ModuloSonido.play('/assets/sounds/on.mp3');
+    ModuloSonido.play('/assets/sounds/accepted.mp3');
     ModuloSonido.play('/assets/sounds/nature.mp3', true);
     this.activity = this.indicatorSrv.start();
-    //tracker.run('camera');
+    tracker.run('camera');
   }
 
   async stopTracking() {

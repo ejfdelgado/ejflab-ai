@@ -12,6 +12,7 @@
     </div>
 </div>
 <div class="body_parent no_mouse">
+    <h1 *ngIf="states[0]" class="podometer white_subtitle">{{ states[0].data.stepCount }}</h1>
     <!--pre class="body_state">{{ states | json }}</pre-->
     <video id="video" width="50" height="50">
         <source src="">
