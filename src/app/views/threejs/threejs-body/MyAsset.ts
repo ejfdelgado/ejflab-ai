@@ -9,6 +9,7 @@ export interface MyAssetInData {
 export class MyAsset {
     data: MyAssetInData;
     object: THREE.Object3D;
+    matrix: THREE.Matrix4;
     constructor(data: MyAssetInData) {
         this.data = data;
     }
@@ -23,5 +24,13 @@ export class MyAsset {
 
     getMesh(): THREE.Object3D {
         return this.object;
+    }
+
+    makeRandomPosition(min: THREE.Vector2, max: THREE.Vector2) {
+        const posX = min.x + Math.random() * (max.x - min.x);
+        const posZ = min.y + Math.random() * (max.y - min.y);
+        this.matrix = new THREE.Matrix4().makeTranslation(posX, 0, posZ);
+        this.object.applyMatrix4(this.matrix);
+        this.object.matrixAutoUpdate = false;
     }
 }
