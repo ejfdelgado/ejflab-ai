@@ -25,6 +25,15 @@
             <img class="meter_icon" [src]="getRoot()+'assets/img/steps-icon.svg'">
             <strong>{{ states[0].data.stepCount }} Steps</strong>
         </span>
+        <span>
+            <strong>Score Top: {{ states[0].data.scoreTop }}</strong>
+        </span>
+        <span>
+            <strong>Score Bottom: {{ states[0].data.scoreBottom }}</strong>
+        </span>
+        <span>
+            <strong>Height: {{ states[0].data.height }}</strong>
+        </span>
     </p>
     <!--pre class="body_state">{{ states | json }}</pre-->
     <video id="video" width="50" height="50">

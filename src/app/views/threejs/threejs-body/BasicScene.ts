@@ -179,8 +179,9 @@ export class BasicScene extends THREE.Scene {
     return response;
   }
 
-  get3DVectorBody(index: number): THREE.Vector3[] {
+  get3DVectorBody(index: number): { points: THREE.Vector3[], scores: number[] } {
     let response: THREE.Vector3[] = [];
+    let scores: number[] = [];
     const originalData = this.poses[index];
     const original = originalData.keypoints3D;
     response = this.vector3DAll[index];
@@ -212,6 +213,7 @@ export class BasicScene extends THREE.Scene {
     if (response == undefined) {
       response = original.map(landmark => {
         const temp = transform(landmark);
+        scores.push(landmark.score);
         return new THREE.Vector3(temp.x, temp.y, temp.z);
       });
       this.vector3DAll[index] = response;
@@ -219,11 +221,15 @@ export class BasicScene extends THREE.Scene {
       // Replace values
       original.forEach((landmark, i) => {
         const temp = transform(landmark);
+        scores[i] = landmark.score;
         response[i].set(temp.x, temp.y, temp.z);
       });
     }
 
-    return response;
+    return {
+      points: response,
+      scores
+    };
   }
 
   getBodyMapIndexes() {
@@ -291,22 +297,27 @@ export class BasicScene extends THREE.Scene {
   }
 
   updatePoses(poses: BodyData[], states: BodyState[]) {
-    this.poses = poses;
+    // Assure it only gets the body with highest overall score
+    this.poses = poses.sort((a, b) => {
+      return b.score - a.score;
+    }).filter((a, i) => i == 0);
     this.states = states;
 
     this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
+      const score = Math.round(100*poses[i].score);
       if (this.states[i] == undefined) {
         this.states[i] = {
           data: {
             stepCount: 0,
             kilometers: 0,
             calories: 0,
+            score,
           }
         };
       }
-      const vectors = this.get3DVectorBody(i);
-      this.walk.capture(vectors, this.bodyPointMapIndex, this.states[i]);
+      const { points, scores } = this.get3DVectorBody(i);
+      this.walk.capture(points, this.bodyPointMapIndex, this.states[i], scores);
       if (this.camera) {
         this.walk.placeCamera(this.camera, this.states[i]);
         this.walk.placeLight(this.lightFollow, this.states[i]);

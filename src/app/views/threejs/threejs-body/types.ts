@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 export interface BodyKeyPointData {
     x: number;
     y: number;

@@ -8,6 +8,7 @@ export class WalkBody {
     MOVEMENT_THRESHOLD = 0.05;
     maxDifference: number = 0;
     lastStep: number = 0;
+    MIN_SCORE: number = 80;
     STEP_AMOUNT: number = 7;
     ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
@@ -53,7 +54,9 @@ export class WalkBody {
     }
 
     placeLight(light: THREE.PointLight, state: BodyState) {
-
+        if (state.data['scoreTop'] < this.MIN_SCORE) {
+            return;
+        }
         light.position.x = this.translationX;
         light.position.y = state.data['height'] * 2;
         light.position.z = this.translationZ;
@@ -149,58 +152,109 @@ export class WalkBody {
         }
     }
 
-    capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState) {
+    computeScores(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState, scores: number[]) {
+        // Compute the average of top points and all points
+        // Cabeza
+        let topScore = 0;
+        let bottomScore = 0;
+        let allScore = 0;
+        const noseIx = bodyPointMapIndex['nose'];
+        allScore += scores[noseIx];
+        topScore += scores[noseIx];
+        // Manos
+        const wrist1Ix = bodyPointMapIndex['left_wrist'];
+        allScore += scores[wrist1Ix];
+        topScore += scores[wrist1Ix];
+        const wrist2Ix = bodyPointMapIndex['right_wrist'];
+        allScore += scores[wrist2Ix];
+        topScore += scores[wrist2Ix];
+        // Tronco
+        const left_shoulderIx = bodyPointMapIndex['left_shoulder'];
+        allScore += scores[left_shoulderIx];
+        topScore += scores[left_shoulderIx];
+        bottomScore += scores[left_shoulderIx];
+        const right_shoulderIx = bodyPointMapIndex['right_shoulder'];
+        topScore += scores[right_shoulderIx];
+        allScore += scores[right_shoulderIx];
+        bottomScore += scores[right_shoulderIx];
+        const left_hipIx = bodyPointMapIndex['left_hip'];
+        allScore += scores[left_hipIx];
+        bottomScore += scores[left_hipIx];
+        const right_hipIx = bodyPointMapIndex['right_hip'];
+        allScore += scores[right_hipIx];
+        bottomScore += scores[right_hipIx];
+        // Pies
+        const leftHeelIx = bodyPointMapIndex['left_heel'];
+        allScore += scores[leftHeelIx];
+        bottomScore += scores[leftHeelIx];
+        const rightHeelIx = bodyPointMapIndex['right_heel'];
+        allScore += scores[rightHeelIx];
+        bottomScore += scores[rightHeelIx];
+
+        state.data['scoreTop'] = Math.round(100 * topScore / 5);
+        state.data['scoreBottom'] = Math.round(100 * bottomScore / 6);
+        state.data['scoreAll'] = Math.round(100 * allScore / 9);
+    }
+
+    capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState, scores: number[]) {
         const noseIx = bodyPointMapIndex['nose'];
         const noseHeight = points[noseIx].y;
         state.data['height'] = noseHeight;
 
-        this.computeFront(points, bodyPointMapIndex, state);
-        this.computeLeftHand(points, bodyPointMapIndex, state);
-        this.computeRightHand(points, bodyPointMapIndex, state);
-        this.computeHandGet(points, bodyPointMapIndex, state);
+        this.computeScores(points, bodyPointMapIndex, state, scores);
 
-        const leftHeelIx = bodyPointMapIndex['left_heel'];
-        const rightHeelIx = bodyPointMapIndex['right_heel'];
-        const leftHeight = points[leftHeelIx].y;
-        const rightHeight = points[rightHeelIx].y;
-        const difference = leftHeight - rightHeight;
-        const differenceAbs = Math.abs(difference);
-        let makeStep = false;
-
-        if (differenceAbs > this.MOVEMENT_THRESHOLD) {
-
-            if (difference > 0) {
-                // left
-                if (this.sideState == 2) {
-                    this.lastStep = this.maxDifference;
-                    this.maxDifference = 0;
-                    makeStep = true;
-                }
-                this.sideState = 1;
-            } else {
-                //right
-                if (this.sideState == 1) {
-                    this.lastStep = this.maxDifference;
-                    this.maxDifference = 0;
-                    makeStep = true;
-                }
-                this.sideState = 2;
-            }
-            this.maxDifference = Math.max(this.maxDifference, differenceAbs);
+        if (state.data['scoreTop'] >= this.MIN_SCORE) {
+            // Hands interaction logic here
+            this.computeLeftHand(points, bodyPointMapIndex, state);
+            this.computeRightHand(points, bodyPointMapIndex, state);
+            this.computeHandGet(points, bodyPointMapIndex, state);
         }
-        state.data.difference = difference * 10;
-        state.data.sideState = this.sideState;
-        state.data.lastStep = this.lastStep * 10;
 
-        if (makeStep) {
-            this.rotationY += state.data['angle'] * this.ROTATION_AMOUNT;
-            const advanceFront = this.FRONT_REFERENCE.clone().applyAxisAngle(this.UP_REFERENCE, this.rotationY).normalize();
-            this.translationX += advanceFront.x * this.lastStep * this.STEP_AMOUNT;
-            this.translationZ += advanceFront.z * this.lastStep * this.STEP_AMOUNT;
-            const translationMatrix = new THREE.Matrix4().makeTranslation(this.translationX, 0, this.translationZ);
-            const rotationMatrix = new THREE.Matrix4().makeRotationY(this.rotationY);
-            this.transformationMatrix = new THREE.Matrix4().multiplyMatrices(translationMatrix, rotationMatrix);
-            this.stepCount += 1;
+        if (state.data['scoreBottom'] >= this.MIN_SCORE) {
+            // Walk loginc here
+            this.computeFront(points, bodyPointMapIndex, state);
+            const leftHeelIx = bodyPointMapIndex['left_heel'];
+            const rightHeelIx = bodyPointMapIndex['right_heel'];
+            const leftHeight = points[leftHeelIx].y;
+            const rightHeight = points[rightHeelIx].y;
+            const difference = leftHeight - rightHeight;
+            const differenceAbs = Math.abs(difference);
+            let makeStep = false;
+
+            if (differenceAbs > this.MOVEMENT_THRESHOLD) {
+                if (difference > 0) {
+                    // left
+                    if (this.sideState == 2) {
+                        this.lastStep = this.maxDifference;
+                        this.maxDifference = 0;
+                        makeStep = true;
+                    }
+                    this.sideState = 1;
+                } else {
+                    //right
+                    if (this.sideState == 1) {
+                        this.lastStep = this.maxDifference;
+                        this.maxDifference = 0;
+                        makeStep = true;
+                    }
+                    this.sideState = 2;
+                }
+                this.maxDifference = Math.max(this.maxDifference, differenceAbs);
+            }
+            state.data.difference = difference * 10;
+            state.data.sideState = this.sideState;
+            state.data.lastStep = this.lastStep * 10;
+
+            if (makeStep) {
+                this.rotationY += state.data['angle'] * this.ROTATION_AMOUNT;
+                const advanceFront = this.FRONT_REFERENCE.clone().applyAxisAngle(this.UP_REFERENCE, this.rotationY).normalize();
+                this.translationX += advanceFront.x * this.lastStep * this.STEP_AMOUNT;
+                this.translationZ += advanceFront.z * this.lastStep * this.STEP_AMOUNT;
+                const translationMatrix = new THREE.Matrix4().makeTranslation(this.translationX, 0, this.translationZ);
+                const rotationMatrix = new THREE.Matrix4().makeRotationY(this.rotationY);
+                this.transformationMatrix = new THREE.Matrix4().multiplyMatrices(translationMatrix, rotationMatrix);
+                this.stepCount += 1;
+            }
         }
 
         state.data['stepCount'] = this.stepCount;
