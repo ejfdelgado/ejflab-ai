@@ -208,6 +208,9 @@ export class WalkBody {
             this.computeLeftHand(points, bodyPointMapIndex, state);
             this.computeRightHand(points, bodyPointMapIndex, state);
             this.computeHandGet(points, bodyPointMapIndex, state);
+        } else {
+            // If top is not well detected, abort
+            return;
         }
 
         if (state.data['scoreBottom'] >= this.MIN_SCORE) {
