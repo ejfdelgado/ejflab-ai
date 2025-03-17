@@ -978,6 +978,7 @@ const tracker = {
                 },
             },
         });
+        //TODO assure tracker.video is not undefined
         tracker.video.srcObject = stream; // attach camera stream to video
 
         // get width and height of the camera video stream

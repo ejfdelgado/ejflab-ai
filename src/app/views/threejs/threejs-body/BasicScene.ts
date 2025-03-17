@@ -90,10 +90,62 @@ export class BasicScene extends THREE.Scene {
     this.loadAllModels();
   }
 
+  scaleMeshToHeight(mesh: THREE.Object3D, targetHeight: number) {
+    // Compute bounding box
+    const bbox = new THREE.Box3().setFromObject(mesh);
+    const size = new THREE.Vector3();
+    bbox.getSize(size);
+
+    // Get current height
+    const currentHeight = size.y;
+
+    if (currentHeight === 0) {
+      return;
+    }
+
+    const scaleFactor = targetHeight / currentHeight;
+    mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+  }
+
+  makeMaterialsEmissive(object: THREE.Object3D, emissiveColor: number = 0xffffff) {
+    object.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        let material = child.material;
+
+        // Handle multi-material meshes
+        if (Array.isArray(material)) {
+          child.material = material.map(mat => this.ensureEmissiveMaterial(mat, emissiveColor));
+        } else {
+          child.material = this.ensureEmissiveMaterial(material, emissiveColor);
+        }
+      }
+    });
+  }
+
+
+  ensureEmissiveMaterial(material: THREE.Material, emissiveColor: number) {
+
+    if (material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshPhongMaterial) {
+      // Clone the material to avoid modifying shared materials
+      const map = material.map;
+      material.emissiveMap = map;
+      material.emissive = new THREE.Color(0xFFFFFF);
+      material.emissiveIntensity = 1.0;
+    }
+
+    return material;
+  }
+
+
   async loadAllModels() {
     const scenario = await this.loadGLTFModel("/assets/models/scene2.gltf");
     scenario.scale.set(6, 6, 6)
     this.add(scenario);
+
+    const ball = await this.loadGLTFModel("/assets/models/assets/ball.glb");
+    this.scaleMeshToHeight(ball, 1);
+    this.makeMaterialsEmissive(ball, 0xFFFFFF);
+    this.add(ball);
   }
 
   /**
@@ -305,7 +357,7 @@ export class BasicScene extends THREE.Scene {
 
     this.getBodyMapIndexes();
     for (let i = 0; i < poses.length; i++) {
-      const score = Math.round(100*poses[i].score);
+      const score = Math.round(100 * poses[i].score);
       if (this.states[i] == undefined) {
         this.states[i] = {
           data: {
