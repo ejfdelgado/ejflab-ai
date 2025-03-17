@@ -3,8 +3,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import { BodyData, BodyKeyPointData, BodyState } from './types';
 import { WalkBody } from './WalkBody';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
+import { MyHelper } from './MyHelper';
+import { MyAsset, MyAssetInData } from './MyAsset';
+
 /**
  * A class to set up some basic scene elements to minimize code in the
  * main execution file.
@@ -40,9 +41,10 @@ export class BasicScene extends THREE.Scene {
   bodyPointMeshes: THREE.Mesh[][] = [];
   bodyLines: THREE.Line[][] = [];
   lightFollow: THREE.PointLight = new THREE.PointLight(0xffffff, 200, 100);
+  myAssets: MyAsset[] = [];
 
   canvasRef: HTMLCanvasElement;
-  gltfLoader = new GLTFLoader();
+
 
   constructor(canvasRef: any, bounds: DOMRect) {
     super();
@@ -90,62 +92,29 @@ export class BasicScene extends THREE.Scene {
     this.loadAllModels();
   }
 
-  scaleMeshToHeight(mesh: THREE.Object3D, targetHeight: number) {
-    // Compute bounding box
-    const bbox = new THREE.Box3().setFromObject(mesh);
-    const size = new THREE.Vector3();
-    bbox.getSize(size);
-
-    // Get current height
-    const currentHeight = size.y;
-
-    if (currentHeight === 0) {
-      return;
-    }
-
-    const scaleFactor = targetHeight / currentHeight;
-    mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
-  }
-
-  makeMaterialsEmissive(object: THREE.Object3D, emissiveColor: number = 0xffffff) {
-    object.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        let material = child.material;
-
-        // Handle multi-material meshes
-        if (Array.isArray(material)) {
-          child.material = material.map(mat => this.ensureEmissiveMaterial(mat, emissiveColor));
-        } else {
-          child.material = this.ensureEmissiveMaterial(material, emissiveColor);
-        }
-      }
-    });
-  }
-
-
-  ensureEmissiveMaterial(material: THREE.Material, emissiveColor: number) {
-
-    if (material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshPhongMaterial) {
-      // Clone the material to avoid modifying shared materials
-      const map = material.map;
-      material.emissiveMap = map;
-      material.emissive = new THREE.Color(0xFFFFFF);
-      material.emissiveIntensity = 1.0;
-    }
-
-    return material;
-  }
-
 
   async loadAllModels() {
-    const scenario = await this.loadGLTFModel("/assets/models/scene2.gltf");
+    const scenario = await MyHelper.loadGLTFModel("/assets/models/scene2.gltf");
     scenario.scale.set(6, 6, 6)
     this.add(scenario);
 
-    const ball = await this.loadGLTFModel("/assets/models/assets/ball.glb");
-    this.scaleMeshToHeight(ball, 1);
-    this.makeMaterialsEmissive(ball, 0xFFFFFF);
-    this.add(ball);
+    const assets: MyAssetInData[] = [
+      {
+        url: "/assets/models/assets/ball.glb",
+        height: 1,
+      }
+    ];
+
+    assets.forEach((element) => {
+      this.addAsset(element);
+    })
+  }
+
+  async addAsset(data: MyAssetInData) {
+    const nuevo = new MyAsset(data);
+    await nuevo.initialize();
+    const mesh = nuevo.getMesh();
+    this.add(mesh);
   }
 
   /**
@@ -379,24 +348,5 @@ export class BasicScene extends THREE.Scene {
     }
   }
 
-  async loadGLTFModel(urlPath: string) {
-    const url = `${MyConstants.SRV_ROOT}${urlPath.replace(/^\//g, '')}`;
-    return new Promise<THREE.Object3D>((resolve, reject) => {
-      this.gltfLoader.load(
-        url,
-        async (response: any) => {
-          let object = null;
-          object = response.scene.children[0];
-          const temp: THREE.Object3D = object;
-          resolve(temp);
-        },
-        (xhr: any) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-        },
-        (error: any) => {
-          reject(error);
-        }
-      );
-    });
-  }
+
 }

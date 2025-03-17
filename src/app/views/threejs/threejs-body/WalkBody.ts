@@ -251,8 +251,12 @@ export class WalkBody {
             if (makeStep) {
                 this.rotationY += state.data['angle'] * this.ROTATION_AMOUNT;
                 const advanceFront = this.FRONT_REFERENCE.clone().applyAxisAngle(this.UP_REFERENCE, this.rotationY).normalize();
-                this.translationX += advanceFront.x * this.lastStep * this.STEP_AMOUNT;
-                this.translationZ += advanceFront.z * this.lastStep * this.STEP_AMOUNT;
+                let forward = 1;
+                if (this.handsClose) {
+                    forward = -1;
+                }
+                this.translationX += (advanceFront.x * this.lastStep * this.STEP_AMOUNT) * forward;
+                this.translationZ += (advanceFront.z * this.lastStep * this.STEP_AMOUNT) * forward;
                 const translationMatrix = new THREE.Matrix4().makeTranslation(this.translationX, 0, this.translationZ);
                 const rotationMatrix = new THREE.Matrix4().makeRotationY(this.rotationY);
                 this.transformationMatrix = new THREE.Matrix4().multiplyMatrices(translationMatrix, rotationMatrix);
