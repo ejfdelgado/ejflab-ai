@@ -4,13 +4,18 @@ import { ModuloSonido } from '@ejfdelgado/ejflab-common/src/ModuloSonido';
 import { EventEmitter } from '@angular/core';
 
 export class WalkBody {
-    sideState: number = 1;
+    sideState: number = 0;
     maxValue: number = 0;
-    MOVEMENT_THRESHOLD = 0.05;
+    MOVEMENT_THRESHOLD = 0.06;
     maxDifference: number = 0;
     lastStep: number = 0;
     MIN_SCORE: number = 80;
-    STEP_AMOUNT: number = 7;
+    STEP_AMOUNT: number = 6;
+    timeStartFreeze: number = 0;
+    now: number = 0;
+    STEP_FREEZE_MILLIS: number = 2500;
+    challengeLeftFoot: boolean = false;
+    challengeRightFoot: boolean = false;
     ROTATION_AMOUNT: number = 0.25;
     FRONT_REFERENCE = new THREE.Vector3(-1, 0, 0);
     UP_REFERENCE = new THREE.Vector3(0, 1, 0);
@@ -66,7 +71,7 @@ export class WalkBody {
     }
 
     makeSmoot(actual: THREE.Vector3, destination: THREE.Vector3, lastTime: number) {
-        const actualT = new Date().getTime();
+        const actualT = this.now;
         const diffTime = actualT - lastTime;
 
         const trayectoria = new THREE.Vector3(
@@ -202,6 +207,7 @@ export class WalkBody {
     }
 
     capture(points: THREE.Vector3[], bodyPointMapIndex: { [key: string]: number }, state: BodyState, scores: number[]) {
+        this.now = new Date().getTime();
         const noseIx = bodyPointMapIndex['nose'];
         const noseHeight = points[noseIx].y;
         state.data['height'] = noseHeight;
@@ -229,25 +235,63 @@ export class WalkBody {
             const differenceAbs = Math.abs(difference);
             let makeStep = false;
 
+            let stepTooLong = false;
+            if (this.timeStartFreeze != 0) {
+                stepTooLong = this.now - this.timeStartFreeze > this.STEP_FREEZE_MILLIS;
+            }
+
             if (differenceAbs > this.MOVEMENT_THRESHOLD) {
+                // Somo foot is elevated more than the other
                 if (difference > 0) {
-                    // left
-                    if (this.sideState == 2) {
-                        this.lastStep = this.maxDifference;
-                        this.maxDifference = 0;
-                        makeStep = true;
+                    // Caused by the left foot
+                    if (this.sideState !== 1) {
+                        // Foot switch
+                        if (!stepTooLong) {
+                            // Foot change, make the step of the previous amount
+                            this.lastStep = this.maxDifference;
+                            this.maxDifference = 0;
+                            this.timeStartFreeze = this.now;
+                            this.challengeLeftFoot = false;
+                            this.challengeRightFoot = false;
+                            makeStep = true;
+                            this.sideState = 1;
+                        }
                     }
-                    this.sideState = 1;
+                    if (!this.challengeLeftFoot && stepTooLong) {
+                        // Start counting long period
+                        ModuloSonido.play('/assets/sounds/challenge_start.mp3', false);
+                        this.challengeLeftFoot = true;
+                    }
                 } else {
-                    //right
-                    if (this.sideState == 1) {
-                        this.lastStep = this.maxDifference;
-                        this.maxDifference = 0;
-                        makeStep = true;
+                    // Caused by the right foot
+                    if (this.sideState !== 2) {
+                        if (!stepTooLong) {
+                            this.lastStep = this.maxDifference;
+                            this.maxDifference = 0;
+                            this.timeStartFreeze = this.now;
+                            this.challengeLeftFoot = false;
+                            this.challengeRightFoot = false;
+                            makeStep = true;
+                            this.sideState = 2;
+                        }
                     }
-                    this.sideState = 2;
+                    if (!this.challengeRightFoot && stepTooLong) {
+                        // Start counting long period
+                        ModuloSonido.play('/assets/sounds/challenge_start.mp3', false);
+                        this.challengeRightFoot = true;
+                    }
                 }
                 this.maxDifference = Math.max(this.maxDifference, differenceAbs);
+            } else {
+                // Both foots on the floor
+                if (this.challengeLeftFoot || this.challengeRightFoot) {
+                    this.maxDifference = 0; // it makes don't make any step after challenge
+                    ModuloSonido.play('/assets/sounds/challenge_finish.mp3', false);
+                }
+                this.sideState = 0;
+                this.timeStartFreeze = 0;
+                this.challengeLeftFoot = false;
+                this.challengeRightFoot = false;
             }
             state.data.difference = difference * 10;
             state.data.sideState = this.sideState;
@@ -266,6 +310,7 @@ export class WalkBody {
                 const rotationMatrix = new THREE.Matrix4().makeRotationY(this.rotationY);
                 this.transformationMatrix = new THREE.Matrix4().multiplyMatrices(translationMatrix, rotationMatrix);
                 this.stepCount += 1;
+                this.lastStep = 0;
             }
         }
 
