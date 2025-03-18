@@ -133,7 +133,7 @@ export class BasicScene extends THREE.Scene {
     const nuevo = new MyAsset(data);
     await nuevo.initialize();
     const mesh = nuevo.getMesh();
-    nuevo.setPosition(-5, 0, true);
+    nuevo.setPosition(-15, 0, true);
     this.add(mesh);
     this.myAssets.push(nuevo);
   }

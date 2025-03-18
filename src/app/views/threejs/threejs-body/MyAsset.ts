@@ -39,7 +39,7 @@ export class MyAsset {
         this.box.min.setY(0);// It has to be fixed when terrain with different height
         this.box.min.setZ(this.box.min.z - INCREASE);
 
-        console.log(`BBox ${this.printVector3(this.box.min)} ${this.printVector3(this.box.max)}}`);
+        //console.log(`BBox ${this.printVector3(this.box.min)} ${this.printVector3(this.box.max)}}`);
     }
 
     printVector3(test: THREE.Vector3) {
@@ -48,7 +48,7 @@ export class MyAsset {
 
     hasCollisionWith(test: THREE.Vector3) {
         const has = this.box.containsPoint(test);
-        console.log(`${has} collison with ${this.printVector3(this.box.min)} ${this.printVector3(this.box.max)} with ${this.printVector3(test)}`);
+        //console.log(`${has} collison with ${this.printVector3(this.box.min)} ${this.printVector3(this.box.max)} with ${this.printVector3(test)}`);
         return has;
     }
 
