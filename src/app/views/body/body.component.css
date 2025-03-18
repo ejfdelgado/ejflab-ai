@@ -33,6 +33,7 @@
 }
 
 .start_button {
+    pointer-events: all !important;
     position: relative;
     width: 100px;
     height: 100px;

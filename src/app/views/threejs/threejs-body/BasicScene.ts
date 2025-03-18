@@ -96,13 +96,13 @@ export class BasicScene extends THREE.Scene {
     this.walk.makeClap.subscribe(this.clapEvent.bind(this));
   }
 
-  async clapEvent(origin: MyAsset) {
+  async clapEvent(origin: WalkBody) {
     // traverse assets to check if there is collision
     for (let i = 0; i < this.myAssets.length; i++) {
       const asset = this.myAssets[i];
       if (asset.owner == null) {
-        const matrix = this.walk.transformationMatrix;
-        const test = this.walk.clapLocation.clone().applyMatrix4(matrix);
+        const matrix = origin.transformationMatrix;
+        const test = origin.clapLocation.clone().applyMatrix4(matrix);
         const collision = asset.hasCollisionWith(test);
         if (collision) {
           ModuloSonido.play('/assets/sounds/mario-coin.mp3', false);
@@ -121,6 +121,14 @@ export class BasicScene extends THREE.Scene {
       {
         url: "/assets/models/assets/ball.glb",
         height: 2,
+      },
+      {
+        url: "/assets/models/assets/ball.glb",
+        height: 2,
+      },
+      {
+        url: "/assets/models/assets/ball.glb",
+        height: 2,
       }
     ];
 
@@ -133,7 +141,8 @@ export class BasicScene extends THREE.Scene {
     const nuevo = new MyAsset(data);
     await nuevo.initialize();
     const mesh = nuevo.getMesh();
-    nuevo.setPosition(-15, 0, true);
+    //nuevo.setPosition(-15, 0, true);
+    nuevo.makeRandomPosition(new THREE.Vector2(-10, -10), new THREE.Vector2(10, 10));
     this.add(mesh);
     this.myAssets.push(nuevo);
   }

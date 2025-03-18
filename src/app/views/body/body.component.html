@@ -4,7 +4,7 @@
     <app-threejs-body #child_reference [poses]="poses" [states]="states"
         (changedEvent)="renderUpdate($event)"></app-threejs-body>
     <!--pre>{{ poses[0]?.keypoints3D | json }}</pre-->
-    <div *ngIf="!started" class="start_container">
+    <div *ngIf="!started" class="start_container no_mouse">
         <button class="start_button" (click)="startTracking()">
             <mat-icon>play_arrow</mat-icon>
             <span>Start</span>
