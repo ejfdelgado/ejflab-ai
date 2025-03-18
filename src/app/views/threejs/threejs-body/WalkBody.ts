@@ -36,6 +36,7 @@ export class WalkBody {
 
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
     public makeClap: EventEmitter<WalkBody> = new EventEmitter();
+    public clapLocation: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
     placeCamera(camera: THREE.PerspectiveCamera, state: BodyState) {
         // Compute the location behind the avatar
@@ -144,6 +145,7 @@ export class WalkBody {
         if (distance <= CLOSE) {
             if (this.handsClose == false) {
                 ModuloSonido.play('/assets/sounds/clap.mp3', false);
+                this.clapLocation.set((wrist1.x + wrist2.x) / 2, (wrist1.y + wrist2.y) / 2, (wrist1.z + wrist2.z) / 2);
                 this.makeClap.emit(this);
                 this.handsClose = true;
             }

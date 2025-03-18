@@ -122,7 +122,7 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
 
   async startTracking() {
     this.started = true;
-    this.enterFullScreen();
+    //this.enterFullScreen();
     ModuloSonido.play('/assets/sounds/nature.mp3', true);
     ModuloSonido.play('/assets/sounds/button.mp3');
     this.activity = this.indicatorSrv.start();

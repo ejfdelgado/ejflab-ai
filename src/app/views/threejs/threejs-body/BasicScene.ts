@@ -5,6 +5,7 @@ import { BodyData, BodyKeyPointData, BodyState } from './types';
 import { WalkBody } from './WalkBody';
 import { MyHelper } from './MyHelper';
 import { MyAsset, MyAssetInData } from './MyAsset';
+import { ModuloSonido } from '@ejfdelgado/ejflab-common/src/ModuloSonido';
 
 /**
  * A class to set up some basic scene elements to minimize code in the
@@ -90,8 +91,26 @@ export class BasicScene extends THREE.Scene {
     this.lightFollow.position.set(0, 15, 0);
     this.add(this.lightFollow);
     this.loadAllModels();
+
+    // Setup events
+    this.walk.makeClap.subscribe(this.clapEvent.bind(this));
   }
 
+  async clapEvent(origin: MyAsset) {
+    // traverse assets to check if there is collision
+    for (let i = 0; i < this.myAssets.length; i++) {
+      const asset = this.myAssets[i];
+      if (asset.owner == null) {
+        const matrix = this.walk.transformationMatrix;
+        const test = this.walk.clapLocation.clone().applyMatrix4(matrix);
+        const collision = asset.hasCollisionWith(test);
+        if (collision) {
+          ModuloSonido.play('/assets/sounds/mario-coin.mp3', false);
+          asset.owner = "me";
+        }
+      }
+    }
+  }
 
   async loadAllModels() {
     const scenario = await MyHelper.loadGLTFModel("/assets/models/scene2.gltf");
@@ -114,8 +133,9 @@ export class BasicScene extends THREE.Scene {
     const nuevo = new MyAsset(data);
     await nuevo.initialize();
     const mesh = nuevo.getMesh();
-    nuevo.setPosition(-5, 0);
+    nuevo.setPosition(-5, 0, true);
     this.add(mesh);
+    this.myAssets.push(nuevo);
   }
 
   /**
