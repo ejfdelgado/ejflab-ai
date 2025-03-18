@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { BodyKeyPointData, BodyState } from "./types";
 import { ModuloSonido } from '@ejfdelgado/ejflab-common/src/ModuloSonido';
+import { EventEmitter } from '@angular/core';
 
 export class WalkBody {
     sideState: number = 1;
@@ -34,6 +35,7 @@ export class WalkBody {
     calories: number = 0;
 
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
+    public makeClap: EventEmitter<WalkBody> = new EventEmitter();
 
     placeCamera(camera: THREE.PerspectiveCamera, state: BodyState) {
         // Compute the location behind the avatar
@@ -142,6 +144,7 @@ export class WalkBody {
         if (distance <= CLOSE) {
             if (this.handsClose == false) {
                 ModuloSonido.play('/assets/sounds/clap.mp3', false);
+                this.makeClap.emit(this);
                 this.handsClose = true;
             }
         } else if (distance > FAR) {

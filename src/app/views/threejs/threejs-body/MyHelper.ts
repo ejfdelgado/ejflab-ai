@@ -25,7 +25,11 @@ export class MyHelper {
         });
     }
 
-    static scaleMeshToHeight(mesh: THREE.Object3D, targetHeight: number) {
+    scaleMeshToHeightLocal() {
+
+    }
+
+    static scaleMeshToHeight(mesh: THREE.Object3D, targetHeight: number): { box: THREE.Box3, scale: number } | null {
         // Compute bounding box
         const bbox = new THREE.Box3().setFromObject(mesh);
         const size = new THREE.Vector3();
@@ -35,12 +39,12 @@ export class MyHelper {
         const currentHeight = size.y;
 
         if (currentHeight === 0) {
-            return;
+            return null;
         }
 
         const scaleFactor = targetHeight / currentHeight;
-        mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        return new THREE.Box3().setFromObject(mesh);
+        //mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        return { box: new THREE.Box3().setFromObject(mesh), scale: scaleFactor };
     }
 
     static makeMaterialsEmissive(object: THREE.Object3D) {

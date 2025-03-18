@@ -10,6 +10,8 @@ export class MyAsset {
     data: MyAssetInData;
     object: THREE.Object3D;
     matrix: THREE.Matrix4;
+    scale: number;
+    box: THREE.Box3;
     constructor(data: MyAssetInData) {
         this.data = data;
     }
@@ -18,7 +20,12 @@ export class MyAsset {
         MyHelper.loadGLTFModel(this.data.url);
 
         this.object = await MyHelper.loadGLTFModel("/assets/models/assets/ball.glb");
-        MyHelper.scaleMeshToHeight(this.object, this.data.height);
+        this.object.matrixAutoUpdate = false;
+        const temp = MyHelper.scaleMeshToHeight(this.object, this.data.height);
+        if (temp) {
+            this.box = temp.box;
+            this.scale = temp.scale;
+        }
         MyHelper.makeMaterialsEmissive(this.object);
     }
 
@@ -26,11 +33,17 @@ export class MyAsset {
         return this.object;
     }
 
+    setPosition(x: number, z: number) {
+        const translation = new THREE.Matrix4().makeTranslation(x, 0, z);
+        const scale = new THREE.Matrix4().makeScale(this.scale, this.scale, this.scale);
+        this.matrix = new THREE.Matrix4().multiplyMatrices(translation, scale);
+        this.object.applyMatrix4(this.matrix);
+    }
+
     makeRandomPosition(min: THREE.Vector2, max: THREE.Vector2) {
         const posX = min.x + Math.random() * (max.x - min.x);
         const posZ = min.y + Math.random() * (max.y - min.y);
         this.matrix = new THREE.Matrix4().makeTranslation(posX, 0, posZ);
         this.object.applyMatrix4(this.matrix);
-        this.object.matrixAutoUpdate = false;
     }
 }

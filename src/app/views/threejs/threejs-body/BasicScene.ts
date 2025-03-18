@@ -114,7 +114,7 @@ export class BasicScene extends THREE.Scene {
     const nuevo = new MyAsset(data);
     await nuevo.initialize();
     const mesh = nuevo.getMesh();
-    nuevo.makeRandomPosition(new THREE.Vector2(-5, -5), new THREE.Vector2(15, 15));
+    nuevo.setPosition(-5, 0);
     this.add(mesh);
   }
 
