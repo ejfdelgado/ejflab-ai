@@ -6,7 +6,7 @@ import { EventEmitter } from '@angular/core';
 export class WalkBody {
     sideState: number = 0;
     maxValue: number = 0;
-    MOVEMENT_THRESHOLD = 0.06;
+    MOVEMENT_THRESHOLD = 0.15;
     maxDifference: number = 0;
     lastStep: number = 0;
     MIN_SCORE: number = 80;
@@ -40,6 +40,8 @@ export class WalkBody {
     calories: number = 0;
 
     public transformationMatrix: THREE.Matrix4 = new THREE.Matrix4().identity();
+    HANDS_CLOSE = 0.8;
+    HANDS_NOT_CLOSE = 1.1;
     public makeClap: EventEmitter<WalkBody> = new EventEmitter();
     public clapLocation: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
@@ -145,16 +147,14 @@ export class WalkBody {
         const wrist2 = points[wrist2Ix];
         const distance = new THREE.Vector3(wrist1.x, wrist1.y, wrist1.z).distanceTo(new THREE.Vector3(wrist2.x, wrist2.y, wrist2.z));
         state.data['hands'] = distance;
-        const CLOSE = 0.6;
-        const FAR = 1.0;
-        if (distance <= CLOSE) {
+        if (distance <= this.HANDS_CLOSE) {
             if (this.handsClose == false) {
                 ModuloSonido.play('/assets/sounds/clap.mp3', false);
                 this.clapLocation.set((wrist1.x + wrist2.x) / 2, (wrist1.y + wrist2.y) / 2, (wrist1.z + wrist2.z) / 2);
                 this.makeClap.emit(this);
                 this.handsClose = true;
             }
-        } else if (distance > FAR) {
+        } else if (distance > this.HANDS_NOT_CLOSE) {
             if (this.handsClose == true) {
                 //ModuloSonido.play('/assets/sounds/off.mp3', false);
                 this.handsClose = false;
@@ -223,7 +223,7 @@ export class WalkBody {
             // If top is not well detected, abort
             return;
         }
-
+        let differenceAbs = 0;
         if (state.data['scoreBottom'] >= this.MIN_SCORE) {
             // Walk loginc here
             this.computeFront(points, bodyPointMapIndex, state);
@@ -232,7 +232,7 @@ export class WalkBody {
             const leftHeight = points[leftHeelIx].y;
             const rightHeight = points[rightHeelIx].y;
             const difference = leftHeight - rightHeight;
-            const differenceAbs = Math.abs(difference);
+            differenceAbs = Math.abs(difference);
             let makeStep = false;
 
             let stepTooLong = false;
@@ -241,6 +241,7 @@ export class WalkBody {
             }
 
             if (differenceAbs > this.MOVEMENT_THRESHOLD) {
+                //console.log(`differenceAbs ${differenceAbs} > this.MOVEMENT_THRESHOLD ${this.MOVEMENT_THRESHOLD}`);
                 // Somo foot is elevated more than the other
                 if (difference > 0) {
                     // Caused by the left foot
@@ -314,6 +315,7 @@ export class WalkBody {
             }
         }
 
+        state.data['differenceAbs'] = differenceAbs;
         state.data['stepCount'] = this.stepCount;
         this.kilometers = this.computeKilometers(this.stepCount);
         state.data['kilometers'] = this.kilometers.toFixed(2);

@@ -25,6 +25,12 @@
             <img class="meter_icon" [src]="getRoot()+'assets/img/steps-icon.svg'">
             <strong>{{ states[0].data.stepCount }} Steps</strong>
         </span>
+        <span>
+            <strong>hands: {{ states[0].data.hands.toFixed(3) }}</strong>
+        </span>
+        <!--span>
+            <strong>Differenceabs: {{ states[0].data.differenceAbs.toFixed(3) }}</strong>
+        </span-->
         <!--span>
             <strong>Score: {{ states[0].data.score }}</strong>
         </span>
