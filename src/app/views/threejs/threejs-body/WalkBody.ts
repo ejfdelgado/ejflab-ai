@@ -13,7 +13,7 @@ export class WalkBody {
     STEP_AMOUNT: number = 6;
     timeStartFreeze: number = 0;
     now: number = 0;
-    STEP_FREEZE_MILLIS: number = 2500;
+    STEP_FREEZE_MILLIS: number = 2000;
     challengeLeftFoot: boolean = false;
     challengeRightFoot: boolean = false;
     ROTATION_AMOUNT: number = 0.25;
