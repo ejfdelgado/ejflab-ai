@@ -41,9 +41,8 @@ export class MyAsset {
     }
 
     makeRandomPosition(min: THREE.Vector2, max: THREE.Vector2) {
-        const posX = min.x + Math.random() * (max.x - min.x);
-        const posZ = min.y + Math.random() * (max.y - min.y);
-        this.matrix = new THREE.Matrix4().makeTranslation(posX, 0, posZ);
-        this.object.applyMatrix4(this.matrix);
+        const x = min.x + Math.random() * (max.x - min.x);
+        const z = min.y + Math.random() * (max.y - min.y);
+        this.setPosition(x, z);
     }
 }

@@ -101,7 +101,7 @@ export class BasicScene extends THREE.Scene {
     const assets: MyAssetInData[] = [
       {
         url: "/assets/models/assets/ball.glb",
-        height: 1,
+        height: 2,
       }
     ];
 
