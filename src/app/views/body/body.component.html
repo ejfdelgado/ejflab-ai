@@ -26,7 +26,12 @@
             <strong>{{ states[0].data.stepCount }} Steps</strong>
         </span>
         <span>
-            <strong>hands: {{ states[0].data.hands.toFixed(3) }}</strong>
+            <img class="meter_icon" [src]="getRoot()+'assets/img/time.svg'">
+            <strong>{{ states[0].data.maxChallengeTime }} Seconds</strong>
+        </span>
+        <span *ngIf="states[0].data.challengeTime > 0">
+            <img class="meter_icon" [src]="getRoot()+'assets/img/time.svg'">
+            <strong>{{ states[0].data.challengeTime }} Seconds</strong>
         </span>
         <!--span>
             <strong>Differenceabs: {{ states[0].data.differenceAbs.toFixed(3) }}</strong>

@@ -14,6 +14,8 @@ export class WalkBody {
     timeStartFreeze: number = 0;
     now: number = 0;
     STEP_FREEZE_MILLIS: number = 2000;
+    maxChallengeTime: number = 0;
+    overpassLastMax: boolean = false;
     challengeLeftFoot: boolean = false;
     challengeRightFoot: boolean = false;
     ROTATION_AMOUNT: number = 0.25;
@@ -224,6 +226,7 @@ export class WalkBody {
             return;
         }
         let differenceAbs = 0;
+        let challengeTime = 0;
         if (state.data['scoreBottom'] >= this.MIN_SCORE) {
             // Walk loginc here
             this.computeFront(points, bodyPointMapIndex, state);
@@ -237,7 +240,11 @@ export class WalkBody {
 
             let stepTooLong = false;
             if (this.timeStartFreeze != 0) {
-                stepTooLong = this.now - this.timeStartFreeze > this.STEP_FREEZE_MILLIS;
+                const difference = this.now - this.timeStartFreeze;
+                stepTooLong = difference > this.STEP_FREEZE_MILLIS;
+                if (stepTooLong) {
+                    challengeTime = difference;
+                }
             }
 
             if (differenceAbs > this.MOVEMENT_THRESHOLD) {
@@ -261,6 +268,8 @@ export class WalkBody {
                     if (!this.challengeLeftFoot && stepTooLong) {
                         // Start counting long period
                         ModuloSonido.play('/assets/sounds/challenge_start.mp3', false);
+                        ModuloSonido.play('/assets/sounds/tictoc.mp3', true);
+                        this.overpassLastMax = false;
                         this.challengeLeftFoot = true;
                     }
                 } else {
@@ -279,6 +288,8 @@ export class WalkBody {
                     if (!this.challengeRightFoot && stepTooLong) {
                         // Start counting long period
                         ModuloSonido.play('/assets/sounds/challenge_start.mp3', false);
+                        ModuloSonido.play('/assets/sounds/tictoc.mp3', true);
+                        this.overpassLastMax = false;
                         this.challengeRightFoot = true;
                     }
                 }
@@ -287,7 +298,11 @@ export class WalkBody {
                 // Both foots on the floor
                 if (this.challengeLeftFoot || this.challengeRightFoot) {
                     this.maxDifference = 0; // it makes don't make any step after challenge
+                    ModuloSonido.stop('/assets/sounds/tictoc.mp3');
                     ModuloSonido.play('/assets/sounds/challenge_finish.mp3', false);
+                    if (this.maxChallengeTime < challengeTime) {
+                        this.maxChallengeTime = challengeTime;
+                    }
                 }
                 this.sideState = 0;
                 this.timeStartFreeze = 0;
@@ -297,6 +312,15 @@ export class WalkBody {
             state.data.difference = difference * 10;
             state.data.sideState = this.sideState;
             state.data.lastStep = this.lastStep * 10;
+
+            if (!this.overpassLastMax) {
+                if (this.maxChallengeTime < challengeTime) {
+                    this.overpassLastMax = true;
+                    if (this.maxChallengeTime > 0) {
+                        ModuloSonido.play('/assets/sounds/newscore.mp3', false);
+                    }
+                }
+            }
 
             if (makeStep) {
                 this.rotationY += state.data['angle'] * this.ROTATION_AMOUNT;
@@ -315,7 +339,8 @@ export class WalkBody {
             }
         }
 
-        state.data['differenceAbs'] = differenceAbs;
+        state.data['maxChallengeTime'] = (this.maxChallengeTime / 1000).toFixed(0);
+        state.data['challengeTime'] = (challengeTime / 1000).toFixed(0);
         state.data['stepCount'] = this.stepCount;
         this.kilometers = this.computeKilometers(this.stepCount);
         state.data['kilometers'] = this.kilometers.toFixed(2);

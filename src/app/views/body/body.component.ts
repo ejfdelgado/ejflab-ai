@@ -116,6 +116,8 @@ export class BodyComponent extends BaseComponent implements OnInit, OnDestroy {
       '/assets/sounds/fall.mp3',
       '/assets/sounds/challenge_start.mp3',
       '/assets/sounds/challenge_finish.mp3',
+      '/assets/sounds/tictoc.mp3',
+      '/assets/sounds/newscore.mp3',
     ]);
   }
 
