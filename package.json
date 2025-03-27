@@ -1,5 +1,5 @@
 {
-  "name": "widesight-code",
+  "name": "ejflab-ai",
   "version": "1.3.6",
   "description": "",
   "main": "app.mjs",
@@ -25,7 +25,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "@ejfdelgado/ejflab-back": "^1.30.9",
+    "@ejfdelgado/ejflab-back": "^1.31.1",
     "@ejfdelgado/ejflab-common": "^1.16.1",
     "@google-cloud/compute": "^4.7.0",
     "@google-cloud/firestore": "^7.9.0",
@@ -112,7 +112,7 @@
     "@types/three": "^0.174.0",
     "@types/uuid": "^10.0.0",
     "@types/webrtc": "^0.0.43",
-    "ejflab-front-lib": "^2.4.9",
+    "ejflab-front-lib": "^2.7.3",
     "firebase-tools": "^13.13.1",
     "latlon-geohash": "^2.0.0",
     "ngx-material-timepicker": "^13.1.1",
