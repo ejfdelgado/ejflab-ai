@@ -5,7 +5,21 @@ import { Auth } from '@angular/fire/auth';
 
 import { MyConstants } from '@ejfdelgado/ejflab-common/src/MyConstants';
 import { ModuloDatoSeguroFront } from '@ejfdelgado/ejflab-common/src/ModuloDatoSeguroFront';
-import { TupleService, AuthService, BackendPageService, BaseComponent, BlobOptionsData, CallService, FileSaveResponseData, FileService, FlowchartService, ImagepickerOptionsData, ModalService, TxtOptionsData, WebcamService } from 'ejflab-front-lib';
+import {
+  TupleService,
+  AuthService,
+  BackendPageService,
+  BaseComponent,
+  BlobOptionsData,
+  CallService,
+  FileSaveResponseData,
+  FileService,
+  FlowchartService,
+  ImagepickerOptionsData,
+  ModalService,
+  TxtOptionsData,
+  WebcamService
+} from 'ejflab-front-lib';
 
 @Component({
   selector: 'app-cv',
