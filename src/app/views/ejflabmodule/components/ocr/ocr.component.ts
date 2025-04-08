@@ -7,10 +7,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   selector: 'app-ocr',
   templateUrl: './ocr.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
-    '../../../../forms.css',
     './ocr.component.css'
   ]
 })

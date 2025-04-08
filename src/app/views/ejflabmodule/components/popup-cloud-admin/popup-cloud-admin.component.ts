@@ -9,10 +9,6 @@ import { CloudManagerService, ServiceMetaData } from '../../services/cloudManage
   selector: 'app-popup-cloud-admin',
   templateUrl: './popup-cloud-admin.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../popup.css',
-    '../../../../containers.css',
-    '../../../../forms.css',
     './popup-cloud-admin.component.css'
   ]
 })

@@ -26,20 +26,21 @@
             mode="buffer"></mat-progress-bar>
         <div class="container_horizontal gap_10">
             <div class="container_horizontal gap_10">
-                <button class="btn red" (click)="resetChat()">
+                <button class="btn btn-danger" (click)="resetChat()">
                     <mat-icon>delete_forever</mat-icon>
                     Clear chat
                 </button>
             </div>
             <div class="container_horizontal end full gap_10">
-                <button class="btn" (click)="chat()" *ngIf="!speech2TextSrv.isListening()">
+                <button class="btn btn-primary" (click)="chat()" *ngIf="!speech2TextSrv.isListening()">
                     <mat-icon>send</mat-icon>
                     Send
                 </button>
-                <button *ngIf="!speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.start()">
+                <button *ngIf="!speech2TextSrv.isListening()" class="btn btn-secondary"
+                    (click)="speech2TextSrv.start()">
                     <mat-icon class="peque">graphic_eq</mat-icon>
                 </button>
-                <button *ngIf="speech2TextSrv.isListening()" class="btn" (click)="speech2TextSrv.pause()"
+                <button *ngIf="speech2TextSrv.isListening()" class="btn btn-primary" (click)="speech2TextSrv.pause()"
                     [ngClass]="{'active': speech2TextSrv.getListeningState()!==0}">
                     <mat-icon class="peque">pause</mat-icon>
                     <span>Pause</span>

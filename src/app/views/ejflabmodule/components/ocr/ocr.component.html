@@ -2,7 +2,7 @@
     <app-imagepicker [options]="imageOptions" (eventSave)="changedImage($event)" [url]="getPageImage()">
     </app-imagepicker>
     <div class="container_horizontal end gap_10">
-        <button class="btn" (click)="recognize()">
+        <button class="btn btn-primary" (click)="recognize()">
             <mat-icon>send</mat-icon>
             Send
         </button>

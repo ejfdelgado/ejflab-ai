@@ -14,10 +14,6 @@ import { ConfigRacService } from '../../services/configRac.service';
   selector: 'app-llm-knowledge',
   templateUrl: './llm-knowledge.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
-    '../../../../forms.css',
     './llm-knowledge.component.css'
   ]
 })

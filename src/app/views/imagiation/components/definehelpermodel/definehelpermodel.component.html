@@ -1,8 +1,10 @@
 <div mat-dialog-title>
-    <h1 class="centrado">Modelo de colaboración</h1>
-    <span class="boton_cerrar" [mat-dialog-close]>
-        <mat-icon>close</mat-icon>
-    </span>
+    <header>
+        <h1 class="centrado">Modelo de colaboración</h1>
+        <span class="boton_cerrar" [mat-dialog-close]>
+            <mat-icon>close</mat-icon>
+        </span>
+    </header>
 </div>
 <mat-dialog-content class="mat-typography con_form">
     <p class="texto_descripcion">Definir modelo de colaboración:</p>
@@ -15,11 +17,13 @@
         </div>
     </form>
 </mat-dialog-content>
-<div class="bottom_buttons">
-    <button mat-raised-button color="" (click)="cancelar()" type="button">
+<div mat-dialog-actions class="bottom_buttons">
+    <button class="btn btn-secondary" (click)="cancelar()" type="button">
+        <mat-icon>close</mat-icon>
         Cancelar
     </button>
-    <button mat-raised-button color="primary" (click)="apply()" type="button">
+    <button class="btn btn-primary" (click)="apply()" type="button">
+        <mat-icon>check</mat-icon>
         Aplicar
     </button>
 </div>

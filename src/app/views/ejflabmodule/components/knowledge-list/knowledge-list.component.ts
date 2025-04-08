@@ -7,9 +7,6 @@ import { JsonColorPipe, ModalService } from 'ejflab-front-lib';
   selector: 'app-knowledge-list',
   templateUrl: './knowledge-list.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
     './knowledge-list.component.css'
   ]
 })

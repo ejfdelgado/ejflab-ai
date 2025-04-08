@@ -11,10 +11,6 @@ import { Buffer } from 'buffer';
   selector: 'app-popup-rac-config',
   templateUrl: './popup-rac-config.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../popup.css',
-    '../../../../containers.css',
-    '../../../../forms.css',
     './popup-rac-config.component.css'
   ]
 })

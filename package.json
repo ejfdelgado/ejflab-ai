@@ -112,7 +112,7 @@
     "@types/three": "^0.174.0",
     "@types/uuid": "^10.0.0",
     "@types/webrtc": "^0.0.43",
-    "ejflab-front-lib": "^2.7.3",
+    "ejflab-front-lib": "^2.9.12",
     "firebase-tools": "^13.13.1",
     "latlon-geohash": "^2.0.0",
     "ngx-material-timepicker": "^13.1.1",

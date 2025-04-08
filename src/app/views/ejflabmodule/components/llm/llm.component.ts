@@ -12,9 +12,6 @@ import { ModalService } from 'ejflab-front-lib';
   selector: 'app-llm',
   templateUrl: './llm.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
     './llm.component.css'
   ]
 })

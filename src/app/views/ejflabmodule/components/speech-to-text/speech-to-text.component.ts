@@ -12,9 +12,6 @@ import { ConfigRacService } from '../../services/configRac.service';
   selector: 'app-speech-to-text',
   templateUrl: './speech-to-text.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
     './speech-to-text.component.css'
   ]
 })

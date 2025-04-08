@@ -20,10 +20,12 @@
 }
 
 .btn.action.start {
+    border-color: rgb(0, 100, 0);
     background-color: green;
 }
 
 .btn.action.stop {
+    border-color: rgb(196, 2, 2);
     background-color: red;
 }
 

@@ -11,9 +11,6 @@ import { ConfigRacService } from '../../services/configRac.service';
   selector: 'app-ingest',
   templateUrl: './ingest.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
     './ingest.component.css'
   ]
 })

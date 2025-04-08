@@ -11,10 +11,6 @@ import { Buffer } from 'buffer';
   selector: 'app-popup-database-edit',
   templateUrl: './popup-database-edit.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../popup.css',
-    '../../../../containers.css',
-    '../../../../forms.css',
     './popup-database-edit.component.css'
   ]
 })

@@ -24,6 +24,11 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/ejflab-front-lib/src/styles/popups.css",
+              "src/assets/css/buttons.css",
+              "src/assets/css/containers.css",
+              "src/assets/css/fonts.css",
+              "src/assets/css/forms.css",
               "src/styles.css"
             ],
             "scripts": [],

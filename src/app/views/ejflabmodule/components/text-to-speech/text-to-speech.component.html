@@ -11,7 +11,7 @@
                 <p>{{ seconds }}</p>
             </div>
             <div class="container_horizontal end gap_10 full">
-                <button class="btn" [ngClass]="{'disabled': isProcessing}" (click)="convert()">
+                <button class="btn btn-primary" [ngClass]="{'disabled': isProcessing}" (click)="convert()">
                     <mat-icon>play_arrow</mat-icon>
                     Play
                 </button>

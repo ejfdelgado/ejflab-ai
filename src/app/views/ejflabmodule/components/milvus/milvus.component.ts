@@ -14,9 +14,6 @@ export interface MilvusDatabaseData {
   selector: 'app-milvus',
   templateUrl: './milvus.component.html',
   styleUrls: [
-    '../../../../buttons.css',
-    '../../../../containers.css',
-    '../../../../fonts.css',
     './milvus.component.css'
   ]
 })

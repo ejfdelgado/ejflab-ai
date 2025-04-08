@@ -1,14 +1,16 @@
 <div mat-dialog-title>
-    <h1 class="centrado">Clases</h1>
-    <span class="boton_cerrar" (click)="cancelar()">
-        <mat-icon>close</mat-icon>
-    </span>
+    <header>
+        <h1 class="centrado">Clases</h1>
+        <span class="boton_cerrar" (click)="cancelar()">
+            <mat-icon>close</mat-icon>
+        </span>
+    </header>
 </div>
 <mat-dialog-content class="mat-typography con_form" #container_scroll>
     <p class="texto_descripcion">Definir clase:</p>
     <form class="form-container layout_columna" [formGroup]="form">
         <div class="list_container">
-            <button mat-raised-button class="manito" type="button" color="primary" (click)="agregarClase()">
+            <button class="btn btn-primary" class="manito" type="button" (click)="agregarClase()">
                 Agregar clase
             </button>
             <div [formArrayName]="'formArrayName'">
@@ -35,14 +37,17 @@
         </div>
     </form>
 </mat-dialog-content>
-<div class="bottom_buttons">
-    <button mat-raised-button color="" (click)="cancelar()" type="button">
+<div mat-dialog-actions class="bottom_buttons">
+    <button class="btn btn-secondary" (click)="cancelar()" type="button">
+        <mat-icon>close</mat-icon>
         Cancelar
     </button>
-    <button *ngIf="tag" mat-raised-button color="warn" (click)="wantsToDelete()" type="button">
+    <button *ngIf="tag" class="btn btn-danger" (click)="wantsToDelete()" type="button">
+        <mat-icon>delete</mat-icon>
         Borrar etiqueta
     </button>
-    <button mat-raised-button color="primary" (click)="guardarCerrar()" type="button">
+    <button class="btn btn-primary" (click)="guardarCerrar()" type="button">
+        <mat-icon>check</mat-icon>
         Guardar
     </button>
 </div>
