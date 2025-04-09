@@ -9,6 +9,10 @@ body {
   font-family: 'Comfortaa', "Helvetica Neue", sans-serif;
 }
 
+.mat-h1, .mat-headline-5, .mat-typography .mat-h1, .mat-typography .mat-headline-5, .mat-typography h1 {
+  font-family: 'Comfortaa', "Helvetica Neue", sans-serif;
+}
+
 body {
   margin: 0;
   font-family: 'Comfortaa', "Helvetica Neue", sans-serif;
