@@ -1,34 +1,3 @@
-.bottom_buttons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: right;
-  margin-top: 10px;
-}
-
-[mat-dialog-title] {
-  display: flex;
-  margin: 0;
-}
-
-[mat-dialog-title] h1 {
-  flex: 1;
-}
-
-[mat-dialog-title] .boton_cerrar {
-  cursor: pointer;
-  color: rgb(158, 158, 158);
-  position: relative;
-  top: -5px;
-  left: 0;
-  margin-left: 10px;
-}
-
-[mat-dialog-title] .boton_cerrar:hover {
-  color: rgb(57, 57, 57);
-}
-
 mat-form-field {
   width: 100%;
 }

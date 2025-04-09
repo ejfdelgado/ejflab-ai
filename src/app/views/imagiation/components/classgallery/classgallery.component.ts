@@ -85,13 +85,13 @@ export class ClassgalleryComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   getTagColor(tag: any) {
     if (this.tag?.bbox.label == tag.num) {
-      return 'primary';
+      return 'btn-primary';
     } else {
-      return 'secondary';
+      return 'btn-secondary';
     }
   }
 
@@ -111,7 +111,7 @@ export class ClassgalleryComponent implements OnInit {
     try {
       this.containerScroll.nativeElement.scrollTop =
         this.containerScroll.nativeElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) { }
   }
 
   async wantsToDelete() {

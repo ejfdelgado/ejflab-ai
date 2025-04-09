@@ -1,8 +1,10 @@
 <div mat-dialog-title>
-    <h1 class="centrado">Entrenamiento</h1>
-    <span class="boton_cerrar" [mat-dialog-close]>
-        <mat-icon>close</mat-icon>
-    </span>
+    <header>
+        <h1 class="centrado">Entrenamiento</h1>
+        <span class="boton_cerrar" [mat-dialog-close]>
+            <mat-icon>close</mat-icon>
+        </span>
+    </header>
 </div>
 <mat-dialog-content class="mat-typography con_form no_scroll_h">
     <p class="texto_descripcion">Detalles del entrenamiento:</p>
@@ -110,12 +112,17 @@
         </div>
     </form>
 </mat-dialog-content>
-<div class="bottom_buttons">
-    <button mat-raised-button color="" (click)="cancelar()" type="button">
+<div mat-dialog-actions class="bottom_buttons">
+    <button class="btn btn-secondary" (click)="cancelar()" type="button">
+        <mat-icon>close</mat-icon>
         {{ isNew ? "Cancelar": "Cerrar" }}
     </button>
-    <button *ngIf="isNew" mat-raised-button color="primary" (click)="apply()" type="button">
+    <button *ngIf="isNew" class="btn btn-primary" (click)="apply()" type="button">
+        <mat-icon>check</mat-icon>
         Crear
     </button>
-    <button *ngIf="canAbort()" mat-raised-button color="warn" (click)="cancelJob()" type="button">Abortar</button>
+    <button *ngIf="canAbort()" class="btn btn-danger" (click)="cancelJob()" type="button">
+        <mat-icon>delete</mat-icon>
+        Abortar
+    </button>
 </div>
