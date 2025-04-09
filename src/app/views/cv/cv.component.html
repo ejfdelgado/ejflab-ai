@@ -1,7 +1,9 @@
 <pre>{{ tupleModel | json }}</pre>
-<button (click)="setTime()">Catch Time</button>
-<button (click)="testCifer()">Cipher</button>
-<button (click)="openWebcam({})">Open Webcam</button>
+<div class="container_horizontal gap_10">
+    <button class="btn btn-primary" (click)="setTime()">Catch Time</button>
+    <button class="btn btn-secondary" (click)="testCifer()">Cipher</button>
+    <button class="btn btn-danger" (click)="openWebcam({})">Open Webcam</button>
+</div>
 <div style="padding: 10px;">
     <app-blobeditor [options]="blobOptions" [url]="tupleModel?.blobFile"
         (urlChange)="tupleModel.blobFile=$event; saveTuple()">
